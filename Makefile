@@ -1,11 +1,12 @@
 CC=avr-gcc
-FLAGS=-std=c++11 -DF_CPU=16000000UL -DARDUINO=169 #Add -Wall
+FLAGS=-std=c++11 -Wall -DF_CPU=16000000UL -DARDUINO=169 -Os
 AVR_GCC_MCU=atmega328p
 
 ARDUINO_HARDWARE_FOLDER=~/Programme/arduino-1.6.9/hardware/arduino/avr
 AVR_FLASH=avrdude
 AVRDUDE_DEVICE=m328p
 AVRDUDE_PROGRAMMER=arduino
+AVRDUDE_PORT=/dev/ttyACM0
 
 INPUT_FILES=main.cpp label/label.cpp Joystick.cpp \
 	$(wildcard $(ARDUINO_HARDWARE_FOLDER)/cores/arduino/*.cpp) \
@@ -19,11 +20,9 @@ INPUT_FILES=main.cpp label/label.cpp Joystick.cpp \
 	Adafruit_ILI9341/Adafruit_ILI9341.cpp \
 	Adafruit_STMPE610/Adafruit_STMPE610.cpp \
 	Adafruit-GFX-Library/Adafruit_GFX.cpp \
-	$(wildcard RadioHead/*.cpp) \
-	RadioControlProtocol/rcLib.cpp	
-	#RadioHead/RH_RF95.cpp \
-	#RadioHead/RHGenericDriver.cpp \
-	#RadioHead/RHSPIDriver.cpp \
+	RadioControlProtocol/rcLib.cpp \
+	# $(wildcard RadioHead/*.cpp) \
+		
 
 HEX_FILE=main.hex
 
@@ -48,7 +47,7 @@ build:
 	$(CC) $(FLAGS) $(INCLUDE_PATH) -mmcu=$(AVR_GCC_MCU) -Os -o $(HEX_FILE) $(INPUT_FILES) 
 
 flash:
-	$(AVR_FLASH) -c $(AVRDUDE_PROGRAMMER) -p $(AVRDUDE_DEVICE) $(HEX_FILE)
+	$(AVR_FLASH) -c $(AVRDUDE_PROGRAMMER) -p $(AVRDUDE_DEVICE) -P $(AVRDUDE_PORT) -U flash:w:$(HEX_FILE)
 
 clean:
 	rm *.o *.hex

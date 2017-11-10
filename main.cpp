@@ -8,7 +8,7 @@
 #include "Adafruit_ILI9341.h"
 #include "Adafruit_STMPE610.h"
 #include "SPI.h"
-#include "RH_RF95.h"
+//#include "RH_RF95.h"
 
 #include "RadioControlProtocol/rcLib.hpp"
 
@@ -23,7 +23,7 @@ int receiveCount = 0;
 Joystick joyLeft, joyRight;
 rcLib::Package receivePackage;
 
-RH_RF95 rf95(5);
+//RH_RF95 rf95(5);
 
 /*int main(void){
     setup();
@@ -38,13 +38,12 @@ void setup() {
     Serial.println(__TIMESTAMP__);
 
 
-    if (!rf95.init()){
+    /*if (!rf95.init()){
       Serial.println("Radio init failed");  
     } else {
       Serial.println("Radio init success");
     }
-    rf95.setFrequency(434.0);
-
+    rf95.setFrequency(434.0);*/
     orientation = analogRead(A0) < 32;    
 
     controller::load();
@@ -83,7 +82,7 @@ void loop() {
 
 
   
-    if (rf95.available()) {
+    /*if (rf95.available()) {
       // Should be a message for us now   
       uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
       uint8_t len = sizeof(buf);
@@ -102,7 +101,7 @@ void loop() {
       } else {
         Serial.println("recv failed");
       }
-    }
+    }*/
 
 }
 
