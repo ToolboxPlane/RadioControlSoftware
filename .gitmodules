@@ -1,0 +1,15 @@
+[submodule "RadioControlProtocol"]
+	path = RadioControlProtocol
+	url = git@github.com:ToolboxPlane/RadioControlProtocol.git
+[submodule "Adafruit_ILI9341"]
+	path = Adafruit_ILI9341
+	url = https://github.com/adafruit/Adafruit_ILI9341
+[submodule "Adafruit-GFX-Library"]
+	path = Adafruit-GFX-Library
+	url = https://github.com/adafruit/Adafruit-GFX-Library
+[submodule "RadioHead"]
+	path = RadioHead
+	url = https://github.com/PaulStoffregen/RadioHead
+[submodule "Adafruit_STMPE610"]
+	path = Adafruit_STMPE610
+	url = https://github.com/adafruit/Adafruit_STMPE610

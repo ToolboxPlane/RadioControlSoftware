@@ -1,12 +1,14 @@
-#include <gfxfont.h>
-#include <Adafruit_GFX.h>
+#include "Arduino.h"
 
-#include <Wire.h>      // this is needed even tho we aren't using it
+#include "gfxfont.h"
+#include "Adafruit_GFX.h"
 
-#include <Adafruit_ILI9341.h>
-#include <Adafruit_STMPE610.h>
-#include <SPI.h>
-#include <RH_RF95.h>
+#include "Wire.h"      // this is needed even tho we aren't using it
+
+#include "Adafruit_ILI9341.h"
+#include "Adafruit_STMPE610.h"
+#include "SPI.h"
+#include "RH_RF95.h"
 
 #include "RadioControlProtocol/rcLib.hpp"
 
@@ -22,6 +24,12 @@ Joystick joyLeft, joyRight;
 rcLib::Package receivePackage;
 
 RH_RF95 rf95(5);
+
+/*int main(void){
+    setup();
+    while(1)
+        loop();
+}*/
 
 void setup() {
     Serial.begin(9600);

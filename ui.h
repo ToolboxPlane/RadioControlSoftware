@@ -1,11 +1,11 @@
 #ifndef _UI_H
 #define _UI_H
 
-#include "label.hpp"
+#include "label/label.hpp"
 #include "materialColors.h"
 #include "colorConvert.h"
 
-#define TFT_DC 9
+#define TFT_DC 3
 #define TFT_CS 10
 
 #define BACKGROUND_COLOR r8g8b8Tor5g6b5(Grey::P300)

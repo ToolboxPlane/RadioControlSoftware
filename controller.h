@@ -139,7 +139,7 @@ namespace controller{
                     case 2:
                     case 3:
                     case 4:
-                        model::flightmode = sel;
+                        model::flightmode =(model::Flightmode)sel;
                     case 5:
                         page = START;
                         break;

@@ -2,7 +2,7 @@
 #define _JOYSTICK_HPP
 
 #include "Arduino.h"
-#include <EEPROM.h>
+#include "EEPROM.h"
 
 #define BUTTON_SCHMITT_LOW 200
 #define BUTTON_SCHMITT_HIGH 800
