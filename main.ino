@@ -8,7 +8,7 @@
 #include <SPI.h>
 #include <RH_RF95.h>
 
-#include "RadioControlProtocol/rcLib.hpp"
+#include "rcLib.hpp"
 
 #include "Joystick.hpp"
 #include "model.h"
@@ -30,12 +30,12 @@ void setup() {
     Serial.println(__TIMESTAMP__);
 
 
-    if (!rf95.init()){
+    /*if (!rf95.init()){
       Serial.println("Radio init failed");  
     } else {
       Serial.println("Radio init success");
     }
-    rf95.setFrequency(434.0);
+    rf95.setFrequency(434.0);*/
 
     orientation = analogRead(A0) < 32;    
 
@@ -95,7 +95,6 @@ void loop() {
         Serial.println("recv failed");
       }
     }
-
 }
 
 

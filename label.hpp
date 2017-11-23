@@ -5,10 +5,10 @@
 #ifndef SMARTWATCH2_LABEL_HPP
 #define SMARTWATCH2_LABEL_HPP
 
-#include "Arduino.h"
+#include <Arduino.h>
+#include <stdint.h>
 
 extern void drawLabel(String text, uint16_t x, uint16_t y, uint8_t size, uint16_t color);
-
 
 class Label
 {

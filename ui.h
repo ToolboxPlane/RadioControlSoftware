@@ -1,7 +1,7 @@
 #ifndef _UI_H
 #define _UI_H
 
-#include "label/label.hpp"
+#include "label.hpp"
 #include "materialColors.h"
 #include "colorConvert.h"
 
