@@ -1,3 +1,4 @@
 *.gch
 *.hex
 /cmake-build-debug/
+.idea/

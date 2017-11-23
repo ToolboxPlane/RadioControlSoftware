@@ -11,10 +11,10 @@
 #define TS_MAXX 3800
 #define TS_MAXY 4000
 
-namespace controller{
+namespace controller {
     Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 
-    enum Page{
+    enum Page {
         START,
         SETTINGS,
         CALIBRATE,
@@ -22,48 +22,48 @@ namespace controller{
     };
 
     Page page = START;
-    
 
-    void load(){
-        ui::load();        
-        ts.begin();        
+
+    void load() {
+        ui::load();
+        ts.begin();
     }
 
-    int8_t getSelection(){
+    int8_t getSelection() {
         static uint8_t eventHandled = false;
         if (ts.bufferEmpty()) {
-            eventHandled = false;            
-            for(uint8_t c=0; c<=5; c++){
+            eventHandled = false;
+            for (uint8_t c = 0; c <= 5; c++) {
                 ui::buttonLabel[c].setColor(BUTTON_TEXT_COLOR);
             }
-    
+
             return -1;
         }
-        
+
         TS_Point p = ts.getPoint();
-        
+
         p.x = map(p.x, TS_MINX, TS_MAXX, 0, 240);
         p.y = 320 - map(p.y, TS_MINY, TS_MAXY, 0, 320);
 
-        if(p.y < 15){
-            for(uint8_t c=0; c<=5; c++){
+        if (p.y < 15) {
+            for (uint8_t c = 0; c <= 5; c++) {
                 ui::buttonLabel[c].setColor(BUTTON_TEXT_COLOR);
-            }    
+            }
 
             return -1;
         }
 
-        int8_t sel = (p.y-15)/50;
+        int8_t sel = (p.y - 15) / 50;
 
-        for(uint8_t c=0; c<=5; c++){
-            if(sel != c){
+        for (uint8_t c = 0; c <= 5; c++) {
+            if (sel != c) {
                 ui::buttonLabel[c].setColor(BUTTON_TEXT_COLOR);
             } else {
                 ui::buttonLabel[sel].setColor(BUTTON_TEXT_SELECTED_COLOR);
             }
         }
 
-        if(!eventHandled){
+        if (!eventHandled) {
             eventHandled = true;
             return sel;
         } else {
@@ -71,8 +71,8 @@ namespace controller{
         }
     }
 
-    void updateButtons(){
-        switch(page){
+    void updateButtons() {
+        switch (page) {
             case START:
                 ui::buttonLabel[0].setText("Arm/Disarm");
                 ui::buttonLabel[1].setText("Flightmodes");
@@ -100,12 +100,12 @@ namespace controller{
         }
     }
 
-    void handleEvent(uint8_t sel){
+    void handleEvent(uint8_t sel) {
         ui::update(model::armed, model::getFlightMode());
-        
-        switch(page){
+
+        switch (page) {
             case START:
-                switch (sel){
+                switch (sel) {
                     case 0:
                         model::armed = !model::armed;
                         break;
@@ -122,7 +122,7 @@ namespace controller{
                 }
                 break;
             case CALIBRATE:
-                switch(sel){
+                switch (sel) {
                     case 5:
                         joyLeft.endCalibration(0);
                         joyRight.endCalibration(4);
@@ -133,13 +133,13 @@ namespace controller{
                 }
                 break;
             case FLIGHTMODES:
-                switch(sel){
+                switch (sel) {
                     case 0:
                     case 1:
                     case 2:
                     case 3:
                     case 4:
-                        model::flightmode =(model::Flightmode)sel;
+                        model::flightmode = (model::Flightmode) sel;
                     case 5:
                         page = START;
                         break;

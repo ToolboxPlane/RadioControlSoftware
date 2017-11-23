@@ -37,7 +37,7 @@ void setup() {
     }
     rf95.setFrequency(434.0);*/
 
-    orientation = analogRead(A0) < 32;    
+    orientation = analogRead(A0) < 32;
 
     controller::load();
 
@@ -46,7 +46,7 @@ void setup() {
 }
 
 void loop() {
-    if(orientation){
+    if (orientation) {
         joyLeft.setButton(analogRead(A0));
         joyLeft.setXValue(1024 - analogRead(A2));
         joyLeft.setYValue(analogRead(A1));
@@ -64,8 +64,8 @@ void loop() {
         joyRight.setYValue(analogRead(A0));
     }
 
-    if(Serial.available()){
-        if(receivePackage.decode(Serial.read())){
+    if (Serial.available()) {
+        if (receivePackage.decode(Serial.read())) {
             receiveCount++;
         }
     }
@@ -73,27 +73,25 @@ void loop() {
     controller::handleEvent(controller::getSelection());
 
 
-
-  
     if (rf95.available()) {
-      // Should be a message for us now   
-      uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
-      uint8_t len = sizeof(buf);
-      if (rf95.recv(buf, &len)) {
-        //      RH_RF95::printBuffer("request: ", buf, len);
-        Serial.print("got request: ");
-        Serial.println((char*)buf);
-        //      Serial.print("RSSI: ");
-        //      Serial.println(rf95.lastRssi(), DEC);
-        
-        // Send a reply
-        uint8_t data[] = "And hello back to you";
-        rf95.send(data, sizeof(data));
-        rf95.waitPacketSent();
-        Serial.println("Sent a reply");
-      } else {
-        Serial.println("recv failed");
-      }
+        // Should be a message for us now
+        uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
+        uint8_t len = sizeof(buf);
+        if (rf95.recv(buf, &len)) {
+            //      RH_RF95::printBuffer("request: ", buf, len);
+            Serial.print("got request: ");
+            Serial.println((char *) buf);
+            //      Serial.print("RSSI: ");
+            //      Serial.println(rf95.lastRssi(), DEC);
+
+            // Send a reply
+            uint8_t data[] = "And hello back to you";
+            rf95.send(data, sizeof(data));
+            rf95.waitPacketSent();
+            Serial.println("Sent a reply");
+        } else {
+            Serial.println("recv failed");
+        }
     }
 }
 

@@ -7,21 +7,28 @@
 #define BUTTON_SCHMITT_LOW 200
 #define BUTTON_SCHMITT_HIGH 800
 
-class Joystick{
+class Joystick {
 public:
     Joystick();
+
     void loadConfiguration(uint16_t startAddr);
 
     void startCalibration();
+
     void endCalibration(uint16_t startAddr);
 
     void setXValue(uint16_t value);
+
     void setYValue(uint16_t value);
+
     void setButton(uint16_t button);
 
     int8_t getXValue();
+
     int8_t getYValue();
+
     uint8_t getButton();
+
 private:
     uint8_t buttonState;
     int8_t xVal, yVal;
