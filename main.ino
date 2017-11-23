@@ -74,7 +74,7 @@ void loop() {
 
 
     if (rf95.available()) {
-        // Should be a message for us now
+       /* // Should be a message for us now
         uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
         uint8_t len = sizeof(buf);
         if (rf95.recv(buf, &len)) {
@@ -91,7 +91,7 @@ void loop() {
             Serial.println("Sent a reply");
         } else {
             Serial.println("recv failed");
-        }
+        }*/
     }
 }
 
