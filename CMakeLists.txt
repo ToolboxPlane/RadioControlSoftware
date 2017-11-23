@@ -1,14 +1,16 @@
 cmake_minimum_required(VERSION 3.8)
 
-project (DONTUSEME)
+project (DONT_USE_ME_IM_JUST_HERE_FOR_THE_DEPENDENCIES)
 
-file(GLOB DONTUSEME_SRC
+file(GLOB DONT_USE_ME_IM_JUST_HERE_FOR_THE_DEPENDENCIES_SRC
         "*.h"
         "*.cpp"
         "*.ino"
         )
 
-add_executable(DONTUSEME ${DONTUSEME_SRC})
+add_executable(DONT_USE_ME_IM_JUST_HERE_FOR_THE_DEPENDENCIES ${DONT_USE_ME_IM_JUST_HERE_FOR_THE_DEPENDENCIES_SRC})
+
+add_executable(EMPTY_RUN run.c)
 
 add_custom_target(
         CompileArduino ALL
