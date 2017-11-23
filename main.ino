@@ -21,14 +21,12 @@ int receiveCount = 0;
 Joystick joyLeft, joyRight;
 rcLib::Package receivePackage;
 
-RH_RF95 rf95(5);
+//RH_RF95 rf95(4);
 
 void setup() {
     Serial.begin(9600);
-
     Serial.print("Compiled at:\t");
     Serial.println(__TIMESTAMP__);
-
 
     /*if (!rf95.init()){
       Serial.println("Radio init failed");  
@@ -73,8 +71,8 @@ void loop() {
     controller::handleEvent(controller::getSelection());
 
 
-    if (rf95.available()) {
-       /* // Should be a message for us now
+    /*if (rf95.available()) {
+        // Should be a message for us now
         uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
         uint8_t len = sizeof(buf);
         if (rf95.recv(buf, &len)) {
@@ -91,8 +89,8 @@ void loop() {
             Serial.println("Sent a reply");
         } else {
             Serial.println("recv failed");
-        }*/
-    }
+        }
+    }*/
 }
 
 

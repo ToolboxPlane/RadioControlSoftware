@@ -1,2 +1,3 @@
-int main(void){return 0;}
-
+#ifndef ARDUINO
+int main(){return 0;}
+#endif
