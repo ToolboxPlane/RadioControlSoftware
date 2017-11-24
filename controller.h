@@ -11,6 +11,8 @@
 #define TS_MAXX 3800
 #define TS_MAXY 4000
 
+#include "Pages/ncontroller.h"
+
 namespace controller {
     Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
 
@@ -27,6 +29,7 @@ namespace controller {
     void load() {
         ui::load();
         ts.begin();
+        ncontroller::init();
     }
 
     int8_t getSelection() {
@@ -72,7 +75,7 @@ namespace controller {
     }
 
     void updateButtons() {
-        switch (page) {
+       /* switch (page) {
             case START:
                 ui::buttonLabel[0].setText("Arm/Disarm");
                 ui::buttonLabel[1].setText("Flightmodes");
@@ -97,13 +100,17 @@ namespace controller {
                 ui::buttonLabel[4].setText("Waypoint");
                 ui::buttonLabel[5].setText("Back");
                 break;
+        }*/
+        for(int c=0; c<6; c++) {
+            ui::buttonLabel[c].setText(ncontroller::buttons[ncontroller::currPage][c]._title);
         }
     }
 
     void handleEvent(uint8_t sel) {
         ui::update(model::armed, model::getFlightMode());
 
-        switch (page) {
+        ncontroller::buttonHandler(sel);
+        /*switch (page) {
             case START:
                 switch (sel) {
                     case 0:
@@ -148,8 +155,8 @@ namespace controller {
             default:
                 page = START;
                 break;
-        }
-        updateButtons();
+        }*/
+        controller::updateButtons();
     }
 }
 
