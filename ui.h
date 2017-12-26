@@ -46,7 +46,7 @@ namespace ui {
         lblLeftJoy.setColor(NOTIF_TEXT_COLOR);
         lblLeftJoy.setSize(1);
 
-        lblRightJoy.setPosition(160, 1);
+        lblRightJoy.setPosition(152, 1);
         lblRightJoy.setColor(NOTIF_TEXT_COLOR);
         lblRightJoy.setSize(1);
 

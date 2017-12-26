@@ -11,8 +11,6 @@
 #define TS_MAXX 3800
 #define TS_MAXY 4000
 
-//#include "Pages/ncontroller.h"
-
 namespace controller {
     Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
     void updateButtons();
@@ -28,17 +26,15 @@ namespace controller {
 
     Page page = START;
 
-
     void load() {
         ui::load();
-        ui::update(model::armed, model::getFlightMode());
-        updateButtons();
         ts.begin();
     }
 
     void setDebug(uint8_t index, String val) {
-        if(index >= 0 && index < 6)
+        if(index >= 0 && index < 6) {
             model::debugVals[index] = val;
+        }
     }
 
     void setDebug(uint8_t index, int val) {
@@ -46,44 +42,27 @@ namespace controller {
     }
 
     int8_t getSelection() {
-        static uint8_t eventHandled = false;
+        static int8_t lastSel = -1;
         if (ts.bufferEmpty()) {
-            eventHandled = false;
-            for (uint8_t c = 0; c <= 5; c++) {
-                ui::buttonLabel[c].setColor(BUTTON_TEXT_COLOR);
-            }
-
+            ui::buttonLabel[lastSel].setColor(BUTTON_TEXT_COLOR);
+            return lastSel =  -1;
+        } else if(lastSel >= 0) {
+            ts.getPoint();
             return -1;
-        }
-
-        TS_Point p = ts.getPoint();
-
-        p.x = map(p.x, TS_MINX, TS_MAXX, 0, 240);
-        p.y = 320 - map(p.y, TS_MINY, TS_MAXY, 0, 320);
-
-        if (p.y < 15) {
-            for (uint8_t c = 0; c <= 5; c++) {
-                ui::buttonLabel[c].setColor(BUTTON_TEXT_COLOR);
-            }
-
-            return -1;
-        }
-
-        int8_t sel = (p.y - 15) / 50;
-
-        for (uint8_t c = 0; c <= 5; c++) {
-            if (sel != c) {
-                ui::buttonLabel[c].setColor(BUTTON_TEXT_COLOR);
-            } else {
-                ui::buttonLabel[sel].setColor(BUTTON_TEXT_SELECTED_COLOR);
-            }
-        }
-
-        if (!eventHandled) {
-            eventHandled = true;
-            return sel;
         } else {
-            return -1;
+            TS_Point p = ts.getPoint();
+
+            p.x = map(p.x, TS_MINX, TS_MAXX, 0, 240);
+            p.y = 320 - map(p.y, TS_MINY, TS_MAXY, 0, 320);
+
+            if (p.y < 15) {
+                return -1;
+            }
+
+            lastSel = (p.y - 15) / 50;
+
+            ui::buttonLabel[lastSel].setColor(BUTTON_TEXT_SELECTED_COLOR);
+            return lastSel;
         }
     }
 
