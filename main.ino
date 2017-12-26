@@ -1,3 +1,4 @@
+#include "Arduino.h"
 #include <gfxfont.h>
 #include <Adafruit_GFX.h>
 
@@ -8,7 +9,7 @@
 #include <SPI.h>
 #include <RH_RF95.h>
 
-#include "rcLib.hpp"
+#include "src/RadioControlProtocol/rcLib.hpp"
 
 #include "Joystick.hpp"
 #include "model.h"
@@ -19,14 +20,14 @@ bool orientation;
 int receiveCount = 0;
 
 Joystick joyLeft, joyRight;
-rcLib::Package receivePackage;
 
 RH_RF95 rf95(5);
 
+rcLib::Package serialOut(1024,8), serialIn;
+
 void setup() {
     Serial.begin(9600);
-    Serial.print("Compiled at:\t");
-    Serial.println(__TIMESTAMP__);
+    rcLib::Package::transmitterId = 17;
 
     if (!rf95.init()){
       Serial.println("Radio init failed");  
@@ -38,7 +39,6 @@ void setup() {
     orientation = analogRead(A0) < 32;
 
     controller::load();
-
     joyLeft.loadConfiguration(0);
     joyRight.loadConfiguration(4);
 }
@@ -62,16 +62,31 @@ void loop() {
         joyRight.setYValue(analogRead(A0));
     }
 
-    if (Serial.available()) {
-        if (receivePackage.decode(Serial.read())) {
-            receiveCount++;
+    serialOut.setChannel(0, joyLeft.getXValue());
+    serialOut.setChannel(1, joyLeft.getYValue());
+    serialOut.setChannel(2, joyLeft.getButton());
+    serialOut.setChannel(3, joyRight.getXValue());
+    serialOut.setChannel(4, joyRight.getYValue());
+    serialOut.setChannel(5, joyRight.getButton());
+    serialOut.setChannel(6, model::flightmode);
+    serialOut.setChannel(7, controller::page);
+    uint16_t l = serialOut.encode();
+    Serial.write(serialOut.getEncodedData(), l);
+
+    if(Serial.available()) {
+        if(serialIn.decode(Serial.read())) {
+            for(int c=0; c<6; c++) {
+                controller::setDebug(c,
+                    serialIn.getChannel(c));
+            }
         }
     }
+   
 
     controller::handleEvent(controller::getSelection());
 
 
-    if (rf95.available()) {
+    //if (rf95.available()) {
         // Should be a message for us now
         /*uint8_t buf[1];
         uint8_t len = sizeof(buf);
@@ -90,7 +105,7 @@ void loop() {
         } else {
             Serial.println("recv failed");
         }*/
-    }
+    //}
 }
 
 

@@ -11,16 +11,19 @@
 #define TS_MAXX 3800
 #define TS_MAXY 4000
 
-#include "Pages/ncontroller.h"
+//#include "Pages/ncontroller.h"
 
 namespace controller {
     Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
+    void updateButtons();
 
     enum Page {
         START,
-        SETTINGS,
         CALIBRATE,
-        FLIGHTMODES
+        FLIGHTMODES,
+        SETTINGS,
+        DEBUG,
+        LOG
     };
 
     Page page = START;
@@ -28,8 +31,18 @@ namespace controller {
 
     void load() {
         ui::load();
+        ui::update(model::armed, model::getFlightMode());
+        updateButtons();
         ts.begin();
-        ncontroller::init();
+    }
+
+    void setDebug(uint8_t index, String val) {
+        if(index >= 0 && index < 6)
+            model::debugVals[index] = val;
+    }
+
+    void setDebug(uint8_t index, int val) {
+        return setDebug(index, String(val));
     }
 
     int8_t getSelection() {
@@ -75,42 +88,67 @@ namespace controller {
     }
 
     void updateButtons() {
-       /* switch (page) {
+        switch (page) {
             case START:
-                ui::buttonLabel[0].setText("Arm/Disarm");
-                ui::buttonLabel[1].setText("Flightmodes");
+                ui::buttonLabel[0].setText(F("Arm/Disarm"));
+                ui::buttonLabel[1].setText(F("Flightmodes"));
                 ui::buttonLabel[2].setText("");
                 ui::buttonLabel[3].setText("");
-                ui::buttonLabel[4].setText("");
-                ui::buttonLabel[5].setText("Calibrate");
+                ui::buttonLabel[4].setText(F("Settings"));
+                ui::buttonLabel[5].setText(F("Debug"));
                 break;
             case CALIBRATE:
-                ui::buttonLabel[0].setText("Move");
-                ui::buttonLabel[1].setText("the");
-                ui::buttonLabel[2].setText("Joysticks");
+                ui::buttonLabel[0].setText(F("Move"));
+                ui::buttonLabel[1].setText(F("the"));
+                ui::buttonLabel[2].setText(F("Joysticks"));
                 ui::buttonLabel[3].setText("");
                 ui::buttonLabel[4].setText("");
-                ui::buttonLabel[5].setText("Finish");
+                ui::buttonLabel[5].setText(F("Finish"));
+                break;
+            case SETTINGS:
+                ui::buttonLabel[0].setText(F("Calibrate"));
+                if(model::serialEnabled) {
+                    ui::buttonLabel[1].setText(F("Disable USB"));
+                } else {
+                    ui::buttonLabel[1].setText(F("Enable USB"));
+                }
+                if(model::loraEnabled) {
+                    ui::buttonLabel[2].setText(F("Disable LoRa"));
+                } else {
+                    ui::buttonLabel[2].setText(F("Enable LoRa"));
+                }
+                ui::buttonLabel[3].setText("");
+                ui::buttonLabel[4].setText("");
+                ui::buttonLabel[5].setText(F("Back"));
                 break;
             case FLIGHTMODES:
-                ui::buttonLabel[0].setText("Manual");
-                ui::buttonLabel[1].setText("Launch");
-                ui::buttonLabel[2].setText("Land");
-                ui::buttonLabel[3].setText("Hold");
-                ui::buttonLabel[4].setText("Waypoint");
-                ui::buttonLabel[5].setText("Back");
+                ui::buttonLabel[0].setText(model::getFlightMode(0));
+                ui::buttonLabel[1].setText(model::getFlightMode(1));
+                ui::buttonLabel[2].setText(model::getFlightMode(2));
+                ui::buttonLabel[3].setText(model::getFlightMode(3));
+                ui::buttonLabel[4].setText(model::getFlightMode(4));
+                ui::buttonLabel[5].setText(F("Back"));
                 break;
-        }*/
-        for(int c=0; c<6; c++) {
-            ui::buttonLabel[c].setText(ncontroller::buttons[ncontroller::currPage][c]._title);
+            case DEBUG:
+                ui::buttonLabel[0].setText(F("Log"));
+                ui::buttonLabel[1].setText("");
+                ui::buttonLabel[2].setText(F("Compiled on:"));
+                ui::buttonLabel[3].setText(F(__TIME__));
+                ui::buttonLabel[4].setText(F(__DATE__));
+                ui::buttonLabel[5].setText(F("Back"));
+                break;
+            case LOG: 
+                for(uint8_t c=0; c<6; c++) {
+                    ui::buttonLabel[c].setText(model::debugVals[c]);
+                }
+                break;
         }
     }
 
     void handleEvent(uint8_t sel) {
         ui::update(model::armed, model::getFlightMode());
 
-        ncontroller::buttonHandler(sel);
-        /*switch (page) {
+        switch (page) {
             case START:
                 switch (sel) {
                     case 0:
@@ -119,10 +157,11 @@ namespace controller {
                     case 1:
                         page = FLIGHTMODES;
                         break;
+                    case 4:
+                        page = SETTINGS;
+                        break;
                     case 5:
-                        joyLeft.startCalibration();
-                        joyRight.startCalibration();
-                        page = CALIBRATE;
+                        page = DEBUG;
                         break;
                     default:
                         break;
@@ -133,7 +172,7 @@ namespace controller {
                     case 5:
                         joyLeft.endCalibration(0);
                         joyRight.endCalibration(4);
-                        page = START;
+                        page = SETTINGS;
                         break;
                     default:
                         break;
@@ -152,10 +191,45 @@ namespace controller {
                         break;
                 }
                 break;
+            case SETTINGS:
+                switch (sel) {
+                    case 0:
+                        joyLeft.startCalibration();
+                        joyRight.startCalibration();
+                        page = CALIBRATE;
+                        break;
+                    case 1:
+                        model::serialEnabled = !model::serialEnabled;
+                        break;
+                    case 2:
+                        model::loraEnabled = !model::loraEnabled;
+                        break;
+                    case 5:
+                        page = START;
+                        break;
+                }
+                break;
+            case DEBUG:
+                switch (sel) {
+                    case 0:
+                        page = LOG;
+                        break;
+                    case 5:
+                        page = START;
+                        break;
+                }
+                break;
+            case LOG:
+                switch (sel) {
+                    case 5:
+                        page = DEBUG;
+                        break;
+                }
+                break;
             default:
                 page = START;
                 break;
-        }*/
+        }
         controller::updateButtons();
     }
 }

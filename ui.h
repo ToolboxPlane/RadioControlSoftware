@@ -35,12 +35,12 @@ namespace ui {
 
         tft.fillRect(0, 0, 240, 10, NOTIF_COLOR);
 
-        tft.fillRoundRect(10, 20, 220, 40, 10, BUTTON_COLOR);
-        tft.fillRoundRect(10, 70, 220, 40, 10, BUTTON_COLOR);
-        tft.fillRoundRect(10, 120, 220, 40, 10, BUTTON_COLOR);
-        tft.fillRoundRect(10, 170, 220, 40, 10, BUTTON_COLOR);
-        tft.fillRoundRect(10, 220, 220, 40, 10, BUTTON_COLOR);
-        tft.fillRoundRect(10, 270, 220, 40, 10, BUTTON_COLOR);
+        tft.fillRoundRect(10, 20, 220, 40, 8, BUTTON_COLOR);
+        tft.fillRoundRect(10, 70, 220, 40, 8, BUTTON_COLOR);
+        tft.fillRoundRect(10, 120, 220, 40, 8, BUTTON_COLOR);
+        tft.fillRoundRect(10, 170, 220, 40, 8, BUTTON_COLOR);
+        tft.fillRoundRect(10, 220, 220, 40, 8, BUTTON_COLOR);
+        tft.fillRoundRect(10, 270, 220, 40, 8, BUTTON_COLOR);
 
         lblLeftJoy.setPosition(20, 1);
         lblLeftJoy.setColor(NOTIF_TEXT_COLOR);
@@ -64,7 +64,7 @@ namespace ui {
 
         for (uint8_t c = 0; c <= 5; c++) {
             buttonLabel[c] = Label(BUTTON_COLOR);
-            buttonLabel[c].setPosition(20, 30 + c * 50);
+            buttonLabel[c].setPosition(16, 30 + c * 50);
             buttonLabel[c].setColor(BUTTON_TEXT_COLOR);
             buttonLabel[c].setSize(3);
         }

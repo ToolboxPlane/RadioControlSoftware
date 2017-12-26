@@ -12,19 +12,21 @@ namespace model {
 
     Flightmode flightmode = LAUNCH;
     uint8_t armed = false;
+    String debugVals[6];
+    uint8_t serialEnabled = false, loraEnabled = false;
 
-    String getFlightMode() {
-        switch (flightmode) {
+    String getFlightMode(Flightmode mode = flightmode) {
+        switch (mode) {
             case MANUAL:
-                return "Manual";
+                return F("Manual");
             case LAUNCH:
-                return "Launch";
+                return F("Launch");
             case LAND:
-                return "Land";
+                return F("Land");
             case HOLD:
-                return "Hold";
+                return F("Hold");
             case WAYPOINT:
-                return "Waypoint";
+                return F("Waypoint");
             default:
                 return "";
         }
