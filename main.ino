@@ -36,20 +36,18 @@ void loop() {
     controller::handleEvent(controller::getSelection());
 
     joyLeft.setButton(analogRead(A0));
-    joyLeft.setXValue(analogRead(A2));
-    
-    joyLeft.setYValue(analogRead(A1));
-
+    joyLeft.setXValue(analogRead(A1));
+    joyLeft.setYValue(analogRead(A2));
     joyRight.setButton(analogRead(A3));
     joyRight.setXValue(analogRead(A4));
     joyRight.setYValue(analogRead(A5));
 
-    if(model::serialEnabled) {
-        serialOut.setChannel(0, joyLeft.getXValue());
-        serialOut.setChannel(1, joyLeft.getYValue());
+    if(model::serialEnabled()) {
+        serialOut.setChannel(0, (joyLeft.getXValue() + 127)*4);
+        serialOut.setChannel(1, (joyLeft.getYValue() + 127)*4);
         serialOut.setChannel(2, joyLeft.getButton());
-        serialOut.setChannel(3, joyRight.getXValue());
-        serialOut.setChannel(4, joyRight.getYValue());
+        serialOut.setChannel(3, (joyRight.getXValue() + 127)*4);
+        serialOut.setChannel(4, (joyRight.getYValue() + 127)*4);
         serialOut.setChannel(5, joyRight.getButton());
         serialOut.setChannel(6, model::flightmode);
         serialOut.setChannel(7, controller::page);
@@ -57,15 +55,20 @@ void loop() {
 
         if(Serial.available()) {
             if(serialIn.decode(Serial.read())) {
-                for(int c=0; c<6; c++) {
-                    controller::setDebug(c,
-                        serialIn.getChannel(c));
+                if(serialIn.isChecksumCorrect()) {
+                    for(int c=0; c<6; c++) {
+                        controller::setDebug(c,
+                            serialIn.getChannel(c));
+                    }
+                } else {
+                    controller::setDebug(0, "Checksum");
+                    controller::setDebug(1, "wrong!");
                 }
             }
         }
     }
    
-    if(model::loraEnabled) {
+    if(model::loraEnabled()) {
         if (rf95.available()) {
             // Should be a message for us now
             uint8_t buf[1];

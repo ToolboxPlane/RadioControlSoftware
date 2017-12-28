@@ -86,12 +86,12 @@ namespace controller {
                 break;
             case SETTINGS:
                 ui::buttonLabel[0].setText(F("Calibrate"));
-                if(model::serialEnabled) {
+                if(model::serialEnabled()) {
                     ui::buttonLabel[1].setText(F("Disable USB"));
                 } else {
                     ui::buttonLabel[1].setText(F("Enable USB"));
                 }
-                if(model::loraEnabled) {
+                if(model::loraEnabled()) {
                     ui::buttonLabel[2].setText(F("Disable LoRa"));
                 } else {
                     ui::buttonLabel[2].setText(F("Enable LoRa"));
@@ -178,10 +178,10 @@ namespace controller {
                         page = CALIBRATE;
                         break;
                     case 1:
-                        model::serialEnabled = !model::serialEnabled;
+                        model::setSerialEnabled(!model::serialEnabled());
                         break;
                     case 2:
-                        model::loraEnabled = !model::loraEnabled;
+                        model::setLoraEnabled(!model::loraEnabled());
                         break;
                     case 5:
                         page = START;
