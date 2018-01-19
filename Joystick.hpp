@@ -29,12 +29,25 @@ public:
 
     uint8_t getButton();
 
+    uint8_t getXChannel();
+
+    uint8_t getYChannel();
+
+    uint8_t getBtnChannel();
+
+    void setXChannel(uint8_t channel);
+
+    void setYChannel(uint8_t channel);
+
+    void setBtnChannel(uint8_t channel);
+
 private:
     uint8_t buttonState;
     int8_t xVal, yVal;
 
     uint8_t isCalibrating;
     uint16_t minX, minY, maxX, maxY;
+    uint8_t xChannel, yChannel, btnChannel;
 };
 
 #endif
