@@ -1,8 +1,10 @@
 #ifndef _JOYSTICK_HPP
 #define _JOYSTICK_HPP
 
-#include "Arduino.h"
-#include "EEPROM.h"
+//#include "Arduino.h"
+//#include "EEPROM.h"
+#include <stdint.h>
+#include <avr/eeprom.h>
 
 #define BUTTON_SCHMITT_LOW 200
 #define BUTTON_SCHMITT_HIGH 800

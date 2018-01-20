@@ -1,5 +1,8 @@
 #include "Joystick.hpp"
 
+#define min(a,b) ((a)>(b)?(b):(a))
+#define max(a,b) ((a)>(b)?(a):(b))
+
 Joystick::Joystick() {
     buttonState = 0;
     xVal = yVal = 0;
@@ -10,10 +13,10 @@ Joystick::Joystick() {
 }
 
 void Joystick::loadConfiguration(uint16_t startAddr) {
-    minX = EEPROM.read(startAddr) * 4;
-    minY = EEPROM.read(startAddr + 1) * 4;
-    maxX = EEPROM.read(startAddr + 2) * 4;
-    maxY = EEPROM.read(startAddr + 3) * 4;
+    minX = eeprom_read_byte((uint8_t*)(startAddr)) *4;
+    minY = eeprom_read_byte((uint8_t*)(startAddr + 1)) *4;
+    maxX = eeprom_read_byte((uint8_t*)(startAddr + 2) ) *4;
+    maxY = eeprom_read_byte((uint8_t*)(startAddr + 3)) *4;
 }
 
 void Joystick::startCalibration() {
@@ -22,10 +25,10 @@ void Joystick::startCalibration() {
 }
 
 void Joystick::endCalibration(uint16_t startAddr) {
-    EEPROM.write(startAddr, minX / 4);
-    EEPROM.write(startAddr + 1, minY / 4);
-    EEPROM.write(startAddr + 2, maxX / 4);
-    EEPROM.write(startAddr + 3, maxY / 4);
+    eeprom_update_byte((uint8_t*)startAddr, minX / 4);
+    eeprom_update_byte((uint8_t*)(startAddr + 1), minY / 4);
+    eeprom_update_byte((uint8_t*)(startAddr + 2), maxX / 4);
+    eeprom_update_byte((uint8_t*)(startAddr + 3), maxY / 4);
 }
 
 void Joystick::setXValue(uint16_t value) {
@@ -33,7 +36,7 @@ void Joystick::setXValue(uint16_t value) {
         minX = min(minX, value);
         maxX = max(maxX, value);
     }
-    xVal = map(value, minX, maxX, -127, 127);
+    xVal = (int8_t)((float)(value-minX)/(maxX-minX) * 256 - 127);
 }
 
 void Joystick::setYValue(uint16_t value) {
@@ -41,7 +44,7 @@ void Joystick::setYValue(uint16_t value) {
         minY = min(minY, value);
         maxY = max(maxY, value);
     }
-    yVal = map(value, minY, maxY, -127, 127);
+    yVal = (int8_t)((float)(value-minY)/(maxX-minY) * 256 - 127);
 }
 
 void Joystick::setButton(uint16_t button) {

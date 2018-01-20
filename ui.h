@@ -4,9 +4,7 @@
 #include "label.hpp"
 #include "materialColors.h"
 #include "colorConvert.h"
-
-#define TFT_DC 3
-#define TFT_CS 10
+#include "Joystick.hpp"
 
 #define BACKGROUND_COLOR r8g8b8Tor5g6b5(Grey::P300)
 #define NOTIF_COLOR r8g8b8Tor5g6b5(Black)
@@ -18,7 +16,7 @@
 extern Joystick joyLeft, joyRight;
 
 namespace ui {
-    Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
+    //Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC);
 
     Label lblLeftJoy(NOTIF_COLOR),
             lblRightJoy(NOTIF_COLOR),
@@ -29,7 +27,7 @@ namespace ui {
     Label buttonLabel[6];
 
     void load() {
-        tft.begin();
+        /*tft.begin();
         tft.fillScreen(BACKGROUND_COLOR);
         tft.setRotation(2);
 
@@ -40,7 +38,20 @@ namespace ui {
         tft.fillRoundRect(10, 120, 220, 40, 8, BUTTON_COLOR);
         tft.fillRoundRect(10, 170, 220, 40, 8, BUTTON_COLOR);
         tft.fillRoundRect(10, 220, 220, 40, 8, BUTTON_COLOR);
-        tft.fillRoundRect(10, 270, 220, 40, 8, BUTTON_COLOR);
+        tft.fillRoundRect(10, 270, 220, 40, 8, BUTTON_COLOR);*/
+
+        ili9341_init();//initial driver setup to drive ili9341
+        ili9341_clear(BACKGROUND_COLOR);//fill screen with black colour
+        ili9341_setRotation(2);//rotate screen
+
+        ili9341_fillrect(0,0,240, 10, NOTIF_COLOR);
+
+        ili9341_fillrect(10,20,220,40, BUTTON_COLOR);
+        ili9341_fillrect(10,70,220,40, BUTTON_COLOR);
+        ili9341_fillrect(10,120,220,40, BUTTON_COLOR);
+        ili9341_fillrect(10,170,220,40, BUTTON_COLOR);
+        ili9341_fillrect(10,220,220,40, BUTTON_COLOR);
+        ili9341_fillrect(10,270,220,40, BUTTON_COLOR);
 
         lblLeftJoy.setPosition(20, 1);
         lblLeftJoy.setColor(NOTIF_TEXT_COLOR);
@@ -70,31 +81,34 @@ namespace ui {
         }
     }
 
-    void update(uint8_t isArmed, String flightmode) {
+    void update(uint8_t isArmed/*, String flightmode*/) {
         lblLeftJoy.setColor(isArmed ? r8g8b8Tor5g6b5(Red::P500) : NOTIF_TEXT_COLOR);
         lblRightJoy.setColor(isArmed ? r8g8b8Tor5g6b5(Red::P500) : NOTIF_TEXT_COLOR);
         lblLeftPress.setColor(isArmed ? r8g8b8Tor5g6b5(Red::P500) : NOTIF_TEXT_COLOR);
         lblRightPress.setColor(isArmed ? r8g8b8Tor5g6b5(Red::P500) : NOTIF_TEXT_COLOR);
         lblFlightMode.setColor(isArmed ? r8g8b8Tor5g6b5(Red::P500) : NOTIF_TEXT_COLOR);
 
-        lblLeftJoy.setText(
+       /* lblLeftJoy.setText(
                 "(" + String(joyLeft.getXValue()) + "|" + String(joyLeft.getYValue()) + ")"
         );
         lblRightJoy.setText(
                 "(" + String(joyRight.getXValue()) + "|" + String(joyRight.getYValue()) + ")"
         );
-        lblLeftPress.setText(joyLeft.getButton() ? "ON" : "OFF");
-        lblRightPress.setText(joyRight.getButton() ? "ON" : "OFF");
-        lblFlightMode.setText(flightmode);
+        lblLeftPress.setText(joyLeft.getButton() ? "ON " : "OFF", 3);
+        lblRightPress.setText(joyRight.getButton() ? " ON" : "OFF", 3);
+        lblFlightMode.setText(flightmode);*/
     }
 }
 
-void drawLabel(String text, uint16_t x, uint16_t y, uint8_t size, uint16_t color) {
-    ui::tft.setTextSize(size);
+void drawLabel(char* text, uint8_t len, uint16_t x, uint16_t y, uint8_t size, uint16_t color) {
+    ili9341_setcursor(x,y);
+    ili9341_settextcolour(color);
+    ili9341_settextsize(size);
 
-    ui::tft.setCursor(x, y);
-    ui::tft.setTextColor(color);
-    ui::tft.print(text);
+    for(uint8_t c=0; c<len; c++) {
+        ili9341_write((uint8_t)(text[c]));
+    }
+
 }
 
 #endif

@@ -5,9 +5,11 @@
 #ifndef SMARTWATCH2_LABEL_HPP
 #define SMARTWATCH2_LABEL_HPP
 
-#include <Arduino.h>
+//#include <Arduino.h>
 
-extern void drawLabel(String text, uint16_t x, uint16_t y, uint8_t size, uint16_t color);
+#include <stdint.h>
+
+extern void drawLabel(char* text,uint8_t len, uint16_t x, uint16_t y, uint8_t size, uint16_t color);
 
 class Label {
 public:
@@ -17,13 +19,9 @@ public:
 
     void setPosition(uint16_t x, uint16_t y);
 
-    void setText(String text);
+    void setText(char* text, uint8_t len);
 
     void setNumber(uint8_t num);
-
-    void setNumber(uint8_t num, String unit);
-
-    void append(String text);
 
     void clear();
 
@@ -34,9 +32,11 @@ public:
     void update();
 
 private:
-    void forceText(String text);
+    void forceText(char* text, uint8_t len);
 
-    String text;
+    char text[12];
+    uint8_t len;
+    //String text;
     uint16_t x, y;
     uint16_t color;
     uint8_t size;
