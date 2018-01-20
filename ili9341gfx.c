@@ -4,17 +4,9 @@
 volatile uint16_t cursor_x;
 volatile uint16_t cursor_y;
 volatile uint16_t textcolour;
-volatile uint16_t textbgcolour;
 volatile uint8_t textsize;
-uint16_t vsetx, vsety, vactualx, vactualy, isetx, isety, iactualx, iactualy;
 
-static FILE mydata = FDEV_SETUP_STREAM(ili9341_putchar_printf, NULL,
-                                       _FDEV_SETUP_WRITE);//mydata declaration and converting it into stream
 
-int16_t ili9341_putchar_printf(char var, FILE *stream)//this function will be called whenever printf is used
-{
-    ili9341_write(var);
-}
 
 
 
@@ -322,6 +314,7 @@ void ili9341_drawchar(int16_t x, int16_t y, unsigned char c, uint16_t color, /*u
             line = 0x0;
         else
             line = pgm_read_byte(font + (c * 5) + i);
+
         for (int8_t j = 0; j < 8; j++) {
             if (line & 0x1) {
                 if (size == 1) // default size
@@ -329,13 +322,7 @@ void ili9341_drawchar(int16_t x, int16_t y, unsigned char c, uint16_t color, /*u
                 else {  // big size
                     ili9341_fillrect(x + (i * size), y + (j * size), size, size, color);
                 }
-            } /*else if (bg != color) {
-                if (size == 1) // default size
-                    ili9341_drawpixel(x + i, y + j, bg);
-                else {  // big size
-                    ili9341_fillrect(x + i * size, y + j * size, size, size, bg);
-                }
-            }*/
+            }
             line >>= 1;
         }
     }

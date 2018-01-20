@@ -22,7 +22,7 @@ SET(CMAKE_CXX_FLAGS ${CXXFLAGS})
 SET(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_C_STANDARD  11)
 
-ADD_EXECUTABLE(${PROJECT_NAME} main.cpp src/RadioControlProtocol/rcLib.cpp ili9341.c ili9341gfx.c label.cpp ui.h Joystick.cpp)
+ADD_EXECUTABLE(${PROJECT_NAME} main.cpp src/RadioControlProtocol/rcLib.cpp ili9341.c ili9341gfx.c label.cpp ui.h Joystick.cpp stmpe610.c controller.h strings.h model.h)
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}.elf")
 
 add_custom_target(strip ALL ${AVRSTRIP} "${PROJECT_NAME}.elf" DEPENDS ${PROJECT_NAME})

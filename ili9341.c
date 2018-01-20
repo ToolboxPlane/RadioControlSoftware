@@ -4,13 +4,6 @@ volatile uint16_t LCD_W = ILI9341_TFTWIDTH;
 volatile uint16_t LCD_H = ILI9341_TFTHEIGHT;
 
 
-void ili9341_hard_init(void)//init hardware
-{
-    RST_DDR = 0xFF;//output for reset
-    RST_PORT |= (1 << RST_BIT);//pull high for normal operation
-    DC_DDR |= (1 << DC_BIT);//D/C as output
-}
-
 
 void ili9341_spi_init(void)//set spi speed and settings 
 {
@@ -41,7 +34,6 @@ void ili9341_writecommand8(uint8_t com)//command write
     CS_PORT |= (1 << CS_BIT);//pull high CS_BIT
 }
 
-
 void ili9341_writedata8(uint8_t data)//data write
 {
     DC_PORT |= (1 << DC_BIT);//st DC_BIT high for data
@@ -55,7 +47,7 @@ void ili9341_writedata8(uint8_t data)//data write
 void ili9341_setaddress(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)//set coordinate for print or other function
 {
     ili9341_writecommand8(0x2A);
-    ili9341_writedata8(x1 >> 8); // @TODO Check
+    ili9341_writedata8(x1 >> 8);
     ili9341_writedata8(x1);
     ili9341_writedata8(x2 >> 8);
     ili9341_writedata8(x2);
@@ -63,29 +55,19 @@ void ili9341_setaddress(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)//set
     ili9341_writecommand8(0x2B);
     ili9341_writedata8(y1 >> 8);
     ili9341_writedata8(y1);
-    ili9341_writedata8(y2);
+    ili9341_writedata8(y2 >> 8);
     ili9341_writedata8(y2);
 
     ili9341_writecommand8(0x2C);//meory write
 }
 
-
-void ili9341_hard_reset(void)//hard reset display
-{
-    RST_PORT |= (1 << RST_BIT);//pull high if low previously
-    _delay_ms(200);
-    RST_PORT &= ~(1 << RST_BIT);//low for reset
-    _delay_ms(200);
-    RST_PORT |= (1 << RST_BIT);//again pull high for normal operation
-    _delay_ms(200);
-}
-
-
 void ili9341_init(void)//set up display using predefined command sequence
 {
+    //ili9341_hard_init();
     ili9341_spi_init();
+    //ili9341_hard_reset();
     ili9341_writecommand8(0x01);//soft reset
-    _delay_ms(1000);
+    //_delay_ms(1000); //@TODO Check necessary
 //power control A
     ili9341_writecommand8(0xCB);
     ili9341_writedata8(0x39);
