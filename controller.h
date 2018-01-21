@@ -117,8 +117,8 @@ namespace controller {
                 ui::buttonLabel[0].setText(F(strings::log));
                 ui::buttonLabel[1].setText(F(strings::empty));
                 ui::buttonLabel[2].setText(F(strings::compiledOn));
-                ui::buttonLabel[3].setText(F(__TIME__));
-                ui::buttonLabel[4].setText(F(__DATE__));
+                ui::buttonLabel[3].setText(F(strings::compileDate));
+                ui::buttonLabel[4].setText(F(strings::compileTime));
                 ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case CHANNEL_MAPPING:
@@ -146,18 +146,18 @@ namespace controller {
                 ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case CHANNEL_VALUES_0:
-                /*ui::buttonLabel[0].setText(F(strings::0));
-                ui::buttonLabel[1].setText(F(strings::1));
-                ui::buttonLabel[2].setText(F(strings::2));
-                ui::buttonLabel[3].setText(F(strings::3));*/
+                ui::buttonLabel[0].setNumber(0);
+                ui::buttonLabel[1].setNumber(1);
+                ui::buttonLabel[2].setNumber(2);
+                ui::buttonLabel[3].setNumber(3);
                 ui::buttonLabel[4].setText(F(strings::next));
                 ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case CHANNEL_VALUES_1:
-                /*ui::buttonLabel[0].setText(F(strings::4));
-                ui::buttonLabel[1].setText(F(strings::5));
-                ui::buttonLabel[2].setText(F(strings::6));
-                ui::buttonLabel[3].setText(F(strings::7));*/
+                ui::buttonLabel[0].setNumber(4);
+                ui::buttonLabel[1].setNumber(5);
+                ui::buttonLabel[2].setNumber(6);
+                ui::buttonLabel[3].setNumber(7);
                 ui::buttonLabel[4].setText(F(strings::previous));
                 ui::buttonLabel[5].setText(F(strings::back));
                 break;

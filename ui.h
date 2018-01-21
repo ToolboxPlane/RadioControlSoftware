@@ -1,6 +1,8 @@
 #ifndef _UI_H
 #define _UI_H
 
+#include <stdlib.h>
+#include <string.h>
 #include "label.hpp"
 #include "materialColors.h"
 #include "colorConvert.h"
@@ -45,7 +47,7 @@ namespace ui {
         lblLeftJoy.setColor(NOTIF_TEXT_COLOR);
         lblLeftJoy.setSize(1);
 
-        lblRightJoy.setPosition(200, 1);
+        lblRightJoy.setPosition(170, 1);
         lblRightJoy.setColor(NOTIF_TEXT_COLOR);
         lblRightJoy.setSize(1);
 
@@ -64,14 +66,21 @@ namespace ui {
         lblRightJoy.setColor(isArmed ? r8g8b8Tor5g6b5(Red::P500) : NOTIF_TEXT_COLOR);
         lblFlightMode.setColor(isArmed ? r8g8b8Tor5g6b5(Red::P500) : NOTIF_TEXT_COLOR);
 
-        lblLeftJoy.setNumber(joyLeft.getXValue());
-        lblRightJoy.setNumber(joyRight.getXValue());
-       /* lblLeftJoy.setText(
-                "(" + String(joyLeft.getXValue()) + "|" + String(joyLeft.getYValue()) + ")"
-        );
-        lblRightJoy.setText(
-                "(" + String(joyRight.getXValue()) + "|" + String(joyRight.getYValue()) + ")"
-        );*/
+        char buf[11] = {' '};
+        buf[0] = '(';
+        itoa(joyLeft.getXValue(), buf+1, 10);
+        buf[5] = '|';
+        itoa(joyLeft.getYValue(), buf+6, 10);
+        buf[10] = ')';
+        lblLeftJoy.setText(buf, 11);
+
+        for(uint8_t c=0; c<4; c++) {
+            buf[1+c] = buf[6+c] = ' ';
+        }
+        itoa(joyRight.getXValue(), buf+1, 10);
+        itoa(joyRight.getYValue(), buf+6, 10);
+        lblRightJoy.setText(buf,11);
+
         lblFlightMode.setText(F(flightmode));
     }
 }

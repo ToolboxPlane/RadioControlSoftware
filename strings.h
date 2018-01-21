@@ -43,6 +43,8 @@ namespace strings {
     static const char hold[] PROGMEM = "Hold";
     static const char waypoint[] PROGMEM = "Waypoint";
     static const char launch[] PROGMEM = "Launch";
+    static const char compileTime[] PROGMEM = __TIME__;
+    static const char compileDate[] PROGMEM = __DATE__;
 }
 
 uint8_t getLength(const char* addr) {
