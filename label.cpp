@@ -58,18 +58,22 @@ void Label::setText(char* text, uint8_t len) {
 
 void Label::setNumber(int16_t num) {
     char buffer[6];
-    int c=0;
+    char sign = num > 0 ? '+' : '-';
     if(num < 0) {
-        buffer[0] = '-';
-        c = 1;
+        num *= -1;
     }
 
-    for(; c<6; c++) {
-        buffer[5-c] = (char)((num%10)+'0');
-        num /= 10;
+    for(uint8_t c=0; c<5; c++) {
+        if(num != 0) {
+            buffer[5 - c] = (char) ((num % 10) + '0');
+            num /= 10;
+        } else {
+            buffer[5 - c] = sign;
+            this->setText(buffer+(5-c), c+1);
+            break;
+        }
     }
 
-    this->setText(buffer, 6);
 }
 
 void Label::forceText(char* text, uint8_t len) {

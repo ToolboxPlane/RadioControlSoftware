@@ -36,7 +36,7 @@ void Joystick::setXValue(uint16_t value) {
         minX = min(minX, value);
         maxX = max(maxX, value);
     }
-    xVal = (int8_t)((float)(value-minX)/(maxX-minX) * 256 - 127);
+    xVal = (int8_t)((float)(value-minX)/(maxX-minX) * 254 - 127);
 }
 
 void Joystick::setYValue(uint16_t value) {
