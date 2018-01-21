@@ -11,7 +11,7 @@ extern "C" {
 }
 
 #include "RadioControlProtocol/rcLib.hpp"
-#include "Joystick.hpp"
+#include "util/Joystick.hpp"
 #include "ui.h"
 #include "controller.h"
 

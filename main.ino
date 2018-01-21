@@ -8,7 +8,7 @@
 
 #include "src/RadioControlProtocol/rcLib.hpp"
 
-#include "Joystick.hpp"
+#include "util/Joystick.hpp"
 #include "model.h"
 #include "controller.h"
 

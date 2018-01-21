@@ -18,11 +18,16 @@ SET(CXXFLAGS "${CMCU} ${CDEFS} ${CINCS} ${COPT}")
 SET(CMAKE_C_FLAGS  ${CFLAGS})
 SET(CMAKE_CXX_FLAGS ${CXXFLAGS})
 
-
 SET(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_C_STANDARD  11)
 
-ADD_EXECUTABLE(${PROJECT_NAME} main.cpp RadioControlProtocol/rcLib.cpp hal/ili9341.c hal/ili9341gfx.c label.cpp ui.h Joystick.cpp hal/stmpe610.c controller.h strings.h model.h drivers/adc.c drivers/adc.h materialColors.h colorConvert.h drivers/uart.c drivers/uart.h)
+ADD_EXECUTABLE(${PROJECT_NAME} main.cpp
+        RadioControlProtocol/rcLib.cpp
+        hal/ili9341.c hal/ili9341gfx.c hal/stmpe610.c
+        util/label.cpp ui.h util/Joystick.cpp
+        controller.h strings.h model.h
+        drivers/adc.c  drivers/uart.c)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}.elf")
 
 add_custom_target(strip ALL ${AVRSTRIP} "${PROJECT_NAME}.elf" DEPENDS ${PROJECT_NAME})

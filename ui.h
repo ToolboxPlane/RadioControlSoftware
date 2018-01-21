@@ -3,10 +3,10 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "label.hpp"
-#include "materialColors.h"
-#include "colorConvert.h"
-#include "Joystick.hpp"
+#include "util/label.hpp"
+#include "util/materialColors.h"
+#include "util/colorConvert.h"
+#include "util/Joystick.hpp"
 #include "strings.h"
 
 #define BACKGROUND_COLOR r8g8b8Tor5g6b5(Grey::P300)

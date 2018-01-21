@@ -1,8 +1,6 @@
 #ifndef _JOYSTICK_HPP
 #define _JOYSTICK_HPP
 
-//#include "Arduino.h"
-//#include "EEPROM.h"
 #include <stdint.h>
 #include <avr/eeprom.h>
 
