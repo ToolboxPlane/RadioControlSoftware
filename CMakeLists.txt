@@ -23,7 +23,7 @@ SET(CMAKE_C_STANDARD  11)
 
 ADD_EXECUTABLE(${PROJECT_NAME} main.cpp
         RadioControlProtocol/rcLib.cpp
-        hal/ili9341.c hal/ili9341gfx.c hal/stmpe610.c
+        hal/ili9341.c hal/ili9341gfx.c hal/stmpe610.c hal/LoRa.cpp
         util/label.cpp ui.h util/Joystick.cpp
         controller.h strings.h model.h
         drivers/adc.c  drivers/uart.c)

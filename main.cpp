@@ -10,6 +10,7 @@ extern "C" {
     #include "drivers/uart.h"
 }
 
+#include "hal/LoRa.h"
 #include "RadioControlProtocol/rcLib.hpp"
 #include "util/Joystick.hpp"
 #include "ui.h"
@@ -28,6 +29,7 @@ int main() {
     joyLeft.loadConfiguration(0);
     joyRight.loadConfiguration(16);
 
+    controller::setDebug(0, LoRa.begin((long)434E6)?1:0);
     rcLib::Package::transmitterId = 17;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
@@ -52,17 +54,20 @@ int main() {
             uart_send_buffer(pkgOut.getEncodedData(), outLen);
             while (uart_available()) {
                 if(pkgUartIn.decode(uart_read())) {
-                    controller::setDebug(0, pkgUartIn.getChannel(0));
+                   /* controller::setDebug(0, pkgUartIn.getChannel(0));
                     controller::setDebug(1, pkgUartIn.getChannel(1));
                     controller::setDebug(2, pkgUartIn.getChannel(2));
                     controller::setDebug(3, pkgUartIn.getChannel(3));
                     controller::setDebug(4, pkgUartIn.getChannel(4));
-                    controller::setDebug(5, pkgUartIn.getChannel(5));
+                    controller::setDebug(5, pkgUartIn.getChannel(5));*/
                 }
             }
         }
         if(model::loraEnabled()) {
-
+            LoRa.disableCrc();
+            LoRa.beginPacket();
+            LoRa.write(pkgOut.getEncodedData(), outLen);
+            controller::setDebug(1,LoRa.endPacket()?1:0);
         }
     }
 #pragma clang diagnostic pop
