@@ -54,11 +54,7 @@ namespace controller {
             tsPoint_t p = stmpe610_get_point();
 
             p.x = (uint16_t)((p.x - TS_MINX)/(TS_MAXX - TS_MINX) * 240);
-            p.y = (uint16_t)((p.y - TS_MINY)/(TS_MAXY - TS_MINY) * 320);
-            p.y = 320 - p.y;
-
-           /* p.x = map(p.x, TS_MINX, TS_MAXX, 0, 240);
-            p.y = 320 - map(p.y, TS_MINY, TS_MAXY, 0, 320);*/
+            p.y = 320 - (uint16_t)((p.y - TS_MINY)/(TS_MAXY - TS_MINY) * 320);
 
             if (p.y < 15) {
                 return -1;
@@ -162,9 +158,9 @@ namespace controller {
                 ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case LOG: 
-                /*for(uint8_t c=0; c<6; c++) {
-                    ui::buttonLabel[c].setText(model::debugVals[c]);
-                }*/
+                for(uint8_t c=0; c<6; c++) {
+                    ui::buttonLabel[c].setNumber(model::debugVals[c]);
+                }
                 break;
         }
     }

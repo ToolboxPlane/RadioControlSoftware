@@ -10,31 +10,59 @@ extern "C" {
     #include "drivers/uart.h"
 }
 
-#include ""
+#include "RadioControlProtocol/rcLib.hpp"
 #include "Joystick.hpp"
 #include "ui.h"
 #include "controller.h"
 
-Joystick joyLeft, joyRight;
+Joystick joyRight;
+Joystick joyLeft;
+
 int main() {
+    rcLib::Package pkgOut(256, 8);
+    rcLib::Package pkgUartIn;
+
     controller::load();
     adc_init();
     uart_init(9600);
     joyLeft.loadConfiguration(0);
     joyRight.loadConfiguration(16);
+
+    rcLib::Package::transmitterId = 17;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
-    char buf[] = "Test\r\n";
     while(true) {
         controller::handleEvent(controller::getSelection());
         joyLeft.setXValue(adc_read(1));
         joyLeft.setYValue(adc_read(2));
         joyRight.setXValue(adc_read(4));
         joyRight.setYValue(adc_read(5));
-        if(uart_available()) {
-            uart_send(uart_read());
-            uart_send('\n');
-            uart_send('\r');
+
+        pkgOut.setChannel(joyLeft.getXChannel(), joyLeft.getXValue()+127);
+        pkgOut.setChannel(joyLeft.getYChannel(), joyLeft.getYValue()+127);
+        pkgOut.setChannel(joyLeft.getBtnChannel(), joyLeft.getButton());
+        pkgOut.setChannel(joyRight.getXChannel(), joyRight.getXValue()+127);
+        pkgOut.setChannel(joyRight.getYChannel(), joyRight.getYValue()+127);
+        pkgOut.setChannel(joyRight.getBtnChannel(), joyRight.getButton());
+        pkgOut.setChannel(model::armedChannnel, model::armed);
+        pkgOut.setChannel(model::flightmodeChannel, model::flightmode);
+        uint8_t outLen = pkgOut.encode();
+
+        if(model::serialEnabled()) {
+            uart_send_buffer(pkgOut.getEncodedData(), outLen);
+            while (uart_available()) {
+                if(pkgUartIn.decode(uart_read())) {
+                    controller::setDebug(0, pkgUartIn.getChannel(0));
+                    controller::setDebug(1, pkgUartIn.getChannel(1));
+                    controller::setDebug(2, pkgUartIn.getChannel(2));
+                    controller::setDebug(3, pkgUartIn.getChannel(3));
+                    controller::setDebug(4, pkgUartIn.getChannel(4));
+                    controller::setDebug(5, pkgUartIn.getChannel(5));
+                }
+            }
+        }
+        if(model::loraEnabled()) {
+
         }
     }
 #pragma clang diagnostic pop
