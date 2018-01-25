@@ -36,13 +36,6 @@ namespace ui {
         ili9341_clear(BACKGROUND_COLOR);//fill screen with black colour
         ili9341_fillrect(0,0,240, 10, NOTIF_COLOR);
 
-        ili9341_fillrect(10,20,220,40, BUTTON_COLOR);
-        ili9341_fillrect(10,70,220,40, BUTTON_COLOR);
-        ili9341_fillrect(10,120,220,40, BUTTON_COLOR);
-        ili9341_fillrect(10,170,220,40, BUTTON_COLOR);
-        ili9341_fillrect(10,220,220,40, BUTTON_COLOR);
-        ili9341_fillrect(10,270,220,40, BUTTON_COLOR);
-
         lblLeftJoy.setPosition(4, 1);
         lblLeftJoy.setColor(NOTIF_TEXT_COLOR);
         lblLeftJoy.setSize(1);
@@ -55,7 +48,8 @@ namespace ui {
         lblFlightMode.setColor(NOTIF_TEXT_COLOR);
         lblFlightMode.setSize(1);
         for (uint16_t c = 0; c < 6; c++) {
-            buttonLabel[c].setPosition(16,30 + c * 50);
+            ili9341_fillrect(6,20 + 50*c,228,40, BUTTON_COLOR);
+            buttonLabel[c].setPosition(14,30 + c * 50);
             buttonLabel[c].setColor(BUTTON_TEXT_COLOR);
             buttonLabel[c].setSize(3);
         }

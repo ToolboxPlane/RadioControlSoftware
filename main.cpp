@@ -29,7 +29,8 @@ int main() {
     joyLeft.loadConfiguration(0);
     joyRight.loadConfiguration(16);
 
-    controller::setDebug(0, LoRa.begin((long)434E6)?1:0);
+    LoRa.begin((long)434E6);
+
     rcLib::Package::transmitterId = 17;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
@@ -64,10 +65,9 @@ int main() {
             }
         }
         if(model::loraEnabled()) {
-            LoRa.disableCrc();
             LoRa.beginPacket();
             LoRa.write(pkgOut.getEncodedData(), outLen);
-            controller::setDebug(1,LoRa.endPacket()?1:0);
+            LoRa.endPacket();
         }
     }
 #pragma clang diagnostic pop

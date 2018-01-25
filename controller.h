@@ -111,7 +111,7 @@ namespace controller {
                 break;
             case DEBUG:
                 ui::buttonLabel[0].setText(F(strings::log));
-                ui::buttonLabel[1].setText(F(strings::empty));
+                ui::buttonLabel[1].setText(F(strings::version));
                 ui::buttonLabel[2].setText(F(strings::compiledOn));
                 ui::buttonLabel[3].setText(F(strings::compileDate));
                 ui::buttonLabel[4].setText(F(strings::compileTime));

@@ -1,6 +1,7 @@
 // Copyright (c) Sandeep Mistry. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
+#include <util/delay.h>
 #include "LoRa.h"
 
 // registers
@@ -56,7 +57,7 @@ LoRaClass::LoRaClass() :
         _frequency(0),
         _packetIndex(0),
         _implicitHeaderMode(0),
-        _onReceive(NULL) {
+        _onReceive(nullptr) {
     // overide Stream timeout value
     //setTimeout(0);
 }
@@ -91,6 +92,8 @@ int LoRaClass::begin(long frequency) {
 
     // put in sleep mode
     sleep();
+
+    _delay_ms(10); // @TODO Check new
 
     // set frequency
     setFrequency(frequency);
@@ -135,6 +138,11 @@ int LoRaClass::beginPacket(int implicitHeader) {
     // reset FIFO address and paload length
     writeRegister(REG_FIFO_ADDR_PTR, 0);
     writeRegister(REG_PAYLOAD_LENGTH, 0);
+
+    this->write(255);
+    this->write(0);
+    this->write(0);
+    this->write(0);
 
     return 1;
 }
@@ -296,7 +304,7 @@ void LoRaClass::sleep() {
 }
 
 void LoRaClass::setTxPower(int level, int outputPin) {
-    /*if (PA_OUTPUT_RFO_PIN == outputPin) {
+    if (outputPin) {
         // RFO
         if (level < 0) {
             level = 0;
@@ -305,7 +313,7 @@ void LoRaClass::setTxPower(int level, int outputPin) {
         }
 
         writeRegister(REG_PA_CONFIG, 0x70 | level);
-    } else {*/
+    } else {
         // PA BOOST
         if (level < 2) {
             level = 2;
@@ -314,7 +322,7 @@ void LoRaClass::setTxPower(int level, int outputPin) {
         }
 
         writeRegister(REG_PA_CONFIG, PA_BOOST | (level - 2));
-   // }
+    }
 }
 
 void LoRaClass::setFrequency(long frequency) {

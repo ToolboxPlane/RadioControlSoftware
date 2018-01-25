@@ -7,7 +7,7 @@
 
 #include <avr/pgmspace.h>
 
-#define F(x) getData(x),getLength(x)
+#define F(x) getData(x),12
 
 namespace strings {
     static const char back[] PROGMEM = "Back";
@@ -45,22 +45,16 @@ namespace strings {
     static const char launch[] PROGMEM = "Launch";
     static const char compileTime[] PROGMEM = __TIME__;
     static const char compileDate[] PROGMEM = __DATE__;
-}
-
-uint8_t getLength(const char* addr) {
-    uint8_t length = 0;
-
-    while (pgm_read_byte (addr++))
-    {
-        length++;
-    }
-    return length;
+    static const char version[] PROGMEM = "0.1-AVR";
 }
 
 char* getData(const char* addr) {
-    static uint8_t data[12];
+    static uint8_t data[12] = {' '};
     uint8_t c = 0;
     while ((data[c] = pgm_read_byte(addr + c++)));
+    for(;c< sizeof(data);c++) {
+        data[c] = ' ';
+    }
     return (char*)data;
 }
 

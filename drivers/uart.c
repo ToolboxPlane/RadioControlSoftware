@@ -4,6 +4,7 @@
 
 #include "uart.h"
 #include <avr/interrupt.h>
+#include <stdbool.h>
 
 volatile uint8_t recv_buf[UART_BUF_SIZE];
 volatile uint8_t recv_head, recv_tail;
@@ -34,7 +35,7 @@ void uart_send_buffer(uint8_t *buf, uint8_t len) {
     }
 }
 
-uint8_t uart_available() {
+bool uart_available() {
     return recv_head != recv_tail;
 }
 

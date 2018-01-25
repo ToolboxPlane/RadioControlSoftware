@@ -26,9 +26,9 @@ void stmpe610_init() {
     SPCR = (1 << SPE) | (1 << MSTR) | (1 << SPR0);//mode 0,fosc/4
     //SPSR |= (1 << SPI2X);//doubling spi speed.i.e final spi speed-fosc/2
 
-    /*if (stmpe610_getVersion() != 0x811) {
+    if (stmpe610_getVersion() != 0x811) {
         return;
-    }*/
+    }
     stmpe610_writeRegister8(STMPE_SYS_CTRL1, STMPE_SYS_CTRL1_RESET);
     _delay_ms(10);
 
