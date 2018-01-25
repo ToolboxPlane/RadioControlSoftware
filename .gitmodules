@@ -1,3 +1,3 @@
-[submodule "src/RadioControlProtocol"]
-	path = src/RadioControlProtocol
-	url = git@github.com:ToolboxPlane/RadioControlProtocol.git
+[submodule "RadioControlProtocol"]
+	path = RadioControlProtocol
+	url = https://github.com/ToolboxPlane/RadioControlProtocol

@@ -3,16 +3,14 @@
 
 #include "ui.h"
 #include "model.h"
+#include "strings.h"
 
-#define STMPE_CS 8
-
-#define TS_MINX 150
-#define TS_MINY 130
-#define TS_MAXX 3800
-#define TS_MAXY 4000
+#define TS_MINX 150.0f
+#define TS_MINY 130.0f
+#define TS_MAXX 3800.0f
+#define TS_MAXY 4000.0f
 
 namespace controller {
-    Adafruit_STMPE610 ts = Adafruit_STMPE610(STMPE_CS);
     void updateButtons();
     Joystick* joy;
 
@@ -35,32 +33,28 @@ namespace controller {
     void load() {
         ui::load();
         model::loadChannelData();
-        ts.begin();
+        stmpe610_init();
     }
 
-    void setDebug(uint8_t index, String val) {
+    void setDebug(uint8_t index, uint16_t val) {
         if(index < 6) {
             model::debugVals[index] = val;
         }
     }
 
-    void setDebug(uint8_t index, int val) {
-        return setDebug(index, String(val));
-    }
-
     int8_t getSelection() {
         static int8_t lastSel = -1;
-        if (ts.bufferEmpty()) {
+        if (stmpe610_buffer_empty()) {
             ui::buttonLabel[lastSel].setColor(BUTTON_TEXT_COLOR);
             return lastSel =  -1;
         } else if(lastSel >= 0) {
-            ts.getPoint();
+            stmpe610_get_point();
             return -1;
         } else {
-            TS_Point p = ts.getPoint();
+            tsPoint_t p = stmpe610_get_point();
 
-            p.x = map(p.x, TS_MINX, TS_MAXX, 0, 240);
-            p.y = 320 - map(p.y, TS_MINY, TS_MAXY, 0, 320);
+            p.x = (uint16_t)((p.x - TS_MINX)/(TS_MAXX - TS_MINX) * 240);
+            p.y = 320 - (uint16_t)((p.y - TS_MINY)/(TS_MAXY - TS_MINY) * 320);
 
             if (p.y < 15) {
                 return -1;
@@ -76,102 +70,102 @@ namespace controller {
     void updateButtons() {
         switch (page) {
             case START:
-                ui::buttonLabel[0].setText(F("Arm/Disarm"));
-                ui::buttonLabel[1].setText(F("Flightmodes"));
-                ui::buttonLabel[2].setText(F("Downlink"));
-                ui::buttonLabel[3].setText(F("Channel Maps"));
-                ui::buttonLabel[4].setText(F("Settings"));
-                ui::buttonLabel[5].setText(F("Debug"));
+                ui::buttonLabel[0].setText(F(strings::armDisarm));
+                ui::buttonLabel[1].setText(F(strings::flightmodes));
+                ui::buttonLabel[2].setText(F(strings::downlink));
+                ui::buttonLabel[3].setText(F(strings::channelMapping));
+                ui::buttonLabel[4].setText(F(strings::settings));
+                ui::buttonLabel[5].setText(F(strings::debug));
                 break;
             case CALIBRATE:
-                ui::buttonLabel[0].setText(F("Move"));
-                ui::buttonLabel[1].setText(F("the"));
-                ui::buttonLabel[2].setText(F("Joysticks"));
-                ui::buttonLabel[3].setText("");
-                ui::buttonLabel[4].setText("");
-                ui::buttonLabel[5].setText(F("Finish"));
+                ui::buttonLabel[0].setText(F(strings::move));
+                ui::buttonLabel[1].setText(F(strings::the));
+                ui::buttonLabel[2].setText(F(strings::joysticks));
+                ui::buttonLabel[3].setText(F(strings::empty));
+                ui::buttonLabel[4].setText(F(strings::empty));
+                ui::buttonLabel[5].setText(F(strings::finish));
                 break;
             case SETTINGS:
-                ui::buttonLabel[0].setText(F("Calibrate"));
+                ui::buttonLabel[0].setText(F(strings::calibrate));
                 if(model::serialEnabled()) {
-                    ui::buttonLabel[1].setText(F("Disable USB"));
+                    ui::buttonLabel[1].setText(F(strings::disableUSB));
                 } else {
-                    ui::buttonLabel[1].setText(F("Enable USB"));
+                    ui::buttonLabel[1].setText(F(strings::enableUSB));
                 }
                 if(model::loraEnabled()) {
-                    ui::buttonLabel[2].setText(F("Disable LoRa"));
+                    ui::buttonLabel[2].setText(F(strings::disableLora));
                 } else {
-                    ui::buttonLabel[2].setText(F("Enable LoRa"));
+                    ui::buttonLabel[2].setText(F(strings::enableLora));
                 }
-                ui::buttonLabel[3].setText("");
-                ui::buttonLabel[4].setText("");
-                ui::buttonLabel[5].setText(F("Back"));
+                ui::buttonLabel[3].setText(F(strings::empty));
+                ui::buttonLabel[4].setText(F(strings::empty));
+                ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case FLIGHTMODES:
-                ui::buttonLabel[0].setText(model::getFlightMode(0));
-                ui::buttonLabel[1].setText(model::getFlightMode(1));
-                ui::buttonLabel[2].setText(model::getFlightMode(2));
-                ui::buttonLabel[3].setText(model::getFlightMode(3));
-                ui::buttonLabel[4].setText(model::getFlightMode(4));
-                ui::buttonLabel[5].setText(F("Back"));
+                ui::buttonLabel[0].setText(F(model::getFlightMode((model::Flightmode)0)));
+                ui::buttonLabel[1].setText(F(model::getFlightMode((model::Flightmode)1)));
+                ui::buttonLabel[2].setText(F(model::getFlightMode((model::Flightmode)2)));
+                ui::buttonLabel[3].setText(F(model::getFlightMode((model::Flightmode)3)));
+                ui::buttonLabel[4].setText(F(model::getFlightMode((model::Flightmode)4)));
+                ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case DEBUG:
-                ui::buttonLabel[0].setText(F("Log"));
-                ui::buttonLabel[1].setText("");
-                ui::buttonLabel[2].setText(F("Compiled on:"));
-                ui::buttonLabel[3].setText(F(__TIME__));
-                ui::buttonLabel[4].setText(F(__DATE__));
-                ui::buttonLabel[5].setText(F("Back"));
+                ui::buttonLabel[0].setText(F(strings::log));
+                ui::buttonLabel[1].setText(F(strings::version));
+                ui::buttonLabel[2].setText(F(strings::compiledOn));
+                ui::buttonLabel[3].setText(F(strings::compileDate));
+                ui::buttonLabel[4].setText(F(strings::compileTime));
+                ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case CHANNEL_MAPPING:
-                ui::buttonLabel[0].setText(F("Left Joy"));
-                ui::buttonLabel[1].setText(F("Right Joy"));
-                ui::buttonLabel[2].setText(F("Flightmodes"));
-                ui::buttonLabel[3].setText(F(""));
-                ui::buttonLabel[4].setText(F(""));
-                ui::buttonLabel[5].setText(F("Back"));
+                ui::buttonLabel[0].setText(F(strings::leftJoy));
+                ui::buttonLabel[1].setText(F(strings::rightJoy));
+                ui::buttonLabel[2].setText(F(strings::flightmodes));
+                ui::buttonLabel[3].setText(F(strings::empty));
+                ui::buttonLabel[4].setText(F(strings::empty));
+                ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case CHANNEL_MAPPING_JOYSTICK:
-                ui::buttonLabel[0].setText("X-Axis ("+String(joy->getXChannel())+")");
-                ui::buttonLabel[1].setText("Y-Axis ("+String(joy->getYChannel())+")");
-                ui::buttonLabel[2].setText("Button ("+String(joy->getBtnChannel())+")");
-                ui::buttonLabel[3].setText(F(""));
-                ui::buttonLabel[4].setText(F(""));
-                ui::buttonLabel[5].setText(F("Back"));
+                ui::buttonLabel[0].setText(F(strings::xAxis));
+                ui::buttonLabel[1].setText(F(strings::yAxis));
+                ui::buttonLabel[2].setText(F(strings::button));
+                ui::buttonLabel[3].setText(F(strings::empty));
+                ui::buttonLabel[4].setText(F(strings::empty));
+                ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case CHANNEL_MAPPING_FLIGHTMODES:
-                ui::buttonLabel[0].setText("F-mode ("+String(model::flightmodeChannel)+")");
-                ui::buttonLabel[1].setText("Armed ("+String(model::armedChannnel)+")");
-                ui::buttonLabel[2].setText(F(""));
-                ui::buttonLabel[3].setText(F(""));
-                ui::buttonLabel[4].setText(F(""));
-                ui::buttonLabel[5].setText(F("Back"));
+                ui::buttonLabel[0].setText(F(strings::fmode));
+                ui::buttonLabel[1].setText(F(strings::armed));
+                ui::buttonLabel[2].setText(F(strings::empty));
+                ui::buttonLabel[3].setText(F(strings::empty));
+                ui::buttonLabel[4].setText(F(strings::empty));
+                ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case CHANNEL_VALUES_0:
-                ui::buttonLabel[0].setText(F("0"));
-                ui::buttonLabel[1].setText(F("1"));
-                ui::buttonLabel[2].setText(F("2"));
-                ui::buttonLabel[3].setText(F("3"));
-                ui::buttonLabel[4].setText(F("Next"));
-                ui::buttonLabel[5].setText(F("Back"));
+                ui::buttonLabel[0].setNumber(0);
+                ui::buttonLabel[1].setNumber(1);
+                ui::buttonLabel[2].setNumber(2);
+                ui::buttonLabel[3].setNumber(3);
+                ui::buttonLabel[4].setText(F(strings::next));
+                ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case CHANNEL_VALUES_1:
-                ui::buttonLabel[0].setText(F("4"));
-                ui::buttonLabel[1].setText(F("5"));
-                ui::buttonLabel[2].setText(F("6"));
-                ui::buttonLabel[3].setText(F("7"));
-                ui::buttonLabel[4].setText(F("Previous"));
-                ui::buttonLabel[5].setText(F("Back"));
+                ui::buttonLabel[0].setNumber(4);
+                ui::buttonLabel[1].setNumber(5);
+                ui::buttonLabel[2].setNumber(6);
+                ui::buttonLabel[3].setNumber(7);
+                ui::buttonLabel[4].setText(F(strings::previous));
+                ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case LOG: 
                 for(uint8_t c=0; c<6; c++) {
-                    ui::buttonLabel[c].setText(model::debugVals[c]);
+                    ui::buttonLabel[c].setNumber(model::debugVals[c]);
                 }
                 break;
         }
     }
 
-    void handleEvent(uint8_t sel) {
+    void handleEvent(int8_t sel) {
         static uint8_t type;
 
         ui::update(model::armed, model::getFlightMode());

@@ -1,7 +1,8 @@
 #ifndef _MODEL_H
 #define _MODEL_H
 
-#include "Joystick.hpp"
+#include "util/Joystick.hpp"
+#include "strings.h"
 
 #define EEPROM_CONFIG_REG 32
 #define EEPROM_CHANNEL_START_REG 64
@@ -21,25 +22,25 @@ namespace model {
 
     Flightmode flightmode = LAUNCH;
     uint8_t armed = false;
-    String debugVals[6];
+    uint16_t debugVals[6];
     int8_t rssi;
     uint8_t flightmodeChannel = 0;
     uint8_t armedChannnel = 0;
 
-    String getFlightMode(Flightmode mode = flightmode) {
+    char* getFlightMode(Flightmode mode = flightmode) {
         switch (mode) {
             case MANUAL:
-                return F("Manual");
+                return (char*)strings::manual;
             case LAUNCH:
-                return F("Launch");
+                return (char*)strings::launch;
             case LAND:
-                return F("Land");
+                return (char*)strings::land;
             case HOLD:
-                return F("Hold");
+                return (char*)strings::hold;
             case WAYPOINT:
-                return F("Waypoint");
+                return (char*)strings::waypoint;
             default:
-                return "";
+                return (char*)strings::empty;
         }
     }
 
@@ -70,42 +71,43 @@ namespace model {
                 armedChannnel = channel;
                 break;
         }
-        EEPROM.write(EEPROM_CHANNEL_START_REG+type, channel);
+
+        eeprom_update_byte((uint8_t*)(EEPROM_CHANNEL_START_REG+type), channel);
     }
 
      void loadChannelData() {
         for(uint8_t c=0; c<11; c++) {
-            mapToChannel(c, EEPROM.read(c+EEPROM_CHANNEL_START_REG));
+            mapToChannel(c, eeprom_read_byte((uint8_t*)(c+EEPROM_CHANNEL_START_REG)));
         }
     }
 
     bool loraEnabled() {
-        return EEPROM.read(EEPROM_CONFIG_REG) & (0b1 << LORA_ENABLE_BIT);
+        return eeprom_read_byte((uint8_t*)EEPROM_CONFIG_REG) & (0b1 << LORA_ENABLE_BIT);
     }
 
 
     bool serialEnabled() {
-        return EEPROM.read(EEPROM_CONFIG_REG) & (0b1 << SERIAL_ENABLE_BIT);
+        return eeprom_read_byte((uint8_t*)EEPROM_CONFIG_REG) & (0b1 << SERIAL_ENABLE_BIT);
     }
 
     void setLoraEnabled(bool enabled) {
-        uint8_t configByte = EEPROM.read(EEPROM_CONFIG_REG);
+        uint8_t configByte = eeprom_read_byte((uint8_t*)EEPROM_CONFIG_REG);
         if(enabled) {
             configByte |= (0b1 << LORA_ENABLE_BIT);
         } else {
             configByte &= ~(0b1 << LORA_ENABLE_BIT);
         }
-        EEPROM.write(EEPROM_CONFIG_REG, configByte);
+        eeprom_update_byte((uint8_t*)EEPROM_CONFIG_REG, configByte);
     }
 
     void setSerialEnabled(bool enabled) {
-        uint8_t configByte = EEPROM.read(EEPROM_CONFIG_REG);
+        uint8_t configByte = eeprom_read_byte((uint8_t*)EEPROM_CONFIG_REG);
         if(enabled) {
             configByte |= (0b1 << SERIAL_ENABLE_BIT);
         } else {
             configByte &= ~(0b1 << SERIAL_ENABLE_BIT);
         }
-        EEPROM.write(EEPROM_CONFIG_REG, configByte);
+        eeprom_update_byte((uint8_t*)EEPROM_CONFIG_REG, configByte);
     }
 }
 
