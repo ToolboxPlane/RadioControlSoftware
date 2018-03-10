@@ -26,7 +26,9 @@ namespace controller {
         CHANNEL_MAPPING_JOYSTICK_RIGHT,
         CHANNEL_MAPPING_FLIGHTMODES,
         CHANNEL_VALUES_0,
-        CHANNEL_VALUES_1
+        CHANNEL_VALUES_1,
+        DOWNLINK,
+        RECEIVED_DATA
     };
 
     Page page = START;
@@ -187,6 +189,22 @@ namespace controller {
                     ui::buttonLabel[c].setNumber(model::debugVals[c]);
                 }
                 break;
+            case DOWNLINK:
+                ui::buttonLabel[0].setText(F(strings::snr));
+                ui::buttonLabel[1].setText(F(strings::rssi));
+                ui::buttonLabel[2].setText(F(strings::received));
+                ui::buttonLabel[3].setText(F(strings::sent));
+                ui::buttonLabel[4].setText(F(strings::receivedData));
+                ui::buttonLabel[5].setText(F(strings::back));
+                break;
+            case RECEIVED_DATA:
+                ui::buttonLabel[0].setText(F(strings::empty));
+                ui::buttonLabel[1].setText(F(strings::empty));
+                ui::buttonLabel[2].setText(F(strings::empty));
+                ui::buttonLabel[3].setText(F(strings::empty));
+                ui::buttonLabel[4].setText(F(strings::empty));
+                ui::buttonLabel[5].setText(F(strings::back));
+                break;
         }
     }
 
@@ -203,6 +221,9 @@ namespace controller {
                         break;
                     case 1:
                         page = FLIGHTMODES;
+                        break;
+                    case 2:
+                        page = DOWNLINK;
                         break;
                     case 3:
                         page = CHANNEL_MAPPING;
@@ -257,6 +278,18 @@ namespace controller {
                     case 5:
                         page = START;
                         break;
+                }
+                break;
+            case DOWNLINK:
+                if(sel == 4) {
+                    page = RECEIVED_DATA;
+                } else if(sel == 5) {
+                    page = START;
+                }
+                break;
+            case RECEIVED_DATA:
+                if(sel == 5) {
+                    page = DOWNLINK;
                 }
                 break;
             case DEBUG:

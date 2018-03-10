@@ -46,6 +46,11 @@ namespace strings {
     static const char compileTime[] PROGMEM = __TIME__;
     static const char compileDate[] PROGMEM = __DATE__;
     static const char version[] PROGMEM = "0.1.1-AVR";
+    static const char snr[] PROGMEM = "SNR: ";
+    static const char rssi[] PROGMEM = "RSSI: ";
+    static const char sent[] PROGMEM = "Sent: ";
+    static const char received[] PROGMEM = "Received: ";
+    static const char receivedData[] PROGMEM = "Data";
 }
 
 char* getData(const char* addr) {
