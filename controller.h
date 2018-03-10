@@ -191,10 +191,13 @@ namespace controller {
                 break;
             case DOWNLINK:
                 ui::buttonLabel[0].setText(F(strings::snr));
+                ui::buttonLabel[0].append(model::snr);
                 ui::buttonLabel[1].setText(F(strings::rssi));
-                ui::buttonLabel[2].setText(F(strings::received));
-                ui::buttonLabel[3].setText(F(strings::sent));
-                ui::buttonLabel[4].setText(F(strings::receivedData));
+                ui::buttonLabel[1].append(model::rssi);
+                ui::buttonLabel[2].setText(F(strings::sent));
+                ui::buttonLabel[2].append(model::sent);
+                ui::buttonLabel[3].setText(F(strings::empty));
+                ui::buttonLabel[4].setText(F(strings::empty));
                 ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case RECEIVED_DATA:

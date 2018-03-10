@@ -122,17 +122,31 @@ void Label::append(const char *text, uint8_t addLen) {
         }
     }
     this->setText(newText, addLen+len);
-/*    this->len += addLen;
-    drawLabel(this->text, this->len, this->x, this->y, this->size, this->color);*/
 }
 
-void Label::append(int number) {
-    uint8_t buf[4];
-    for(uint8_t c=0; c<4; c++) {
-        buf[3-c] = (uint8_t)((number % 10) + '0');
-        number /= 10;
-        if(number == 0) {
-            this->append((char*)(buf+3-c), c+1);
+void Label::append(int num) {
+    char buffer[6];
+    char sign = num >= 0 ? '+' : '-';
+    if(num < 0) {
+        num *= -1;
+    }
+    if(num == 0) {
+        buffer[0] = '0';
+        this->append(buffer, 1);
+        return;
+    }
+
+    for(uint8_t c=0; c<5; c++) {
+        if(num != 0) {
+            buffer[5 - c] = (char) ((num % 10) + '0');
+            num /= 10;
+        } else {
+            if(sign == '-') {
+                buffer[5 - c] = sign;
+                this->append(buffer + (5 - c), c + 1);
+            } else {
+                this->append(buffer + (5-c) +1, c);
+            }
             break;
         }
     }

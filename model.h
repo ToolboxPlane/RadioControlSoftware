@@ -23,7 +23,9 @@ namespace model {
     Flightmode flightmode = LAUNCH;
     uint8_t armed = false;
     uint16_t debugVals[6];
-    int8_t rssi;
+    int16_t rssi;
+    int16_t snr;
+    uint16_t received, sent;
     uint8_t flightmodeChannel = 0;
     uint8_t armedChannnel = 0;
 
