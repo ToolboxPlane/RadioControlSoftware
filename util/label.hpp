@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-extern void drawLabel(char* text,uint8_t len, uint16_t x, uint16_t y, uint8_t size, uint16_t color);
+extern void drawLabel(const char* text,uint8_t len, uint16_t x, uint16_t y, uint8_t size, uint16_t color);
 
 class Label {
 public:
@@ -17,7 +17,11 @@ public:
 
     void setPosition(uint16_t x, uint16_t y);
 
-    void setText(char* text, uint8_t len);
+    void setText(const char* text, uint8_t len);
+
+    void append(const char* text, uint8_t addLen);
+
+    void append(int number);
 
     void setNumber(int16_t num);
 

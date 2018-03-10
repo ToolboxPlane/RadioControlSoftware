@@ -22,10 +22,13 @@ namespace controller {
         DEBUG,
         LOG,
         CHANNEL_MAPPING,
-        CHANNEL_MAPPING_JOYSTICK,
+        CHANNEL_MAPPING_JOYSTICK_LEFT,
+        CHANNEL_MAPPING_JOYSTICK_RIGHT,
         CHANNEL_MAPPING_FLIGHTMODES,
         CHANNEL_VALUES_0,
-        CHANNEL_VALUES_1
+        CHANNEL_VALUES_1,
+        DOWNLINK,
+        RECEIVED_DATA
     };
 
     Page page = START;
@@ -125,17 +128,41 @@ namespace controller {
                 ui::buttonLabel[4].setText(F(strings::empty));
                 ui::buttonLabel[5].setText(F(strings::back));
                 break;
-            case CHANNEL_MAPPING_JOYSTICK:
+            case CHANNEL_MAPPING_JOYSTICK_LEFT:
                 ui::buttonLabel[0].setText(F(strings::xAxis));
+                ui::buttonLabel[0].append(joyLeft.getXChannel());
+                ui::buttonLabel[0].append(")", 1);
                 ui::buttonLabel[1].setText(F(strings::yAxis));
+                ui::buttonLabel[1].append(joyLeft.getYChannel());
+                ui::buttonLabel[1].append(")", 1);
                 ui::buttonLabel[2].setText(F(strings::button));
+                ui::buttonLabel[2].append(joyLeft.getBtnChannel());
+                ui::buttonLabel[2].append(")", 1);
+                ui::buttonLabel[3].setText(F(strings::empty));
+                ui::buttonLabel[4].setText(F(strings::empty));
+                ui::buttonLabel[5].setText(F(strings::back));
+                break;
+            case CHANNEL_MAPPING_JOYSTICK_RIGHT:
+                ui::buttonLabel[0].setText(F(strings::xAxis));
+                ui::buttonLabel[0].append(joyRight.getXChannel());
+                ui::buttonLabel[0].append(")", 1);
+                ui::buttonLabel[1].setText(F(strings::yAxis));
+                ui::buttonLabel[1].append(joyRight.getYChannel());
+                ui::buttonLabel[1].append(")", 1);
+                ui::buttonLabel[2].setText(F(strings::button));
+                ui::buttonLabel[2].append(joyRight.getBtnChannel());
+                ui::buttonLabel[2].append(")", 1);
                 ui::buttonLabel[3].setText(F(strings::empty));
                 ui::buttonLabel[4].setText(F(strings::empty));
                 ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case CHANNEL_MAPPING_FLIGHTMODES:
                 ui::buttonLabel[0].setText(F(strings::fmode));
+                ui::buttonLabel[0].append(model::flightmodeChannel);
+                ui::buttonLabel[0].append(")", 1);
                 ui::buttonLabel[1].setText(F(strings::armed));
+                ui::buttonLabel[1].append(model::armedChannnel);
+                ui::buttonLabel[1].append(")", 1);
                 ui::buttonLabel[2].setText(F(strings::empty));
                 ui::buttonLabel[3].setText(F(strings::empty));
                 ui::buttonLabel[4].setText(F(strings::empty));
@@ -162,6 +189,22 @@ namespace controller {
                     ui::buttonLabel[c].setNumber(model::debugVals[c]);
                 }
                 break;
+            case DOWNLINK:
+                ui::buttonLabel[0].setText(F(strings::snr));
+                ui::buttonLabel[1].setText(F(strings::rssi));
+                ui::buttonLabel[2].setText(F(strings::received));
+                ui::buttonLabel[3].setText(F(strings::sent));
+                ui::buttonLabel[4].setText(F(strings::receivedData));
+                ui::buttonLabel[5].setText(F(strings::back));
+                break;
+            case RECEIVED_DATA:
+                ui::buttonLabel[0].setText(F(strings::empty));
+                ui::buttonLabel[1].setText(F(strings::empty));
+                ui::buttonLabel[2].setText(F(strings::empty));
+                ui::buttonLabel[3].setText(F(strings::empty));
+                ui::buttonLabel[4].setText(F(strings::empty));
+                ui::buttonLabel[5].setText(F(strings::back));
+                break;
         }
     }
 
@@ -178,6 +221,9 @@ namespace controller {
                         break;
                     case 1:
                         page = FLIGHTMODES;
+                        break;
+                    case 2:
+                        page = DOWNLINK;
                         break;
                     case 3:
                         page = CHANNEL_MAPPING;
@@ -234,6 +280,18 @@ namespace controller {
                         break;
                 }
                 break;
+            case DOWNLINK:
+                if(sel == 4) {
+                    page = RECEIVED_DATA;
+                } else if(sel == 5) {
+                    page = START;
+                }
+                break;
+            case RECEIVED_DATA:
+                if(sel == 5) {
+                    page = DOWNLINK;
+                }
+                break;
             case DEBUG:
                 switch (sel) {
                     case 0:
@@ -254,12 +312,12 @@ namespace controller {
             case CHANNEL_MAPPING:
                 switch (sel) {
                     case 0:
-                        page = CHANNEL_MAPPING_JOYSTICK;
+                        page = CHANNEL_MAPPING_JOYSTICK_LEFT;
                         joy = &joyLeft;
                         type = 0;
                         break;
                     case 1:
-                        page = CHANNEL_MAPPING_JOYSTICK;
+                        page = CHANNEL_MAPPING_JOYSTICK_RIGHT;
                         joy = &joyRight;
                         type = 5;
                         break;
@@ -272,7 +330,8 @@ namespace controller {
                         break;
                 }
                 break;
-            case CHANNEL_MAPPING_JOYSTICK:
+            case CHANNEL_MAPPING_JOYSTICK_LEFT:
+            case CHANNEL_MAPPING_JOYSTICK_RIGHT:
             case CHANNEL_MAPPING_FLIGHTMODES:
                 switch(sel) {
                     case 0:

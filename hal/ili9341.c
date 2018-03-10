@@ -18,7 +18,7 @@ void ili9341_spi_init(void)//set spi speed and settings
 }
 
 
-void ili9341_spi_send(unsigned char spi_data)//send spi data to display
+void ili9341_spi_send(unsigned char spi_data)//sent spi data to display
 {
     SPDR = spi_data;//move data into spdr
     while (!(SPSR & (1 << SPIF)));//wait till the transmission is finished
@@ -27,7 +27,7 @@ void ili9341_spi_send(unsigned char spi_data)//send spi data to display
 
 void ili9341_writecommand8(uint8_t com)//command write
 {
-    DC_PORT &= ~(1 << DC_BIT);//DC_BIT and CS_BIT both low to send command
+    DC_PORT &= ~(1 << DC_BIT);//DC_BIT and CS_BIT both low to sent command
     CS_PORT &= ~(1 << CS_BIT);
     _delay_us(5);//little delay
     ili9341_spi_send(com);

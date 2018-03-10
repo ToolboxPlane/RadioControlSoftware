@@ -114,6 +114,10 @@ int LoRaClass::begin(long frequency) {
     // put in standby mode
     idle();
 
+
+    // @TODO Check enables interrupts
+    writeRegister(REG_DIO_MAPPING_1, 0x00);
+
     return 1;
 }
 
