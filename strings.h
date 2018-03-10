@@ -20,7 +20,7 @@ namespace strings {
     static const char move[] PROGMEM = "Move";
     static const char the[] PROGMEM = "the";
     static const char joysticks[] PROGMEM = "Joysticks";
-    static const char button[] PROGMEM = "Button";
+    static const char button[] PROGMEM = "Button (";
     static const char finish[] PROGMEM = "Finish";
     static const char calibrate[] PROGMEM = "Calibrate";
     static const char disableUSB[] PROGMEM = "Disable USB";
@@ -31,10 +31,10 @@ namespace strings {
     static const char compiledOn[] PROGMEM = "Compiled On";
     static const char leftJoy[] PROGMEM = "Left Joy";
     static const char rightJoy[] PROGMEM = "Right Joy";
-    static const char xAxis[] PROGMEM = "X-Axis";
-    static const char yAxis[] PROGMEM = "Y-Axis";
-    static const char fmode[] PROGMEM = "F-Mode";
-    static const char armed[] PROGMEM = "Armed";
+    static const char xAxis[] PROGMEM = "X-Axis (";
+    static const char yAxis[] PROGMEM = "Y-Axis (";
+    static const char fmode[] PROGMEM = "F-Mode (";
+    static const char armed[] PROGMEM = "Armed (";
     static const char next[] PROGMEM = "Next";
     static const char previous[] PROGMEM = "Previous";
     static const char empty[] PROGMEM = "";
@@ -45,7 +45,7 @@ namespace strings {
     static const char launch[] PROGMEM = "Launch";
     static const char compileTime[] PROGMEM = __TIME__;
     static const char compileDate[] PROGMEM = __DATE__;
-    static const char version[] PROGMEM = "0.1-AVR";
+    static const char version[] PROGMEM = "0.1.1-AVR";
 }
 
 char* getData(const char* addr) {

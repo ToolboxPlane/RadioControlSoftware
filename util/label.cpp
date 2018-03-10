@@ -30,9 +30,10 @@ void Label::setColor(uint16_t color) {
     this->color = color;
 }
 
-void Label::setText(char* text, uint8_t len) {
+void Label::setText(const char* text, uint8_t len) {
     uint8_t maxLen = len > this->len ? len : this->len;
     char write[len];
+
     for (uint8_t c = 0; c < maxLen; c++) {
         if(c < len && c < this->len) {
             if (text[c] == this->text[c]) {
@@ -49,10 +50,14 @@ void Label::setText(char* text, uint8_t len) {
     drawLabel(this->text, this->len, this->x, this->y, this->size, this->background);
     drawLabel(write, len, this->x, this->y, this->size, this->color);
 
+    uint8_t realLen = 0;
     for(uint8_t c=0; c<len; c++) {
+        if(text[c] != ' ') {
+            realLen = c+1;
+        }
         this->text[c] = text[c];
     }
-    this->len = len;
+    this->len = realLen;
 }
 
 
@@ -105,4 +110,30 @@ void Label::setSize(uint8_t size) {
 void Label::update() {
     drawLabel(this->text, this->len, this->x, this->y, this->size, this->background);
     drawLabel(this->text, this->len, this->x, this->y, this->size, this->color);
+}
+
+void Label::append(const char *text, uint8_t addLen) {
+    char newText[12];
+    for(uint8_t c=0; c<addLen+len; c++) {
+        if(c < len) {
+            newText[c] = this->text[c];
+        } else {
+            newText[c] = text[c-len];
+        }
+    }
+    this->setText(newText, addLen+len);
+/*    this->len += addLen;
+    drawLabel(this->text, this->len, this->x, this->y, this->size, this->color);*/
+}
+
+void Label::append(int number) {
+    uint8_t buf[4];
+    for(uint8_t c=0; c<4; c++) {
+        buf[3-c] = (uint8_t)((number % 10) + '0');
+        number /= 10;
+        if(number == 0) {
+            this->append((char*)(buf+3-c), c+1);
+            break;
+        }
+    }
 }

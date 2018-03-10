@@ -79,7 +79,7 @@ namespace ui {
     }
 }
 
-void drawLabel(char* text, uint8_t len, uint16_t x, uint16_t y, uint8_t size, uint16_t color) {
+void drawLabel(const char* text, uint8_t len, uint16_t x, uint16_t y, uint8_t size, uint16_t color) {
     ili9341_setcursor(x,y);
     ili9341_settextcolour(color);
     ili9341_settextsize(size);
