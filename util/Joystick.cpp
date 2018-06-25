@@ -67,26 +67,3 @@ uint8_t Joystick::getButton() {
     return buttonState;
 }
 
-uint8_t Joystick::getXChannel() {
-    return xChannel;
-}
-
-uint8_t Joystick::getYChannel() {
-    return yChannel;
-}
-
-uint8_t Joystick::getBtnChannel() {
-    return btnChannel;
-}
-
-void Joystick::setXChannel(uint8_t channel) {
-    xChannel = channel;
-}
-
-void Joystick::setYChannel(uint8_t channel) {
-    yChannel = channel;
-}
-
-void Joystick::setBtnChannel(uint8_t channel) {
-    btnChannel = channel;
-}

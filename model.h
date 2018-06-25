@@ -13,7 +13,7 @@ extern Joystick joyLeft, joyRight;
 
 namespace model {
     enum Flightmode {
-        MANUAL = 0,
+        ANGLE = 0,
         LAUNCH = 1,
         LAND = 2,
         HOLD = 3,
@@ -26,13 +26,12 @@ namespace model {
     int16_t rssi;
     int16_t snr;
     uint16_t received, sent;
-    uint8_t flightmodeChannel = 0;
-    uint8_t armedChannnel = 0;
+    int16_t remoteRssi, remoteSnr;
 
     char* getFlightMode(Flightmode mode = flightmode) {
         switch (mode) {
-            case MANUAL:
-                return (char*)strings::manual;
+            case ANGLE:
+                return (char*)strings::angle;
             case LAUNCH:
                 return (char*)strings::launch;
             case LAND:
@@ -43,43 +42,6 @@ namespace model {
                 return (char*)strings::waypoint;
             default:
                 return (char*)strings::empty;
-        }
-    }
-
-    void mapToChannel(uint8_t type, uint8_t channel) {
-        switch(type) {
-            case 0:
-                joyLeft.setXChannel(channel);
-                break;
-            case 1:
-                joyLeft.setYChannel(channel);
-                break;
-            case 2:
-                joyLeft.setBtnChannel(channel);
-                break;
-            case 5:
-                joyRight.setXChannel(channel);
-                break;
-            case 6:
-                joyRight.setYChannel(channel);
-                break;
-            case 7:
-                joyRight.setBtnChannel(channel);
-                break;
-            case 10:
-                flightmodeChannel = channel;
-                break;
-            case 11:
-                armedChannnel = channel;
-                break;
-        }
-
-        eeprom_update_byte((uint8_t*)(EEPROM_CHANNEL_START_REG+type), channel);
-    }
-
-     void loadChannelData() {
-        for(uint8_t c=0; c<11; c++) {
-            mapToChannel(c, eeprom_read_byte((uint8_t*)(c+EEPROM_CHANNEL_START_REG)));
         }
     }
 

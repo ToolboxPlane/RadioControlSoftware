@@ -39,7 +39,7 @@ namespace strings {
     static const char previous[] PROGMEM = "Previous";
     static const char empty[] PROGMEM = "";
     static const char land[] PROGMEM = "Land";
-    static const char manual[] PROGMEM = "Manual";
+    static const char angle[] PROGMEM = "Angle";
     static const char hold[] PROGMEM = "Hold";
     static const char waypoint[] PROGMEM = "Waypoint";
     static const char launch[] PROGMEM = "Launch";
@@ -49,7 +49,7 @@ namespace strings {
     static const char snr[] PROGMEM = "SNR: ";
     static const char rssi[] PROGMEM = "RSSI: ";
     static const char sent[] PROGMEM = "Sent: ";
-    static const char received[] PROGMEM = "Received: ";
+    static const char received[] PROGMEM = "Recv: ";
     static const char receivedData[] PROGMEM = "Data";
 }
 

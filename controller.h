@@ -12,7 +12,6 @@
 
 namespace controller {
     void updateButtons();
-    Joystick* joy;
 
     enum Page {
         START,
@@ -21,12 +20,6 @@ namespace controller {
         SETTINGS,
         DEBUG,
         LOG,
-        CHANNEL_MAPPING,
-        CHANNEL_MAPPING_JOYSTICK_LEFT,
-        CHANNEL_MAPPING_JOYSTICK_RIGHT,
-        CHANNEL_MAPPING_FLIGHTMODES,
-        CHANNEL_VALUES_0,
-        CHANNEL_VALUES_1,
         DOWNLINK,
         RECEIVED_DATA
     };
@@ -35,7 +28,6 @@ namespace controller {
 
     void load() {
         ui::load();
-        model::loadChannelData();
         stmpe610_init();
     }
 
@@ -76,7 +68,7 @@ namespace controller {
                 ui::buttonLabel[0].setText(F(strings::armDisarm));
                 ui::buttonLabel[1].setText(F(strings::flightmodes));
                 ui::buttonLabel[2].setText(F(strings::downlink));
-                ui::buttonLabel[3].setText(F(strings::channelMapping));
+                ui::buttonLabel[3].setText(F(strings::empty));
                 ui::buttonLabel[4].setText(F(strings::settings));
                 ui::buttonLabel[5].setText(F(strings::debug));
                 break;
@@ -120,71 +112,7 @@ namespace controller {
                 ui::buttonLabel[4].setText(F(strings::compileTime));
                 ui::buttonLabel[5].setText(F(strings::back));
                 break;
-            case CHANNEL_MAPPING:
-                ui::buttonLabel[0].setText(F(strings::leftJoy));
-                ui::buttonLabel[1].setText(F(strings::rightJoy));
-                ui::buttonLabel[2].setText(F(strings::flightmodes));
-                ui::buttonLabel[3].setText(F(strings::empty));
-                ui::buttonLabel[4].setText(F(strings::empty));
-                ui::buttonLabel[5].setText(F(strings::back));
-                break;
-            case CHANNEL_MAPPING_JOYSTICK_LEFT:
-                ui::buttonLabel[0].setText(F(strings::xAxis));
-                ui::buttonLabel[0].append(joyLeft.getXChannel());
-                ui::buttonLabel[0].append(")", 1);
-                ui::buttonLabel[1].setText(F(strings::yAxis));
-                ui::buttonLabel[1].append(joyLeft.getYChannel());
-                ui::buttonLabel[1].append(")", 1);
-                ui::buttonLabel[2].setText(F(strings::button));
-                ui::buttonLabel[2].append(joyLeft.getBtnChannel());
-                ui::buttonLabel[2].append(")", 1);
-                ui::buttonLabel[3].setText(F(strings::empty));
-                ui::buttonLabel[4].setText(F(strings::empty));
-                ui::buttonLabel[5].setText(F(strings::back));
-                break;
-            case CHANNEL_MAPPING_JOYSTICK_RIGHT:
-                ui::buttonLabel[0].setText(F(strings::xAxis));
-                ui::buttonLabel[0].append(joyRight.getXChannel());
-                ui::buttonLabel[0].append(")", 1);
-                ui::buttonLabel[1].setText(F(strings::yAxis));
-                ui::buttonLabel[1].append(joyRight.getYChannel());
-                ui::buttonLabel[1].append(")", 1);
-                ui::buttonLabel[2].setText(F(strings::button));
-                ui::buttonLabel[2].append(joyRight.getBtnChannel());
-                ui::buttonLabel[2].append(")", 1);
-                ui::buttonLabel[3].setText(F(strings::empty));
-                ui::buttonLabel[4].setText(F(strings::empty));
-                ui::buttonLabel[5].setText(F(strings::back));
-                break;
-            case CHANNEL_MAPPING_FLIGHTMODES:
-                ui::buttonLabel[0].setText(F(strings::fmode));
-                ui::buttonLabel[0].append(model::flightmodeChannel);
-                ui::buttonLabel[0].append(")", 1);
-                ui::buttonLabel[1].setText(F(strings::armed));
-                ui::buttonLabel[1].append(model::armedChannnel);
-                ui::buttonLabel[1].append(")", 1);
-                ui::buttonLabel[2].setText(F(strings::empty));
-                ui::buttonLabel[3].setText(F(strings::empty));
-                ui::buttonLabel[4].setText(F(strings::empty));
-                ui::buttonLabel[5].setText(F(strings::back));
-                break;
-            case CHANNEL_VALUES_0:
-                ui::buttonLabel[0].setNumber(0);
-                ui::buttonLabel[1].setNumber(1);
-                ui::buttonLabel[2].setNumber(2);
-                ui::buttonLabel[3].setNumber(3);
-                ui::buttonLabel[4].setText(F(strings::next));
-                ui::buttonLabel[5].setText(F(strings::back));
-                break;
-            case CHANNEL_VALUES_1:
-                ui::buttonLabel[0].setNumber(4);
-                ui::buttonLabel[1].setNumber(5);
-                ui::buttonLabel[2].setNumber(6);
-                ui::buttonLabel[3].setNumber(7);
-                ui::buttonLabel[4].setText(F(strings::previous));
-                ui::buttonLabel[5].setText(F(strings::back));
-                break;
-            case LOG: 
+            case LOG:
                 for(uint8_t c=0; c<6; c++) {
                     ui::buttonLabel[c].setNumber(model::debugVals[c]);
                 }
@@ -196,8 +124,10 @@ namespace controller {
                 ui::buttonLabel[1].append(model::rssi);
                 ui::buttonLabel[2].setText(F(strings::sent));
                 ui::buttonLabel[2].append(model::sent);
-                ui::buttonLabel[3].setText(F(strings::empty));
+                ui::buttonLabel[3].setText(F(strings::received));
+                ui::buttonLabel[3].append(model::received);
                 ui::buttonLabel[4].setText(F(strings::empty));
+                ui::buttonLabel[4].append(model::remoteRssi);
                 ui::buttonLabel[5].setText(F(strings::back));
                 break;
             case RECEIVED_DATA:
@@ -212,8 +142,6 @@ namespace controller {
     }
 
     void handleEvent(int8_t sel) {
-        static uint8_t type;
-
         ui::update(model::armed, model::getFlightMode());
 
         switch (page) {
@@ -229,7 +157,6 @@ namespace controller {
                         page = DOWNLINK;
                         break;
                     case 3:
-                        page = CHANNEL_MAPPING;
                         break;
                     case 4:
                         page = SETTINGS;
@@ -309,75 +236,6 @@ namespace controller {
                 switch (sel) {
                     case 5:
                         page = DEBUG;
-                        break;
-                }
-                break;
-            case CHANNEL_MAPPING:
-                switch (sel) {
-                    case 0:
-                        page = CHANNEL_MAPPING_JOYSTICK_LEFT;
-                        joy = &joyLeft;
-                        type = 0;
-                        break;
-                    case 1:
-                        page = CHANNEL_MAPPING_JOYSTICK_RIGHT;
-                        joy = &joyRight;
-                        type = 5;
-                        break;
-                    case 2:
-                        page = CHANNEL_MAPPING_FLIGHTMODES;
-                        type = 10;
-                        break;
-                    case 5:
-                        page = START;
-                        break;
-                }
-                break;
-            case CHANNEL_MAPPING_JOYSTICK_LEFT:
-            case CHANNEL_MAPPING_JOYSTICK_RIGHT:
-            case CHANNEL_MAPPING_FLIGHTMODES:
-                switch(sel) {
-                    case 0:
-                    case 1:
-                    case 2:
-                        type += sel;
-                        page = CHANNEL_VALUES_0;
-                        break;
-                    case 5:
-                        page = CHANNEL_MAPPING;
-                }
-                break;
-            case CHANNEL_VALUES_0:
-                switch (sel) {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                        model::mapToChannel(type, sel);
-                        page = CHANNEL_MAPPING;
-                        break;
-                    case 4:
-                        page = CHANNEL_VALUES_1;
-                        break;
-                    case 5:
-                        page = CHANNEL_MAPPING;
-                        break;                        
-                }
-                break;
-            case CHANNEL_VALUES_1:
-                switch (sel) {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                        model::mapToChannel(type, sel+4);
-                        page = CHANNEL_MAPPING;
-                        break;
-                    case 4:
-                        page = CHANNEL_VALUES_0;
-                        break;
-                    case 5:
-                        page = CHANNEL_MAPPING;
                         break;
                 }
                 break;
