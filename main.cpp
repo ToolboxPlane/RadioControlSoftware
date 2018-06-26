@@ -23,7 +23,7 @@ Joystick joyLeft;
 
 
 int main() {
-    rcLib::Package pkgLoraOut(256, 4);
+    rcLib::Package pkgOut(256, 8);
     rcLib::Package pkgUartIn;
     rcLib::Package pkgLoraIn;
 
@@ -48,16 +48,18 @@ int main() {
         joyRight.setXValue(adc_read(4));
         joyRight.setYValue(adc_read(5));
 
-        pkgLoraOut.setChannel(0, static_cast<uint16_t>(joyRight.getXValue() + 127));
-        pkgLoraOut.setChannel(1, static_cast<uint16_t>(joyRight.getYValue() + 127));
-        pkgLoraOut.setChannel(2, static_cast<uint16_t>(joyLeft.getXValue() + 127));
-        pkgLoraOut.setChannel(3, static_cast<uint16_t>(joyLeft.getYValue() + 127));
-        pkgLoraOut.setChannel(4, model::flightmode);
-        pkgLoraOut.setChannel(5, model::armed);
-        uint8_t outLen = pkgLoraOut.encode();
+        pkgOut.setChannel(0, static_cast<uint16_t>(joyRight.getXValue() + 127));
+        pkgOut.setChannel(1, static_cast<uint16_t>(joyRight.getYValue() + 127));
+        pkgOut.setChannel(2, static_cast<uint16_t>(joyLeft.getXValue() + 127));
+        pkgOut.setChannel(3, static_cast<uint16_t>(joyLeft.getYValue() + 127));
+        pkgOut.setChannel(4, model::flightmode);
+        pkgOut.setChannel(5, model::armed);
+        pkgOut.setChannel(6, 0);
+        pkgOut.setChannel(7, 0);
+        uint8_t outLen = pkgOut.encode();
 
         if(model::serialEnabled()) {
-            uart_send_buffer(pkgLoraOut.getEncodedData(), outLen);
+            uart_send_buffer(pkgOut.getEncodedData(), outLen);
             while (uart_available()) {
                 if(pkgUartIn.decode(uart_read())) {
                     controller::setDebug(0, pkgUartIn.getChannel(0));
@@ -71,7 +73,7 @@ int main() {
         }
         if(model::loraEnabled()) {
             LoRa.beginPacket();
-            LoRa.write(pkgLoraOut.getEncodedData(), outLen);
+            LoRa.write(pkgOut.getEncodedData(), outLen);
             LoRa.endPacket();
             model::sent++;
 
