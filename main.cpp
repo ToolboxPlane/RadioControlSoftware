@@ -5,91 +5,95 @@
 #include <avr/interrupt.h>
 
 extern "C" {
-    #include "hal/ili9341.h"
-    #include "hal/ili9341gfx.h"
-    #include "hal/stmpe610.h"
-    #include "drivers/adc.h"
-    #include "drivers/uart.h"
+    #include "HAL/adc.h"
+    #include "HAL/uart.h"
+    #include "Drivers/ili9341.h"
+    #include "Drivers/ili9341gfx.h"
+    #include "Drivers/stmpe610.h"
+    #include "Drivers/rcLib/rc_lib.h"
+    #include "Util/Controller/joystick.h"
+    #include "Util/View/ui.h"
+    #include "Util/Controller/controller.h"
+    #include "Util/Model/model.h"
 }
 
-#include "hal/LoRa.h"
-#include "RadioControlProtocol/rcLib.hpp"
-#include "util/Joystick.hpp"
-#include "ui.h"
-#include "controller.h"
+#include "Drivers/LoRa.h"
 
-Joystick joyRight;
-Joystick joyLeft;
-
+void uart_callback(uint8_t data) {
+    static rc_lib_package_t pkg_uart_in;
+    if(rc_lib_decode(&pkg_uart_in, data)) {
+        controller_set_debug(0, pkg_uart_in.channel_data[0]);
+        controller_set_debug(1, pkg_uart_in.channel_data[1]);
+        controller_set_debug(2, pkg_uart_in.channel_data[2]);
+        controller_set_debug(3, pkg_uart_in.channel_data[3]);
+        controller_set_debug(4, 32);
+        controller_set_debug(5, 12);
+    }
+}
 
 int main() {
-    rcLib::Package pkgOut(256, 8);
-    rcLib::Package pkgUartIn;
-    rcLib::Package pkgLoraIn;
+    cli();
 
-    controller::load();
+    controller_init();
     adc_init();
-    uart_init(9600);
-    joyLeft.loadConfiguration(0);
-    joyRight.loadConfiguration(16);
+    uart_init(0, 115200, &uart_callback);
+    joystick_init(&joystick_left);
+    joystick_init(&joystick_right);
+    joystick_load_calibration(&joystick_left, 0);
+    joystick_load_calibration(&joystick_right, 16);
 
     LoRa.begin((long)434E6);
+    sei();
 
-    rcLib::Package::transmitterId = 17;
+    model_init();
+    rc_lib_package_t pkg_out, pkg_lora_in;
+    pkg_out.resolution = 256;
+    pkg_out.channel_count = 8;
+    pkg_out.mesh = false;
+    rc_lib_transmitter_id = 17;
 
-    model::sent = model::received = 0;
-    model::snr = model::rssi = 0;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
     while(true) {
-        controller::handleEvent(controller::getSelection());
-        joyLeft.setXValue(adc_read(1));
-        joyLeft.setYValue(adc_read(2));
-        joyRight.setXValue(adc_read(4));
-        joyRight.setYValue(adc_read(5));
+        controller_handle_events(controller_get_selection());
+        joystick_set_x_value(&joystick_left, adc_read_sync(1));
+        joystick_set_y_value(&joystick_left, adc_read_sync(2));
+        joystick_set_x_value(&joystick_right, adc_read_sync(4));
+        joystick_set_y_value(&joystick_right, adc_read_sync(5));
 
-        pkgOut.setChannel(0, static_cast<uint16_t>(joyRight.getXValue() + 127));
-        pkgOut.setChannel(1, static_cast<uint16_t>(joyRight.getYValue() + 127));
-        pkgOut.setChannel(2, static_cast<uint16_t>(joyLeft.getXValue() + 127));
-        pkgOut.setChannel(3, static_cast<uint16_t>(joyLeft.getYValue() + 127));
-        pkgOut.setChannel(4, model::flightmode);
-        pkgOut.setChannel(5, model::armed);
-        pkgOut.setChannel(6, 0);
-        pkgOut.setChannel(7, 0);
-        uint8_t outLen = pkgOut.encode();
+        pkg_out.channel_data[0] = (uint16_t)(-joystick_get_x_value(&joystick_right) + 127);
+        pkg_out.channel_data[1] = (uint16_t)(joystick_get_y_value(&joystick_right) + 127);
+        pkg_out.channel_data[2] = (uint16_t)(-joystick_get_x_value(&joystick_left) + 127);
+        pkg_out.channel_data[3] = (uint16_t)(joystick_get_y_value(&joystick_left) + 127);
+        pkg_out.channel_data[4] = model_flightmode;
+        pkg_out.channel_data[5] = model_armed;
+        pkg_out.channel_data[6] = 0;
+        pkg_out.channel_data[7] = 0;
+        uint8_t outLen = rc_lib_encode(&pkg_out);
 
-        if(model::serialEnabled()) {
-            uart_send_buffer(pkgOut.getEncodedData(), outLen);
-            while (uart_available()) {
-                if(pkgUartIn.decode(uart_read())) {
-                    controller::setDebug(0, pkgUartIn.getChannel(0));
-                    controller::setDebug(1, pkgUartIn.getChannel(1));
-                    controller::setDebug(2, pkgUartIn.getChannel(2));
-                    controller::setDebug(3, pkgUartIn.getChannel(3));
-                    controller::setDebug(4, 32);
-                    controller::setDebug(5, 12);
-                }
-            }
+        if(model_get_serial_enabled()) {
+            uart_send_buf(0, pkg_out.buffer, outLen);
         }
-        if(model::loraEnabled()) {
+
+        if(model_get_lora_enabled()) {
             LoRa.beginPacket();
-            LoRa.write(pkgOut.getEncodedData(), outLen);
+            LoRa.write(pkg_out.buffer, outLen);
             LoRa.endPacket();
-            model::sent++;
+            model_sent++;
 
             LoRa.receive();
             int size = LoRa.parsePacket();
             if (size) {
-                model::rssi = LoRa.packetRssi();
-                model::snr = (int8_t)LoRa.packetSnr();
+                model_rssi = LoRa.packetRssi();
+                model_snr = (int8_t)LoRa.packetSnr();
                 int read = 0;
                 while((read = LoRa.read()) != -1) {
-                    if(pkgLoraIn.decode((uint8_t)read)) {
-                        model::received++;
-                        model::remoteRssi = pkgLoraIn.getChannel(0);
-                        model::remoteSnr = pkgLoraIn.getChannel(1);
+                    if(rc_lib_decode(&pkg_lora_in, read)) {
+                        model_received++;
+                        model_remote_rssi = pkg_lora_in.channel_data[0];
+                        model_remote_snr = pkg_lora_in.channel_data[1];
                     }
-                    uart_send((uint8_t)read);
+                    uart_send_byte(0, (uint8_t)read);
                 }
             }
         }

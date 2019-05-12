@@ -7,37 +7,6 @@ volatile uint16_t textcolour;
 volatile uint8_t textsize;
 
 
-
-
-
-
-/*void backuplocationvset(void)//backing up vset data start location to print next vset data in exact location
-{
-vsetx=cursor_x;
-vsety=cursor_y;
-}
-
-
-void backuplocationvactual(void)//backing up vactual data start location to print next vactual data in exact location
-{
-vactualx=cursor_x;
-vactualy=cursor_y;
-}
-
-void backuplocationiset(void)//backing up iset data start location to print next iset data in exact location
-{
-isetx=cursor_x;
-isety=cursor_y;
-}
-
-
-void backuplocationiactual(void)//backing up iactual data start location to print next iactual data in exact location
-{
-iactualx=cursor_x;
-iactualy=cursor_y;
-}*/
-
-
 //array for font
 static const unsigned char font[] PROGMEM = {
         0x00, 0x00, 0x00, 0x00, 0x00,
@@ -299,7 +268,7 @@ static const unsigned char font[] PROGMEM = {
 
 extern uint16_t LCD_W, LCD_H;
 
-void ili9341_drawchar(int16_t x, int16_t y, unsigned char c, uint16_t color, /*uint16_t bg,*/
+void ili9341_drawchar(int16_t x, int16_t y, unsigned char c, uint16_t color,
                       uint8_t size) //draw a char like a,b or 1,2
 {
 
