@@ -9,7 +9,7 @@
 #include <stdint.h>
 #include "joystick.h"
 
-joystick_t joyLeft, joyRight;
+extern joystick_t joystick_left, joystick_right;
 
 typedef enum {
     START,
@@ -20,14 +20,14 @@ typedef enum {
     LOG,
     DOWNLINK,
     RECEIVED_DATA
-} Page;
+} controller_page_t;
 
-extern Page page;
+extern controller_page_t page;
 
-void load(void);
-void setDebug(uint8_t index, uint16_t val);
-int8_t getSelection(void);
-void updateButtons(void);
-void handleEvent(int8_t sel);
+void controller_load(void);
+void controller_set_debug(uint8_t index, uint16_t val);
+int8_t controller_get_selection(void);
+void controller_update_buttons(void);
+void controller_handle_events(int8_t sel);
 
 #endif

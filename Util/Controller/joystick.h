@@ -11,14 +11,14 @@ typedef struct {
 } joystick_t;
 
 void joystick_init(joystick_t *joystick);
-void joystick_loadConfiguration(joystick_t *joystick, uint16_t startAddr);
-void joystick_startCalibration(joystick_t *joystick);
-void joystick_endCalibration(joystick_t *joystick, uint16_t startAddr);
-void joystick_setXValue(joystick_t *joystick, uint16_t value);
-void joystick_setYValue(joystick_t *joystick, uint16_t value);
-void joystick_setButton(joystick_t *joystick, uint16_t button);
-int8_t joystick_getXValue(joystick_t *joystick);
-int8_t joystick_getYValue(joystick_t *joystick);
-uint8_t joystick_getButton(joystick_t *joystick);
+void joystick_load_calibration(joystick_t *joystick, uint16_t startAddr);
+void joystick_start_calibration(joystick_t *joystick);
+void joystick_end_calibration(joystick_t *joystick, uint16_t startAddr);
+void joystick_set_x_value(joystick_t *joystick, uint16_t value);
+void joystick_set_y_value(joystick_t *joystick, uint16_t value);
+void joystick_set_button(joystick_t *joystick, uint16_t button);
+int8_t joystick_get_x_value(const joystick_t *joystick);
+int8_t joystick_get_y_value(const joystick_t *joystick);
+uint8_t joystick_get_button(const joystick_t *joystick);
 
 #endif

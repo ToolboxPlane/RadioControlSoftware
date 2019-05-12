@@ -76,17 +76,17 @@ void ui_update(uint8_t isArmed, const char* flightmode) {
 
     char buf[11] = {' '};
     buf[0] = '(';
-    itoa(joystick_getXValue(&joyLeft), buf+1, 10);
+    itoa(joystick_get_x_value(&joystick_left), buf+1, 10);
     buf[5] = '|';
-    itoa(joystick_getYValue(&joyRight), buf+6, 10);
+    itoa(joystick_get_y_value(&joystick_right), buf+6, 10);
     buf[10] = ')';
     label_set_text(&lblLeftJoy, buf, 11);
 
     for(uint8_t c=0; c<4; c++) {
         buf[1+c] = buf[6+c] = ' ';
     }
-    itoa(joystick_getXValue(&joyLeft), buf+1, 10);
-    itoa(joystick_getYValue(&joyRight), buf+6, 10);
+    itoa(joystick_get_x_value(&joystick_left), buf+1, 10);
+    itoa(joystick_get_y_value(&joystick_right), buf+6, 10);
     label_set_text(&lblRightJoy, buf, 11);
 
     label_set_text(&lblFlightMode, TR(flightmode));

@@ -11,20 +11,21 @@
 #include "../Model/model.h"
 #include "../View/strings.h"
 
-Page page = START;
+controller_page_t page = START;
+joystick_t joystick_left, joystick_right;
 
-void load() {
+void controller_load() {
     ui_load();
     stmpe610_init();
 }
 
-void setDebug(uint8_t index, uint16_t val) {
+void controller_set_debug(uint8_t index, uint16_t val) {
     if(index < 6) {
         debugVals[index] = val;
     }
 }
 
-int8_t getSelection() {
+int8_t controller_get_selection() {
     static int8_t lastSel = -1;
     if (stmpe610_buffer_empty()) {
         ui_button_highlight(lastSel, false);
@@ -49,7 +50,7 @@ int8_t getSelection() {
     }
 }
 
-void updateButtons() {
+void controller_update_buttons() {
     switch (page) {
         case START:
             label_set_text(&ui_buttonLabel[0],TR(string_armDisarm));
@@ -128,7 +129,7 @@ void updateButtons() {
     }
 }
 
-void handleEvent(int8_t sel) {
+void controller_handle_events(int8_t sel) {
     ui_update(armed, getFlightMode(flightmode));
 
     switch (page) {
@@ -158,8 +159,8 @@ void handleEvent(int8_t sel) {
         case CALIBRATE:
             switch (sel) {
                 case 5:
-                    joystick_endCalibration(&joyLeft, 0);
-                    joystick_endCalibration(&joyRight, 4);
+                    joystick_end_calibration(&joystick_left, 0);
+                    joystick_end_calibration(&joystick_right, 4);
                     page = SETTINGS;
                     break;
                 default:
@@ -182,8 +183,8 @@ void handleEvent(int8_t sel) {
         case SETTINGS:
             switch (sel) {
                 case 0:
-                    joystick_startCalibration(&joyLeft);
-                    joystick_startCalibration(&joyRight);
+                    joystick_start_calibration(&joystick_left);
+                    joystick_start_calibration(&joystick_right);
                     page = CALIBRATE;
                     break;
                 case 1:
@@ -230,6 +231,6 @@ void handleEvent(int8_t sel) {
             page = START;
             break;
     }
-    updateButtons();
+    controller_update_buttons();
 }
 

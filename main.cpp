@@ -22,23 +22,23 @@ extern "C" {
 void uart_callback(uint8_t data) {
     static rc_lib_package_t pkg_uart_in;
     if(rc_lib_decode(&pkg_uart_in, data)) {
-        setDebug(0, pkg_uart_in.channel_data[0]);
-        setDebug(1, pkg_uart_in.channel_data[1]);
-        setDebug(2, pkg_uart_in.channel_data[2]);
-        setDebug(3, pkg_uart_in.channel_data[3]);
-        setDebug(4, 32);
-        setDebug(5, 12);
+        controller_set_debug(0, pkg_uart_in.channel_data[0]);
+        controller_set_debug(1, pkg_uart_in.channel_data[1]);
+        controller_set_debug(2, pkg_uart_in.channel_data[2]);
+        controller_set_debug(3, pkg_uart_in.channel_data[3]);
+        controller_set_debug(4, 32);
+        controller_set_debug(5, 12);
     }
 }
 
 int main() {
     cli();
 
-    load();
+    controller_load();
     adc_init();
     uart_init(0, 9600, &uart_callback);
-    joystick_loadConfiguration(&joyLeft, 0);
-    joystick_loadConfiguration(&joyRight, 16);
+    joystick_load_calibration(&joystick_left, 0);
+    joystick_load_calibration(&joystick_right, 16);
 
     LoRa.begin((long)434E6);
     sei();
@@ -55,16 +55,16 @@ int main() {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
     while(true) {
-        handleEvent(getSelection());
-        joystick_setXValue(&joyLeft, adc_read_sync(1));
-        joystick_setYValue(&joyLeft, adc_read_sync(2));
-        joystick_setXValue(&joyRight, adc_read_sync(4));
-        joystick_setYValue(&joyRight, adc_read_sync(5));
+        controller_handle_events(controller_get_selection());
+        joystick_set_x_value(&joystick_left, adc_read_sync(1));
+        joystick_set_y_value(&joystick_left, adc_read_sync(2));
+        joystick_set_x_value(&joystick_right, adc_read_sync(4));
+        joystick_set_y_value(&joystick_right, adc_read_sync(5));
 
-        pkg_out.channel_data[0] = (uint16_t)(-joystick_getXValue(&joyRight) + 127);
-        pkg_out.channel_data[1] = (uint16_t)(joystick_getYValue(&joyRight) + 127);
-        pkg_out.channel_data[2] = (uint16_t)(-joystick_getXValue(&joyLeft) + 127);
-        pkg_out.channel_data[3] = (uint16_t)(joystick_getYValue(&joyLeft) + 127);
+        pkg_out.channel_data[0] = (uint16_t)(-joystick_get_x_value(&joystick_right) + 127);
+        pkg_out.channel_data[1] = (uint16_t)(joystick_get_y_value(&joystick_right) + 127);
+        pkg_out.channel_data[2] = (uint16_t)(-joystick_get_x_value(&joystick_left) + 127);
+        pkg_out.channel_data[3] = (uint16_t)(joystick_get_y_value(&joystick_left) + 127);
         pkg_out.channel_data[4] = flightmode;
         pkg_out.channel_data[5] = armed;
         pkg_out.channel_data[6] = 0;
