@@ -13,13 +13,13 @@
 #define SERIAL_ENABLE_BIT 0
 #define LORA_ENABLE_BIT 1
 
-flightmode_t flightmode = LAUNCH;
-uint8_t armed = false;
-uint16_t debug_vals[6];
-int16_t rssi;
-int16_t snr;
-uint16_t received, sent;
-int16_t remote_rssi, remote_snr;
+model_flightmode_t model_flightmode = LAUNCH;
+uint8_t model_armed = false;
+uint16_t model_debug_vals[6];
+int16_t model_rssi;
+int16_t model_snr;
+uint16_t model_received, model_sent;
+int16_t model_remote_rssi, model_remote_snr;
 
 bool model_get_lora_enabled(void) {
     return (eeprom_read_byte((uint8_t*)EEPROM_CONFIG_REG) >> LORA_ENABLE_BIT) & 1;
@@ -50,7 +50,7 @@ void model_set_serial_enabled(bool enabled) {
     eeprom_update_byte((uint8_t*)EEPROM_CONFIG_REG, configByte);
 }
 
-char* model_get_flightmode_string(flightmode_t mode) {
+char* model_get_flightmode_string(model_flightmode_t mode) {
     switch (mode) {
         case ANGLE:
             return (char*)string_angle;
@@ -65,6 +65,11 @@ char* model_get_flightmode_string(flightmode_t mode) {
         default:
             return (char*)string_empty;
     }
+}
+
+void model_init(void) {
+    model_sent = model_received = 0;
+    model_snr = model_rssi = 0;
 }
 
  

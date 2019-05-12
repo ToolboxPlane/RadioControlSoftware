@@ -1,13 +1,13 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.9)
 project(RadioControlSoftware)
 
 set(AVRSTRIP avr-strip)
 set(OBJCOPY avr-objcopy)
-
 set(CMAKE_C_COMPILER avr-gcc)
 set(CMAKE_CXX_COMPILER avr-g++)
+
 set(CDEBUG "-gstabs")
-set(CWARN "-Wall -Wstrict-prototypes")
+set(CWARN "-Wall -Wextra -Wstrict-prototypes")
 set(CTUNING "-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums")
 set(COPT "-Os")
 set(CMCU "-mmcu=atmega328p")
@@ -17,7 +17,7 @@ set(CXXFLAGS "${CMCU} ${CDEFS} ${CINCS} ${COPT}")
 set(CMAKE_C_FLAGS  ${CFLAGS})
 set(CMAKE_CXX_FLAGS ${CXXFLAGS})
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD  11)
 
 set(SOURCES_HAL HAL/uart.c HAL/adc.c)

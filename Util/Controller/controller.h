@@ -24,7 +24,7 @@ typedef enum {
 
 extern controller_page_t page;
 
-void controller_load(void);
+void controller_init(void);
 void controller_set_debug(uint8_t index, uint16_t val);
 int8_t controller_get_selection(void);
 void controller_update_buttons(void);

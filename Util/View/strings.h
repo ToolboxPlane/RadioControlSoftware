@@ -3,7 +3,7 @@
 
 #include <avr/pgmspace.h>
 
-#define TR(x) getData(x),12
+#define TR(x) string_get(x),12
 
 static const char string_back[] PROGMEM = "Back";
 static const char string_armDisarm[] PROGMEM = "Arm/Disarm";
@@ -47,6 +47,6 @@ static const char string_sent[] PROGMEM = "Sent: ";
 static const char string_received[] PROGMEM = "Recv: ";
 static const char string_receivedData[] PROGMEM = "Data";
 
-char* getData(const char* addr);
+char* string_get(const char *addr);
 
 #endif //RADIOCONTROLSOFTWARE_STRINGS_H

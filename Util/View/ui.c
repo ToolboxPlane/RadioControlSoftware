@@ -36,7 +36,7 @@ void ui_drawLabel(const char* text, uint8_t len, uint16_t x, uint16_t y, uint8_t
 }
 
 
-void ui_load() {
+void ui_init() {
     ili9341_init();//initial driver setup to drive ili9341
     ili9341_setRotation(2);//rotate screen
     ili9341_clear(BACKGROUND_COLOR);//fill screen with black colour

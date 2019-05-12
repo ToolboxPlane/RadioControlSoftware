@@ -14,14 +14,14 @@
 controller_page_t page = START;
 joystick_t joystick_left, joystick_right;
 
-void controller_load() {
-    ui_load();
+void controller_init() {
+    ui_init();
     stmpe610_init();
 }
 
 void controller_set_debug(uint8_t index, uint16_t val) {
     if(index < 6) {
-        debug_vals[index] = val;
+        model_debug_vals[index] = val;
     }
 }
 
@@ -53,90 +53,90 @@ int8_t controller_get_selection() {
 void controller_update_buttons() {
     switch (page) {
         case START:
-            label_set_text(&ui_buttonLabel[0],TR(string_armDisarm));
-            label_set_text(&ui_buttonLabel[1],TR(string_flightmodes));
-            label_set_text(&ui_buttonLabel[2],TR(string_downlink));
-            label_set_text(&ui_buttonLabel[3],TR(string_empty));
-            label_set_text(&ui_buttonLabel[4],TR(string_settings));
-            label_set_text(&ui_buttonLabel[5],TR(string_debug));
+            label_set_text(&ui_buttonLabel[0], TR(string_armDisarm));
+            label_set_text(&ui_buttonLabel[1], TR(string_flightmodes));
+            label_set_text(&ui_buttonLabel[2], TR(string_downlink));
+            label_set_text(&ui_buttonLabel[3], TR(string_empty));
+            label_set_text(&ui_buttonLabel[4], TR(string_settings));
+            label_set_text(&ui_buttonLabel[5], TR(string_debug));
             break;
         case CALIBRATE:
-            label_set_text(&ui_buttonLabel[0],TR(string_move));
-            label_set_text(&ui_buttonLabel[1],TR(string_the));
-            label_set_text(&ui_buttonLabel[2],TR(string_joysticks));
-            label_set_text(&ui_buttonLabel[3],TR(string_empty));
-            label_set_text(&ui_buttonLabel[4],TR(string_empty));
-            label_set_text(&ui_buttonLabel[5],TR(string_finish));
+            label_set_text(&ui_buttonLabel[0], TR(string_move));
+            label_set_text(&ui_buttonLabel[1], TR(string_the));
+            label_set_text(&ui_buttonLabel[2], TR(string_joysticks));
+            label_set_text(&ui_buttonLabel[3], TR(string_empty));
+            label_set_text(&ui_buttonLabel[4], TR(string_empty));
+            label_set_text(&ui_buttonLabel[5], TR(string_finish));
             break;
         case SETTINGS:
-            label_set_text(&ui_buttonLabel[0],TR(string_calibrate));
+            label_set_text(&ui_buttonLabel[0], TR(string_calibrate));
             if(model_get_serial_enabled()) {
-                label_set_text(&ui_buttonLabel[1],TR(string_disableUSB));
+                label_set_text(&ui_buttonLabel[1], TR(string_disableUSB));
             } else {
-                label_set_text(&ui_buttonLabel[1],TR(string_enableUSB));
+                label_set_text(&ui_buttonLabel[1], TR(string_enableUSB));
             }
             if(model_get_lora_enabled()) {
-                label_set_text(&ui_buttonLabel[2],TR(string_disableLora));
+                label_set_text(&ui_buttonLabel[2], TR(string_disableLora));
             } else {
-                label_set_text(&ui_buttonLabel[2],TR(string_enableLora));
+                label_set_text(&ui_buttonLabel[2], TR(string_enableLora));
             }
-            label_set_text(&ui_buttonLabel[3],TR(string_empty));
-            label_set_text(&ui_buttonLabel[4],TR(string_empty));
-            label_set_text(&ui_buttonLabel[5],TR(string_back));
+            label_set_text(&ui_buttonLabel[3], TR(string_empty));
+            label_set_text(&ui_buttonLabel[4], TR(string_empty));
+            label_set_text(&ui_buttonLabel[5], TR(string_back));
             break;
         case FLIGHTMODES:
-            label_set_text(&ui_buttonLabel[0],TR(model_get_flightmode_string((flightmode_t) 0)));
-            label_set_text(&ui_buttonLabel[1],TR(model_get_flightmode_string((flightmode_t) 1)));
-            label_set_text(&ui_buttonLabel[2],TR(model_get_flightmode_string((flightmode_t) 2)));
-            label_set_text(&ui_buttonLabel[3],TR(model_get_flightmode_string((flightmode_t) 3)));
-            label_set_text(&ui_buttonLabel[4],TR(model_get_flightmode_string((flightmode_t) 4)));
-            label_set_text(&ui_buttonLabel[5],TR(string_back));
+            label_set_text(&ui_buttonLabel[0], TR(model_get_flightmode_string((model_flightmode_t) 0)));
+            label_set_text(&ui_buttonLabel[1], TR(model_get_flightmode_string((model_flightmode_t) 1)));
+            label_set_text(&ui_buttonLabel[2], TR(model_get_flightmode_string((model_flightmode_t) 2)));
+            label_set_text(&ui_buttonLabel[3], TR(model_get_flightmode_string((model_flightmode_t) 3)));
+            label_set_text(&ui_buttonLabel[4], TR(model_get_flightmode_string((model_flightmode_t) 4)));
+            label_set_text(&ui_buttonLabel[5], TR(string_back));
             break;
         case DEBUG:
-            label_set_text(&ui_buttonLabel[0],TR(string_log));
-            label_set_text(&ui_buttonLabel[1],TR(string_version));
-            label_set_text(&ui_buttonLabel[2],TR(string_compiledOn));
-            label_set_text(&ui_buttonLabel[3],TR(string_compileDate));
-            label_set_text(&ui_buttonLabel[4],TR(string_compileTime));
-            label_set_text(&ui_buttonLabel[5],TR(string_back));
+            label_set_text(&ui_buttonLabel[0], TR(string_log));
+            label_set_text(&ui_buttonLabel[1], TR(string_version));
+            label_set_text(&ui_buttonLabel[2], TR(string_compiledOn));
+            label_set_text(&ui_buttonLabel[3], TR(string_compileDate));
+            label_set_text(&ui_buttonLabel[4], TR(string_compileTime));
+            label_set_text(&ui_buttonLabel[5], TR(string_back));
             break;
         case LOG:
             for(uint8_t c=0; c<6; c++) {
-                label_set_number(&ui_buttonLabel[c],debug_vals[c]);
+                label_set_number(&ui_buttonLabel[c],model_debug_vals[c]);
             }
             break;
         case DOWNLINK:
-            label_set_text(&ui_buttonLabel[0],TR(string_snr));
-            label_append_num(&ui_buttonLabel[0],snr);
-            label_set_text(&ui_buttonLabel[1],TR(string_rssi));
-            label_append_num(&ui_buttonLabel[1],rssi);
-            label_set_text(&ui_buttonLabel[2],TR(string_sent));
-            label_append_num(&ui_buttonLabel[2],sent);
-            label_set_text(&ui_buttonLabel[3],TR(string_received));
-            label_append_num(&ui_buttonLabel[3],received);
-            label_set_text(&ui_buttonLabel[4],TR(string_empty));
-            label_append_num(&ui_buttonLabel[4],remote_rssi);
-            label_set_text(&ui_buttonLabel[5],TR(string_back));
+            label_set_text(&ui_buttonLabel[0], TR(string_snr));
+            label_append_num(&ui_buttonLabel[0],model_snr);
+            label_set_text(&ui_buttonLabel[1], TR(string_rssi));
+            label_append_num(&ui_buttonLabel[1],model_rssi);
+            label_set_text(&ui_buttonLabel[2], TR(string_sent));
+            label_append_num(&ui_buttonLabel[2],model_sent);
+            label_set_text(&ui_buttonLabel[3], TR(string_received));
+            label_append_num(&ui_buttonLabel[3],model_received);
+            label_set_text(&ui_buttonLabel[4], TR(string_empty));
+            label_append_num(&ui_buttonLabel[4],model_remote_rssi);
+            label_set_text(&ui_buttonLabel[5], TR(string_back));
             break;
         case RECEIVED_DATA:
-            label_set_text(&ui_buttonLabel[0],TR(string_empty));
-            label_set_text(&ui_buttonLabel[1],TR(string_empty));
-            label_set_text(&ui_buttonLabel[2],TR(string_empty));
-            label_set_text(&ui_buttonLabel[3],TR(string_empty));
-            label_set_text(&ui_buttonLabel[4],TR(string_empty));
-            label_set_text(&ui_buttonLabel[5],TR(string_back));
+            label_set_text(&ui_buttonLabel[0], TR(string_empty));
+            label_set_text(&ui_buttonLabel[1], TR(string_empty));
+            label_set_text(&ui_buttonLabel[2], TR(string_empty));
+            label_set_text(&ui_buttonLabel[3], TR(string_empty));
+            label_set_text(&ui_buttonLabel[4], TR(string_empty));
+            label_set_text(&ui_buttonLabel[5], TR(string_back));
             break;
     }
 }
 
 void controller_handle_events(int8_t sel) {
-    ui_update(armed, model_get_flightmode_string(flightmode));
+    ui_update(model_armed, model_get_flightmode_string(model_flightmode));
 
     switch (page) {
         case START:
             switch (sel) {
                 case 0:
-                    armed = (uint8_t)!armed;
+                    model_armed = (uint8_t)!model_armed;
                     break;
                 case 1:
                     page = FLIGHTMODES;
@@ -174,7 +174,7 @@ void controller_handle_events(int8_t sel) {
                 case 2:
                 case 3:
                 case 4:
-                    flightmode = (flightmode_t) sel;
+                    model_flightmode = (model_flightmode_t) sel;
                 case 5:
                     page = START;
                     break;
