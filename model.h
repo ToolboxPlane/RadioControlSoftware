@@ -1,7 +1,7 @@
 #ifndef _MODEL_H
 #define _MODEL_H
 
-#include "util/Joystick.hpp"
+#include "Util/Joystick.hpp"
 #include "strings.h"
 
 #define EEPROM_CONFIG_REG 32

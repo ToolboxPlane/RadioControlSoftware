@@ -55,7 +55,7 @@ namespace controller {
                 return -1;
             }
 
-            lastSel = (p.y - 15) / 50;
+            lastSel = static_cast<int8_t>((p.y - 15) / 50);
 
             ui::buttonLabel[lastSel].setColor(BUTTON_TEXT_SELECTED_COLOR);
             return lastSel;
@@ -148,7 +148,7 @@ namespace controller {
             case START:
                 switch (sel) {
                     case 0:
-                        model::armed = !model::armed;
+                        model::armed = static_cast<uint8_t>(!model::armed);
                         break;
                     case 1:
                         page = FLIGHTMODES;
