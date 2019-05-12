@@ -5,6 +5,7 @@
  * @brief strings @TODO
  */
 #include <stdint.h>
+#include <avr/pgmspace.h>
 
 char* getData(const char* addr) {
     static char data[12] = {' '};
