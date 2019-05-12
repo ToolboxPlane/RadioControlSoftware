@@ -1,9 +1,9 @@
 #ifndef _CONTROLLER_H
 #define _CONTROLLER_H
 
-#include "ui.h"
-#include "model.h"
-#include "strings.h"
+#include "../View/ui.h"
+#include "../Model/model.h"
+#include "../View/strings.h"
 
 #define TS_MINX 150.0f
 #define TS_MINY 130.0f
@@ -65,52 +65,52 @@ namespace controller {
     void updateButtons() {
         switch (page) {
             case START:
-                ui::buttonLabel[0].setText(F(strings::armDisarm));
-                ui::buttonLabel[1].setText(F(strings::flightmodes));
-                ui::buttonLabel[2].setText(F(strings::downlink));
-                ui::buttonLabel[3].setText(F(strings::empty));
-                ui::buttonLabel[4].setText(F(strings::settings));
-                ui::buttonLabel[5].setText(F(strings::debug));
+                ui::buttonLabel[0].setText(TR(string_armDisarm));
+                ui::buttonLabel[1].setText(TR(string_flightmodes));
+                ui::buttonLabel[2].setText(TR(string_downlink));
+                ui::buttonLabel[3].setText(TR(string_empty));
+                ui::buttonLabel[4].setText(TR(string_settings));
+                ui::buttonLabel[5].setText(TR(string_debug));
                 break;
             case CALIBRATE:
-                ui::buttonLabel[0].setText(F(strings::move));
-                ui::buttonLabel[1].setText(F(strings::the));
-                ui::buttonLabel[2].setText(F(strings::joysticks));
-                ui::buttonLabel[3].setText(F(strings::empty));
-                ui::buttonLabel[4].setText(F(strings::empty));
-                ui::buttonLabel[5].setText(F(strings::finish));
+                ui::buttonLabel[0].setText(TR(string_move));
+                ui::buttonLabel[1].setText(TR(string_the));
+                ui::buttonLabel[2].setText(TR(string_joysticks));
+                ui::buttonLabel[3].setText(TR(string_empty));
+                ui::buttonLabel[4].setText(TR(string_empty));
+                ui::buttonLabel[5].setText(TR(string_finish));
                 break;
             case SETTINGS:
-                ui::buttonLabel[0].setText(F(strings::calibrate));
+                ui::buttonLabel[0].setText(TR(string_calibrate));
                 if(model::serialEnabled()) {
-                    ui::buttonLabel[1].setText(F(strings::disableUSB));
+                    ui::buttonLabel[1].setText(TR(string_disableUSB));
                 } else {
-                    ui::buttonLabel[1].setText(F(strings::enableUSB));
+                    ui::buttonLabel[1].setText(TR(string_enableUSB));
                 }
                 if(model::loraEnabled()) {
-                    ui::buttonLabel[2].setText(F(strings::disableLora));
+                    ui::buttonLabel[2].setText(TR(string_disableLora));
                 } else {
-                    ui::buttonLabel[2].setText(F(strings::enableLora));
+                    ui::buttonLabel[2].setText(TR(string_enableLora));
                 }
-                ui::buttonLabel[3].setText(F(strings::empty));
-                ui::buttonLabel[4].setText(F(strings::empty));
-                ui::buttonLabel[5].setText(F(strings::back));
+                ui::buttonLabel[3].setText(TR(string_empty));
+                ui::buttonLabel[4].setText(TR(string_empty));
+                ui::buttonLabel[5].setText(TR(string_back));
                 break;
             case FLIGHTMODES:
-                ui::buttonLabel[0].setText(F(model::getFlightMode((model::Flightmode)0)));
-                ui::buttonLabel[1].setText(F(model::getFlightMode((model::Flightmode)1)));
-                ui::buttonLabel[2].setText(F(model::getFlightMode((model::Flightmode)2)));
-                ui::buttonLabel[3].setText(F(model::getFlightMode((model::Flightmode)3)));
-                ui::buttonLabel[4].setText(F(model::getFlightMode((model::Flightmode)4)));
-                ui::buttonLabel[5].setText(F(strings::back));
+                ui::buttonLabel[0].setText(TR(model::getFlightMode((model::Flightmode)0)));
+                ui::buttonLabel[1].setText(TR(model::getFlightMode((model::Flightmode)1)));
+                ui::buttonLabel[2].setText(TR(model::getFlightMode((model::Flightmode)2)));
+                ui::buttonLabel[3].setText(TR(model::getFlightMode((model::Flightmode)3)));
+                ui::buttonLabel[4].setText(TR(model::getFlightMode((model::Flightmode)4)));
+                ui::buttonLabel[5].setText(TR(string_back));
                 break;
             case DEBUG:
-                ui::buttonLabel[0].setText(F(strings::log));
-                ui::buttonLabel[1].setText(F(strings::version));
-                ui::buttonLabel[2].setText(F(strings::compiledOn));
-                ui::buttonLabel[3].setText(F(strings::compileDate));
-                ui::buttonLabel[4].setText(F(strings::compileTime));
-                ui::buttonLabel[5].setText(F(strings::back));
+                ui::buttonLabel[0].setText(TR(string_log));
+                ui::buttonLabel[1].setText(TR(string_version));
+                ui::buttonLabel[2].setText(TR(string_compiledOn));
+                ui::buttonLabel[3].setText(TR(string_compileDate));
+                ui::buttonLabel[4].setText(TR(string_compileTime));
+                ui::buttonLabel[5].setText(TR(string_back));
                 break;
             case LOG:
                 for(uint8_t c=0; c<6; c++) {
@@ -118,25 +118,25 @@ namespace controller {
                 }
                 break;
             case DOWNLINK:
-                ui::buttonLabel[0].setText(F(strings::snr));
+                ui::buttonLabel[0].setText(TR(string_snr));
                 ui::buttonLabel[0].append(model::snr);
-                ui::buttonLabel[1].setText(F(strings::rssi));
+                ui::buttonLabel[1].setText(TR(string_rssi));
                 ui::buttonLabel[1].append(model::rssi);
-                ui::buttonLabel[2].setText(F(strings::sent));
+                ui::buttonLabel[2].setText(TR(string_sent));
                 ui::buttonLabel[2].append(model::sent);
-                ui::buttonLabel[3].setText(F(strings::received));
+                ui::buttonLabel[3].setText(TR(string_received));
                 ui::buttonLabel[3].append(model::received);
-                ui::buttonLabel[4].setText(F(strings::empty));
+                ui::buttonLabel[4].setText(TR(string_empty));
                 ui::buttonLabel[4].append(model::remoteRssi);
-                ui::buttonLabel[5].setText(F(strings::back));
+                ui::buttonLabel[5].setText(TR(string_back));
                 break;
             case RECEIVED_DATA:
-                ui::buttonLabel[0].setText(F(strings::empty));
-                ui::buttonLabel[1].setText(F(strings::empty));
-                ui::buttonLabel[2].setText(F(strings::empty));
-                ui::buttonLabel[3].setText(F(strings::empty));
-                ui::buttonLabel[4].setText(F(strings::empty));
-                ui::buttonLabel[5].setText(F(strings::back));
+                ui::buttonLabel[0].setText(TR(string_empty));
+                ui::buttonLabel[1].setText(TR(string_empty));
+                ui::buttonLabel[2].setText(TR(string_empty));
+                ui::buttonLabel[3].setText(TR(string_empty));
+                ui::buttonLabel[4].setText(TR(string_empty));
+                ui::buttonLabel[5].setText(TR(string_back));
                 break;
         }
     }

@@ -1,8 +1,8 @@
 #ifndef _MODEL_H
 #define _MODEL_H
 
-#include "Util/Joystick.hpp"
-#include "strings.h"
+#include "../Controller/Joystick.hpp"
+#include "../View/strings.h"
 
 #define EEPROM_CONFIG_REG 32
 #define EEPROM_CHANNEL_START_REG 64
@@ -31,17 +31,17 @@ namespace model {
     char* getFlightMode(Flightmode mode = flightmode) {
         switch (mode) {
             case ANGLE:
-                return (char*)strings::angle;
+                return (char*)string_angle;
             case LAUNCH:
-                return (char*)strings::launch;
+                return (char*)string_launch;
             case LAND:
-                return (char*)strings::land;
+                return (char*)string_land;
             case HOLD:
-                return (char*)strings::hold;
+                return (char*)string_hold;
             case WAYPOINT:
-                return (char*)strings::waypoint;
+                return (char*)string_waypoint;
             default:
-                return (char*)strings::empty;
+                return (char*)string_empty;
         }
     }
 

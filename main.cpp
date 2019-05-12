@@ -14,9 +14,9 @@ extern "C" {
 }
 
 #include "Drivers/LoRa.h"
-#include "Util/Joystick.hpp"
-#include "ui.h"
-#include "controller.h"
+#include "Util/Controller/Joystick.hpp"
+#include "Util/View/ui.h"
+#include "Util/Controller/controller.h"
 
 Joystick joyRight;
 Joystick joyLeft;

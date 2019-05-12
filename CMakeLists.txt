@@ -22,7 +22,8 @@ set(CMAKE_C_STANDARD  11)
 
 set(SOURCES_HAL HAL/uart.c HAL/adc.c)
 set(SOURCES_DRIVERS Drivers/ili9341.c Drivers/ili9341gfx.c Drivers/LoRa.cpp Drivers/stmpe610.c Drivers/rcLib/rc_lib.c)
-set(SOURCES main.cpp Util/label.cpp Util/Joystick.cpp)
+set(SOURCES main.cpp Util/View/label.c Util/Controller/Joystick.cpp Util/View/colorconvert.c
+        Util/View/strings.c Util/View/ui.c)
 
 ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCES_HAL} ${SOURCES_DRIVERS} ${SOURCES})
 
