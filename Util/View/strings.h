@@ -1,7 +1,3 @@
-//
-// Created by paul on 20.01.18.
-//
-
 #ifndef RADIOCONTROLSOFTWARE_STRINGS_H
 #define RADIOCONTROLSOFTWARE_STRINGS_H
 

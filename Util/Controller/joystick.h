@@ -1,5 +1,5 @@
-#ifndef _JOYSTICK_HPP
-#define _JOYSTICK_HPP
+#ifndef RADIOCONTROLSOFTWARE_JOYSTICK_H
+#define RADIOCONTROLSOFTWARE_JOYSTICK_H
 
 #include <stdint.h>
 

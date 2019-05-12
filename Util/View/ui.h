@@ -1,5 +1,5 @@
-#ifndef _UI_H
-#define _UI_H
+#ifndef RADIOCONTROLSOFTWARE_UI_H
+#define RADIOCONTROLSOFTWARE_UI_H
 
 #include <stdint.h>
 #include <stdbool.h>

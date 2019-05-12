@@ -1,9 +1,5 @@
-//
-// Created by paul on 25.07.16.
-//
-
-#ifndef SMARTWATCH2_LABEL_H
-#define SMARTWATCH2_LABEL_H
+#ifndef RADIOCONTROLSOFTWARE_LABEL_H
+#define RADIOCONTROLSOFTWARE_LABEL_H
 
 #include <stdint.h>
 

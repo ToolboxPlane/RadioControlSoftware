@@ -1,5 +1,5 @@
-#ifndef _MODEL_H
-#define _MODEL_H
+#ifndef RADIOCONTROLSOFTWARE_MODEL_H
+#define RADIOCONTROLSOFTWARE_MODEL_H
 
 #include <avr/eeprom.h>
 #include <stdbool.h>
@@ -10,20 +10,20 @@ typedef enum {
     LAND = 2,
     HOLD = 3,
     WAYPOINT = 4
-} Flightmode;
+} flightmode_t;
 
-extern Flightmode flightmode;
+extern flightmode_t flightmode;
 extern uint8_t armed;
-extern uint16_t debugVals[6];
+extern uint16_t debug_vals[6];
 extern int16_t rssi;
 extern int16_t snr;
 extern uint16_t received, sent;
-extern int16_t remoteRssi, remoteSnr;
+extern int16_t remote_rssi, remote_snr;
 
-bool loraEnabled(void);
-bool serialEnabled(void);
-void setLoraEnabled(bool enabled);
-void setSerialEnabled(bool enabled);
-char* getFlightMode(Flightmode mode);
+bool model_get_lora_enabled(void);
+bool model_get_serial_enabled(void);
+void model_set_lora_enabled(bool enabled);
+void model_set_serial_enabled(bool enabled);
+char* model_get_flightmode_string(flightmode_t mode);
 
 #endif

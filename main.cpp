@@ -71,11 +71,11 @@ int main() {
         pkg_out.channel_data[7] = 0;
         uint8_t outLen = rc_lib_encode(&pkg_out);
 
-        if(serialEnabled()) {
+        if(model_get_serial_enabled()) {
             uart_send_buf(0, pkg_out.buffer, outLen);
         }
 
-        if(loraEnabled()) {
+        if(model_get_lora_enabled()) {
             LoRa.beginPacket();
             LoRa.write(pkg_out.buffer, outLen);
             LoRa.endPacket();
@@ -90,8 +90,8 @@ int main() {
                 while((read = LoRa.read()) != -1) {
                     if(rc_lib_decode(&pkg_lora_in, read)) {
                         received++;
-                        remoteRssi = pkg_lora_in.channel_data[0];
-                        remoteSnr = pkg_lora_in.channel_data[1];
+                        remote_rssi = pkg_lora_in.channel_data[0];
+                        remote_snr = pkg_lora_in.channel_data[1];
                     }
                     uart_send_byte(0, (uint8_t)read);
                 }
