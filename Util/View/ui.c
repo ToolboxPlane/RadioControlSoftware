@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include "ui.h"
 
-#include "label.h"
+#include "Elements/label.h"
 #include "../../Drivers/ili9341.h"
 #include "../../Drivers/ili9341gfx.h"
 #include "../Controller/controller.h"

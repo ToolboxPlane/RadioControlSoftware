@@ -4,6 +4,8 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
 extern "C" {
     #include "HAL/adc.h"
     #include "HAL/uart.h"
@@ -52,8 +54,6 @@ int main() {
     pkg_out.mesh = false;
     rc_lib_transmitter_id = 17;
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-noreturn"
     while(true) {
         controller_handle_events(controller_get_selection());
         joystick_set_x_value(&joystick_left, adc_read_sync(1));
@@ -98,5 +98,6 @@ int main() {
             }
         }
     }
-#pragma clang diagnostic pop
 }
+
+#pragma clang diagnostic pop

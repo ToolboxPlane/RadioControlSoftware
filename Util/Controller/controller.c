@@ -11,7 +11,12 @@
 #include "../Model/model.h"
 #include "../View/strings.h"
 
-controller_page_t page = START;
+#define TS_MINX 150.0f
+#define TS_MINY 130.0f
+#define TS_MAXX 3800.0f
+#define TS_MAXY 4000.0f
+
+controller_screen_t page = START;
 joystick_t joystick_left, joystick_right;
 
 void controller_init() {
