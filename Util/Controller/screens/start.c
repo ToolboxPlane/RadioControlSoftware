@@ -19,7 +19,7 @@ static void init(void *buf) {
     button_t *buttons = buf;
     button_init(&buttons[0], 6, 20+0*50, 240-2*6, 40, TR(string_armDisarm), BUTTON_TEXT_COLOR, BUTTON_COLOR);
     button_init(&buttons[1], 6, 20+1*50, 240-2*6, 40, TR(string_flightmodes), BUTTON_TEXT_COLOR, BUTTON_COLOR);
-    button_init(&buttons[2], 6, 20+2*50, 240-2*6, 40, TR(string_downlink), BUTTON_TEXT_COLOR, BUTTON_COLOR);
+    button_init(&buttons[2], 6, 20+2*50, 240-2*6, 40, TR(string_telemetry), BUTTON_TEXT_COLOR, BUTTON_COLOR);
     button_init(&buttons[3], 6, 20+4*50, 240-2*6, 40, TR(string_settings), BUTTON_TEXT_COLOR, BUTTON_COLOR);
     button_init(&buttons[4], 6, 20+5*50, 240-2*6, 40, TR(string_debug), BUTTON_TEXT_COLOR, BUTTON_COLOR);
 }
@@ -31,7 +31,7 @@ static controller_screen_t handle_event(void *buf, uint16_t x,uint16_t y) {
     } else if (button_is_clicked(&buttons[1], x, y)) {
         return FLIGHTMODES;
     } else if (button_is_clicked(&buttons[2], x, y)) {
-        return DOWNLINK;
+        return TELEMETRY;
     } else if (button_is_clicked(&buttons[3], x, y)) {
         return SETTINGS;
     } else if (button_is_clicked(&buttons[4], x, y)) {

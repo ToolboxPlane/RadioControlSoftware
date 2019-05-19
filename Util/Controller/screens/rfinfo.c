@@ -5,7 +5,7 @@
  * @brief downlink @TODO
  */
 
-#include "downlink.h"
+#include "rfinfo.h"
 #include "../../../Drivers/ili9341.h"
 #include "../../View/colors.h"
 #include "../../View/Elements/button.h"
@@ -44,9 +44,9 @@ static void init(void *buf) {
 static controller_screen_t handle_event(void *buf, uint16_t x,uint16_t y) {
     button_t *buttons = buf;
     if (button_is_clicked(&buttons[0], x, y)) {
-        return START;
+        return TELEMETRY;
     }
-    return CALIBRATE;
+    return RFINFO;
 }
 
 static void update(void *buf) {
@@ -67,7 +67,7 @@ static void update(void *buf) {
     label_append_num(&labels[5], model_remote_snr);
 }
 
-controller_screen_render_t controller_get_downlink_screen(void) {
+controller_screen_render_t controller_get_rfinfo_screen(void) {
     controller_screen_render_t result;
     result.init = &init;
     result.handle_event = &handle_event;

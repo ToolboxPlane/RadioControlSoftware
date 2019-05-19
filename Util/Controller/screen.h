@@ -17,8 +17,8 @@ typedef enum {
     SETTINGS = 3,
     DEBUG = 4,
     LOG = 5,
-    DOWNLINK = 6,
-    RECEIVED_DATA = 7
+    RFINFO = 6,
+    TELEMETRY = 7
 } controller_screen_t;
 
 typedef struct {
