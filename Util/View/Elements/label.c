@@ -3,6 +3,7 @@
 void label_init(label_t *label, uint16_t background, draw_f_t draw_f) {
     label->background = background;
     label->draw_f = draw_f;
+    label->len = 0;
 }
 
 void label_set_position(label_t *label, uint16_t x, uint16_t y) {

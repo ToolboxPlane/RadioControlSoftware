@@ -11,14 +11,17 @@
 #include "../../View/ui.h"
 #include "../../View/colors.h"
 #include "../../Model/model.h"
+#include "../../../Drivers/ili9341.h"
+#include "../../View/strings.h"
 
 static void init(void *buf) {
+    ili9341_fillrect(0,10,240, 320-10, BACKGROUND_COLOR);
     button_t *buttons = buf;
-    button_init(&buttons[0], 20+0*50, 6, 240-2*6, 40, "Arm/Disarm", BUTTON_TEXT_COLOR, BUTTON_COLOR);
-    button_init(&buttons[1], 20+1*50, 6, 240-2*6, 40, "Flightmodes", BUTTON_TEXT_COLOR, BUTTON_COLOR);
-    button_init(&buttons[2], 20+2*50, 6, 240-2*6, 40, "Downlink", BUTTON_TEXT_COLOR, BUTTON_COLOR);
-    button_init(&buttons[3], 20+4*50, 6, 240-2*6, 40, "Settings", BUTTON_TEXT_COLOR, BUTTON_COLOR);
-    button_init(&buttons[4], 20+5*50, 6, 240-2*6, 40, "Debug", BUTTON_TEXT_COLOR, BUTTON_COLOR);
+    button_init(&buttons[0], 6, 20+0*50, 240-2*6, 40, TR(string_armDisarm), BUTTON_TEXT_COLOR, BUTTON_COLOR);
+    button_init(&buttons[1], 6, 20+1*50, 240-2*6, 40, TR(string_flightmodes), BUTTON_TEXT_COLOR, BUTTON_COLOR);
+    button_init(&buttons[2], 6, 20+2*50, 240-2*6, 40, TR(string_downlink), BUTTON_TEXT_COLOR, BUTTON_COLOR);
+    button_init(&buttons[3], 6, 20+4*50, 240-2*6, 40, TR(string_settings), BUTTON_TEXT_COLOR, BUTTON_COLOR);
+    button_init(&buttons[4], 6, 20+5*50, 240-2*6, 40, TR(string_debug), BUTTON_TEXT_COLOR, BUTTON_COLOR);
 }
 
 static controller_screen_t handle_event(void *buf, uint16_t x,uint16_t y) {

@@ -53,14 +53,6 @@ void ui_init() {
     label_set_position(&lblFlightMode, 90, 1);
     label_set_color(&lblFlightMode, NOTIF_TEXT_COLOR);
     label_set_size(&lblFlightMode, 1);
-
-    for (uint16_t c = 0; c < 6; c++) {
-        label_init(&ui_buttonLabel[c], BUTTON_COLOR, &ui_drawLabel);
-        ili9341_fillrect(6,20 + 50*c,228,40, BUTTON_COLOR);
-        label_set_position(&ui_buttonLabel[c], 14,30 + c * 50);
-        label_set_color(&ui_buttonLabel[c], BUTTON_TEXT_COLOR);
-        label_set_size(&ui_buttonLabel[c], 3);
-    }
 }
 
 void ui_update(uint8_t isArmed, const char* flightmode) {
@@ -85,8 +77,3 @@ void ui_update(uint8_t isArmed, const char* flightmode) {
 
     label_set_text(&lblFlightMode, TR(flightmode));
 }
-
-void ui_button_highlight(uint8_t button_id, bool highlighted) {
-    label_set_color(&ui_buttonLabel[button_id], highlighted ? BUTTON_TEXT_SELECTED_COLOR : BUTTON_TEXT_COLOR);
-}
-

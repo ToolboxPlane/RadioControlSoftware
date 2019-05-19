@@ -55,7 +55,7 @@ int main() {
     rc_lib_transmitter_id = 17;
 
     while(true) {
-        controller_handle_events(controller_get_selection());
+        controller_update();
         joystick_set_x_value(&joystick_left, adc_read_sync(1));
         joystick_set_y_value(&joystick_left, adc_read_sync(2));
         joystick_set_x_value(&joystick_right, adc_read_sync(4));
