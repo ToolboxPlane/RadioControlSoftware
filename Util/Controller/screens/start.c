@@ -39,12 +39,18 @@ static controller_screen_t handle_event(void *buf, uint16_t x,uint16_t y) {
     return START;
 }
 
+static void finish(void *buf) {
+    for (uint8_t c=0; c<6; ++c) {
+        ili9341_fillrect(6, 20 + c * 50, 240 - 2 * 6, 40, BACKGROUND_COLOR);
+    }
+}
+
 controller_screen_render_t controller_get_start_screen(void) {
     controller_screen_render_t result;
     result.init = &init;
     result.update = 0;
     result.handle_event = &handle_event;
-    result.finish = 0;
+    result.finish = &finish;
     return result;
 }
 

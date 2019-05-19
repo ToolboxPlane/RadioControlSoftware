@@ -60,11 +60,18 @@ void update(void *buf) {
     }
 }
 
+static void finish(void *buf) {
+    ili9341_fillrect(6, 20+0*50, 240-2*6, 40, BACKGROUND_COLOR);
+    ili9341_fillrect(6, 20+1*50, 240-2*6, 40, BACKGROUND_COLOR);
+    ili9341_fillrect(6, 20+2*50, 240-2*6, 40, BACKGROUND_COLOR);
+    ili9341_fillrect(6, 20+5*50, 240-2*6, 40, BACKGROUND_COLOR);
+}
+
 controller_screen_render_t controller_get_settings_screen(void) {
     controller_screen_render_t result;
     result.handle_event = &handle_event;
     result.update = &update;
     result.init = &init;
-    result.finish = 0;
+    result.finish = &finish;
     return result;
 }
