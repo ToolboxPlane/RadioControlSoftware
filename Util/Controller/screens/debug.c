@@ -27,9 +27,9 @@ static void init(void *buf) {
         label_set_color(&labels[c], r8g8b8Tor5g6b5(BLACK));
     }
     label_set_text(&labels[0], TR(string_version));
-    label_set_text(&labels[1], TR(string_compiledOn));
-    label_set_text(&labels[2], TR(string_compileDate));
-    label_set_text(&labels[3], TR(string_compileTime));
+    label_set_text(&labels[1], TR(string_compiled_on));
+    label_set_text(&labels[2], TR(string_compile_date));
+    label_set_text(&labels[3], TR(string_compile_time));
 }
 
 static controller_screen_t handle_event(void *buf, uint16_t x,uint16_t y) {

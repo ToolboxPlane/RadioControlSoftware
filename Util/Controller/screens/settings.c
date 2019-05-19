@@ -17,17 +17,17 @@ static void init(void *buf) {
     button_t *buttons = buf;
     button_init(&buttons[0], 6, 20+0*50, 240-2*6, 40, TR(string_calibrate), BUTTON_TEXT_COLOR, BUTTON_COLOR);
     if (model_get_lora_enabled()) {
-        button_init(&buttons[1], 6, 20 + 1 * 50, 240 - 2 * 6, 40, TR(string_disableLora),
+        button_init(&buttons[1], 6, 20 + 1 * 50, 240 - 2 * 6, 40, TR(string_disable_lora),
                 BUTTON_TEXT_COLOR, BUTTON_COLOR);
     } else {
-        button_init(&buttons[1], 6, 20 + 1 * 50, 240 - 2 * 6, 40, TR(string_enableLora),
+        button_init(&buttons[1], 6, 20 + 1 * 50, 240 - 2 * 6, 40, TR(string_enable_lora),
                 BUTTON_TEXT_COLOR, BUTTON_COLOR);
     }
     if (model_get_serial_enabled()) {
-        button_init(&buttons[2], 6, 20 + 2 * 50, 240 - 2 * 6, 40, TR(string_disableUSB),
+        button_init(&buttons[2], 6, 20 + 2 * 50, 240 - 2 * 6, 40, TR(string_disable_usb),
                     BUTTON_TEXT_COLOR, BUTTON_COLOR);
     } else {
-        button_init(&buttons[2], 6, 20 + 2 * 50, 240 - 2 * 6, 40, TR(string_enableUSB),
+        button_init(&buttons[2], 6, 20 + 2 * 50, 240 - 2 * 6, 40, TR(string_enable_usb),
                     BUTTON_TEXT_COLOR, BUTTON_COLOR);
     }
     button_init(&buttons[3], 6, 20+5*50, 240-2*6, 40, TR(string_back), BUTTON_TEXT_COLOR, BUTTON_COLOR);
@@ -50,14 +50,14 @@ static controller_screen_t handle_event(void *buf, uint16_t x,uint16_t y) {
 void update(void *buf) {
     button_t *buttons = buf;
     if (model_get_lora_enabled()) {
-        button_set_text(&buttons[1], TR(string_disableLora));
+        button_set_text(&buttons[1], TR(string_disable_lora));
     } else {
-        button_set_text(&buttons[1], TR(string_enableLora));
+        button_set_text(&buttons[1], TR(string_enable_lora));
     }
     if (model_get_serial_enabled()) {
-        button_set_text(&buttons[2], TR(string_disableUSB));
+        button_set_text(&buttons[2], TR(string_disable_usb));
     } else {
-        button_set_text(&buttons[2], TR(string_enableUSB));
+        button_set_text(&buttons[2], TR(string_enable_usb));
     }
 }
 

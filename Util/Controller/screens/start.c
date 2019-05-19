@@ -17,7 +17,7 @@
 static void init(void *buf) {
     ili9341_fillrect(0,10,240, 320-10, BACKGROUND_COLOR);
     button_t *buttons = buf;
-    button_init(&buttons[0], 6, 20+0*50, 240-2*6, 40, TR(string_armDisarm), BUTTON_TEXT_COLOR, BUTTON_COLOR);
+    button_init(&buttons[0], 6, 20+0*50, 240-2*6, 40, TR(string_arm_disarm), BUTTON_TEXT_COLOR, BUTTON_COLOR);
     button_init(&buttons[1], 6, 20+1*50, 240-2*6, 40, TR(string_flightmodes), BUTTON_TEXT_COLOR, BUTTON_COLOR);
     button_init(&buttons[2], 6, 20+2*50, 240-2*6, 40, TR(string_telemetry), BUTTON_TEXT_COLOR, BUTTON_COLOR);
     button_init(&buttons[3], 6, 20+4*50, 240-2*6, 40, TR(string_settings), BUTTON_TEXT_COLOR, BUTTON_COLOR);

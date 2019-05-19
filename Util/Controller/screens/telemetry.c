@@ -18,7 +18,7 @@ static void init(void *buf) {
     ili9341_fillrect(0,10,240, 320-10, BACKGROUND_COLOR);
     button_t *buttons = buf;
     button_init(&buttons[0], 6, 20+5*50, 240-2*6, 40, TR(string_back), BUTTON_TEXT_COLOR, BUTTON_COLOR);
-    button_init(&buttons[1], 6, 20+4*50, 240-2*6, 40, TR(string_rfInfo), BUTTON_TEXT_COLOR, BUTTON_COLOR);
+    button_init(&buttons[1], 6, 20+4*50, 240-2*6, 40, TR(string_rf_info), BUTTON_TEXT_COLOR, BUTTON_COLOR);
 
     label_t *labels = (label_t *) &buttons[2];
     for (uint8_t c=0; c<8; ++c) {
