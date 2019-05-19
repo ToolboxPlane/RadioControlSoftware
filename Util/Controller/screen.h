@@ -25,6 +25,7 @@ typedef struct {
     void (*init)(void*);
     void (*update)(void*);
     controller_screen_t (*handle_event)(void*,uint16_t,uint16_t);
+    void (*finish)(void*);
 } controller_screen_render_t;
 
 #endif //RADIOCONTROLSOFTWARE_SCREEN_H

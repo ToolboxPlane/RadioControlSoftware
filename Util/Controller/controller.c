@@ -19,7 +19,6 @@
 #define TS_MAXX 3800.0f
 #define TS_MAXY 4000.0f
 
-controller_screen_t page = START;
 joystick_t joystick_left, joystick_right;
 
 controller_screen_render_t screens[8];
@@ -63,6 +62,9 @@ void controller_update(void) {
         controller_screen_t next_screen = screens[currScreen].handle_event(screen_data, p.x, p.y);
 
         if (next_screen != currScreen) {
+            if (screens[currScreen].finish) {
+                screens[currScreen].finish(screen_data);
+            }
             currScreen = next_screen;
             screens[currScreen].init(screen_data);
         }

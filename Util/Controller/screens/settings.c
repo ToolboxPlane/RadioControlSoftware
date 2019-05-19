@@ -66,5 +66,6 @@ controller_screen_render_t controller_get_settings_screen(void) {
     result.handle_event = &handle_event;
     result.update = &update;
     result.init = &init;
+    result.finish = 0;
     return result;
 }

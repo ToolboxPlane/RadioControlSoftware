@@ -46,6 +46,7 @@ controller_screen_render_t controller_get_flightmodes_screen(void) {
     result.init = &init;
     result.update = 0;
     result.handle_event = &handle_event;
+    result.finish = 0;
     return result;
 }
 
