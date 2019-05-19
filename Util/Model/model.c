@@ -14,7 +14,6 @@
 
 model_flightmode_t model_flightmode = LAUNCH;
 uint8_t model_armed = false;
-uint16_t model_debug_vals[6];
 int16_t model_rssi;
 int16_t model_snr;
 uint16_t model_received, model_sent;

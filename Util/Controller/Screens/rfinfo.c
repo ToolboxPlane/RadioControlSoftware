@@ -12,7 +12,7 @@
 #include "../../View/strings.h"
 #include "../../View/ui.h"
 #include "../../View/colorconvert.h"
-#include "../../View/materialColors.h"
+#include "../../View/materialcolors.h"
 #include "../../Model/model.h"
 
 static void init(void *buf) {
@@ -21,10 +21,10 @@ static void init(void *buf) {
 
     label_t *labels = (label_t *) &buttons[1];
     for (uint8_t c=0; c<6; ++c) {
-        label_init(&labels[c], BACKGROUND_COLOR, &ui_drawLabel);
+        label_init(&labels[c], BACKGROUND_COLOR, &ui_draw_label);
         label_set_position(&labels[c], 6, 20+30*c);
         label_set_size(&labels[c], 2);
-        label_set_color(&labels[c], r8g8b8Tor5g6b5(BLACK));
+        label_set_color(&labels[c], r8g8b8_to_r5g6b5(BLACK));
     }
     label_set_text(&labels[0], TR(string_snr));
     label_append_num(&labels[0], model_snr);

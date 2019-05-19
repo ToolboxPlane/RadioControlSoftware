@@ -13,13 +13,12 @@
 #include "../Controller/controller.h"
 #include "strings.h"
 #include "colorconvert.h"
-#include "materialColors.h"
+#include "materialcolors.h"
 #include "colors.h"
 
-label_t lblLeftJoy, lblRightJoy, lblFlightMode;
-label_t ui_buttonLabel[6];
+label_t lbl_left_joystick, lbl_right_joystick, label_flightmode;
 
-void ui_drawLabel(const char* text, uint8_t len, uint16_t x, uint16_t y, uint8_t size, uint16_t color) {
+void ui_draw_label(const char *text, uint8_t len, uint16_t x, uint16_t y, uint8_t size, uint16_t color) {
     ili9341_setcursor(x,y);
     ili9341_settextcolour(color);
     ili9341_settextsize(size);
@@ -36,29 +35,29 @@ void ui_init() {
     ili9341_clear(BACKGROUND_COLOR);//fill screen with black colour
     ili9341_fillrect(0,0,240, 10, NOTIF_COLOR);
 
-    label_init(&lblRightJoy, NOTIF_COLOR, &ui_drawLabel);
-    label_init(&lblFlightMode, NOTIF_COLOR, &ui_drawLabel);
+    label_init(&lbl_right_joystick, NOTIF_COLOR, &ui_draw_label);
+    label_init(&label_flightmode, NOTIF_COLOR, &ui_draw_label);
 
-    label_init(&lblLeftJoy, NOTIF_COLOR, &ui_drawLabel);
-    label_set_position(&lblLeftJoy, 4, 1);
-    label_set_color(&lblLeftJoy, NOTIF_TEXT_COLOR);
-    label_set_size(&lblLeftJoy, 1);
+    label_init(&lbl_left_joystick, NOTIF_COLOR, &ui_draw_label);
+    label_set_position(&lbl_left_joystick, 4, 1);
+    label_set_color(&lbl_left_joystick, NOTIF_TEXT_COLOR);
+    label_set_size(&lbl_left_joystick, 1);
 
-    label_init(&lblRightJoy, NOTIF_COLOR, &ui_drawLabel);
-    label_set_position(&lblRightJoy, 170, 1);
-    label_set_color(&lblRightJoy, NOTIF_TEXT_COLOR);
-    label_set_size(&lblRightJoy, 1);
+    label_init(&lbl_right_joystick, NOTIF_COLOR, &ui_draw_label);
+    label_set_position(&lbl_right_joystick, 170, 1);
+    label_set_color(&lbl_right_joystick, NOTIF_TEXT_COLOR);
+    label_set_size(&lbl_right_joystick, 1);
 
-    label_init(&lblFlightMode, NOTIF_COLOR, &ui_drawLabel);
-    label_set_position(&lblFlightMode, 90, 1);
-    label_set_color(&lblFlightMode, NOTIF_TEXT_COLOR);
-    label_set_size(&lblFlightMode, 1);
+    label_init(&label_flightmode, NOTIF_COLOR, &ui_draw_label);
+    label_set_position(&label_flightmode, 90, 1);
+    label_set_color(&label_flightmode, NOTIF_TEXT_COLOR);
+    label_set_size(&label_flightmode, 1);
 }
 
 void ui_update(uint8_t isArmed, const char* flightmode) {
-    label_set_color(&lblLeftJoy, isArmed ? r8g8b8Tor5g6b5(RED_P500) : NOTIF_TEXT_COLOR);
-    label_set_color(&lblRightJoy, isArmed ? r8g8b8Tor5g6b5(RED_P500) : NOTIF_TEXT_COLOR);
-    label_set_color(&lblFlightMode, isArmed ? r8g8b8Tor5g6b5(RED_P500) : NOTIF_TEXT_COLOR);
+    label_set_color(&lbl_left_joystick, isArmed ? r8g8b8_to_r5g6b5(RED_P500) : NOTIF_TEXT_COLOR);
+    label_set_color(&lbl_right_joystick, isArmed ? r8g8b8_to_r5g6b5(RED_P500) : NOTIF_TEXT_COLOR);
+    label_set_color(&label_flightmode, isArmed ? r8g8b8_to_r5g6b5(RED_P500) : NOTIF_TEXT_COLOR);
 
     char buf[11] = {' '};
     buf[0] = '(';
@@ -66,14 +65,14 @@ void ui_update(uint8_t isArmed, const char* flightmode) {
     buf[5] = '|';
     itoa(joystick_get_y_value(&joystick_left), buf+6, 10);
     buf[10] = ')';
-    label_set_text(&lblLeftJoy, buf, 11);
+    label_set_text(&lbl_left_joystick, buf, 11);
 
     for(uint8_t c=0; c<4; c++) {
         buf[1+c] = buf[6+c] = ' ';
     }
     itoa(joystick_get_x_value(&joystick_right), buf+1, 10);
     itoa(joystick_get_y_value(&joystick_right), buf+6, 10);
-    label_set_text(&lblRightJoy, buf, 11);
+    label_set_text(&lbl_right_joystick, buf, 11);
 
-    label_set_text(&lblFlightMode, TR(flightmode));
+    label_set_text(&label_flightmode, TR(flightmode));
 }

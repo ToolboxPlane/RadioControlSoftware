@@ -21,15 +21,12 @@ extern "C" {
 
 #include "Drivers/LoRa.h"
 
+static rc_lib_package_t *pkg_to_send_lora = NULL;
+
 void uart_callback(uint8_t data) {
     static rc_lib_package_t pkg_uart_in;
     if(rc_lib_decode(&pkg_uart_in, data)) {
-        controller_set_debug(0, pkg_uart_in.channel_data[0]);
-        controller_set_debug(1, pkg_uart_in.channel_data[1]);
-        controller_set_debug(2, pkg_uart_in.channel_data[2]);
-        controller_set_debug(3, pkg_uart_in.channel_data[3]);
-        controller_set_debug(4, 32);
-        controller_set_debug(5, 12);
+        *pkg_to_send_lora = pkg_uart_in;
     }
 }
 
@@ -80,6 +77,15 @@ int main() {
             LoRa.write(pkg_out.buffer, outLen);
             LoRa.endPacket();
             model_sent++;
+
+            if (pkg_to_send_lora != NULL) {
+                uint16_t len = rc_lib_encode(pkg_to_send_lora);
+                LoRa.beginPacket();
+                LoRa.write(pkg_to_send_lora->buffer, len);
+                LoRa.endPacket();
+                model_sent++;
+                pkg_to_send_lora = NULL;
+            }
 
             LoRa.receive();
             int size = LoRa.parsePacket();

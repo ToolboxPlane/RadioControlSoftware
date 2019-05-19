@@ -16,7 +16,7 @@ void button_init(button_t *button, uint16_t x, uint16_t y, uint16_t width, uint1
     button->height = height;
     button->width = width;
     ili9341_fillrect(x,y,width,height, color);
-    label_init(&button->label, color, &ui_drawLabel);
+    label_init(&button->label, color, &ui_draw_label);
     label_set_position(&button->label, x+8,y+10);
     label_set_color(&button->label, text_color);
     label_set_size(&button->label, 3);

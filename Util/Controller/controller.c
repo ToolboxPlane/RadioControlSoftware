@@ -47,12 +47,6 @@ void controller_init() {
     screens[currScreen].init(screen_data);
 }
 
-void controller_set_debug(uint8_t index, uint16_t val) {
-    if(index < 6) {
-        model_debug_vals[index] = val;
-    }
-}
-
 void controller_update(void) {
     static bool clicked = false;
     if (stmpe610_buffer_empty()) {
