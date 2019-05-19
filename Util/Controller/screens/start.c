@@ -12,7 +12,7 @@
 #include "../../View/colors.h"
 #include "../../Model/model.h"
 
-static void init(void *buf, uint16_t size) {
+static void init(void *buf) {
     button_t *buttons = buf;
     button_init(&buttons[0], 20+0*50, 6, 240-2*6, 40, "Arm/Disarm", BUTTON_TEXT_COLOR, BUTTON_COLOR);
     button_init(&buttons[1], 20+1*50, 6, 240-2*6, 40, "Flightmodes", BUTTON_TEXT_COLOR, BUTTON_COLOR);
@@ -21,7 +21,7 @@ static void init(void *buf, uint16_t size) {
     button_init(&buttons[4], 20+5*50, 6, 240-2*6, 40, "Debug", BUTTON_TEXT_COLOR, BUTTON_COLOR);
 }
 
-static controller_screen_t handle_event(void *buf, uint16_t size, uint16_t x,uint16_t y) {
+static controller_screen_t handle_event(void *buf, uint16_t x,uint16_t y) {
     button_t *buttons = buf;
     if (button_is_clicked(&buttons[0], x, y)) {
         model_armed = !model_armed;

@@ -8,6 +8,8 @@
 #ifndef RADIOCONTROLSOFTWARE_SCREEN_H
 #define RADIOCONTROLSOFTWARE_SCREEN_H
 
+#include <stdint.h>
+
 typedef enum {
     START = 0,
     CALIBRATE = 1,
@@ -20,9 +22,9 @@ typedef enum {
 } controller_screen_t;
 
 typedef struct {
-    void (*init)(void*, uint16_t);
-    void (*update)(void*, uint16_t);
-    controller_screen_t (*handle_event)(void*,uint16_t,uint16_t,uint16_t);
+    void (*init)(void*);
+    void (*update)(void*);
+    controller_screen_t (*handle_event)(void*,uint16_t,uint16_t);
 } controller_screen_render_t;
 
 #endif //RADIOCONTROLSOFTWARE_SCREEN_H
