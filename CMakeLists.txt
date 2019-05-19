@@ -30,7 +30,7 @@ set(SOURCES_VIEW ${SOURCES_VIEW_ELEMENTS}
         Util/View/colors.c Util/View/ui.c Util/View/strings.c Util/View/colorconvert.c)
 set(SOURCES_CONTROLLER_SCREENS
         Util/Controller/screens/settings.c Util/Controller/screens/start.c Util/Controller/screens/flightmodes.c
-        Util/Controller/screens/calibrate.c)
+        Util/Controller/screens/calibrate.c Util/Controller/screens/downlink.c)
 set(SOURCES_CONTROLLER ${SOURCES_CONTROLLER_SCREENS}
         Util/Controller/controller.c Util/Controller/joystick.c)
 set(SOURCES_MODEL
@@ -38,7 +38,7 @@ set(SOURCES_MODEL
 set(SOURCES_UTIL ${SOURCES_MODEL} ${SOURCES_CONTROLLER} ${SOURCES_VIEW})
 set(SOURCES main.cpp ${SOURCES_HAL} ${SOURCES_DRIVERS} ${SOURCES_UTIL})
 
-ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}.elf")
 

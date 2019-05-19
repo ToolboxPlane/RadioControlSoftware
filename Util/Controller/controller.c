@@ -14,6 +14,7 @@
 #include "screens/flightmodes.h"
 #include "screens/settings.h"
 #include "screens/calibrate.h"
+#include "screens/downlink.h"
 
 #define TS_MINX 150.0f
 #define TS_MINY 130.0f
@@ -34,6 +35,7 @@ void controller_init() {
     screens[FLIGHTMODES] = controller_get_flightmodes_screen();
     screens[SETTINGS] = controller_get_settings_screen();
     screens[CALIBRATE] = controller_get_calibrate_screen();
+    screens[DOWNLINK] = controller_get_downlink_screen();
 
     currScreen = START;
     screens[currScreen].init(screen_data);

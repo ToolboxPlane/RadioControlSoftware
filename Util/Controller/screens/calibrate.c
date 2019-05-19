@@ -19,17 +19,19 @@ static void init(void *buf) {
     ili9341_fillrect(0,10,240, 320-10, BACKGROUND_COLOR);
     button_t *buttons = buf;
     button_init(&buttons[0], 6, 20+5*50, 240-2*6, 40, TR(string_back), BUTTON_TEXT_COLOR, BUTTON_COLOR);
+
     label_t *labels = (label_t *) &buttons[1];
     label_init(&labels[0], BACKGROUND_COLOR, &ui_drawLabel);
     label_set_position(&labels[0], 45, 30);
     label_set_size(&labels[0], 3);
     label_set_color(&labels[0], r8g8b8Tor5g6b5(BLACK));
     label_set_text(&labels[0], TR(string_calibrate0));
-    label_init(&labels[0], BACKGROUND_COLOR, &ui_drawLabel);
-    label_set_position(&labels[0], 30, 70);
-    label_set_size(&labels[0], 3);
-    label_set_color(&labels[0], r8g8b8Tor5g6b5(BLACK));
-    label_set_text(&labels[0], TR(string_calibrate1));
+
+    label_init(&labels[1], BACKGROUND_COLOR, &ui_drawLabel);
+    label_set_position(&labels[1], 30, 70);
+    label_set_size(&labels[1], 3);
+    label_set_color(&labels[1], r8g8b8Tor5g6b5(BLACK));
+    label_set_text(&labels[1], TR(string_calibrate1));
 
     joystick_start_calibration(&joystick_left);
     joystick_start_calibration(&joystick_right);
