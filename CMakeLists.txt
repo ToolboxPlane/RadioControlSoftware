@@ -29,7 +29,8 @@ SET(SOURCES_VIEW_ELEMENTS
 set(SOURCES_VIEW ${SOURCES_VIEW_ELEMENTS}
         Util/View/colors.c Util/View/ui.c Util/View/strings.c Util/View/colorconvert.c)
 set(SOURCES_CONTROLLER_SCREENS
-        Util/Controller/screens/settings.c Util/Controller/screens/start.c Util/Controller/screens/flightmodes.c)
+        Util/Controller/screens/settings.c Util/Controller/screens/start.c Util/Controller/screens/flightmodes.c
+        Util/Controller/screens/calibrate.c)
 set(SOURCES_CONTROLLER ${SOURCES_CONTROLLER_SCREENS}
         Util/Controller/controller.c Util/Controller/joystick.c)
 set(SOURCES_MODEL
