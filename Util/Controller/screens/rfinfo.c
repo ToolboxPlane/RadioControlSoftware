@@ -16,7 +16,6 @@
 #include "../../Model/model.h"
 
 static void init(void *buf) {
-    ili9341_fillrect(0,10,240, 320-10, BACKGROUND_COLOR);
     button_t *buttons = buf;
     button_init(&buttons[0], 6, 20+5*50, 240-2*6, 40, TR(string_back), BUTTON_TEXT_COLOR, BUTTON_COLOR);
 

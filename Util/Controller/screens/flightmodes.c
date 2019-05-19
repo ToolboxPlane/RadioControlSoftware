@@ -13,7 +13,6 @@
 #include "../../View/strings.h"
 
 static void init(void *buf) {
-    ili9341_fillrect(0,10,240, 320-10, BACKGROUND_COLOR);
     button_t *buttons = buf;
     button_init(&buttons[0], 6, 20+0*50, 240-2*6, 40, TR(string_angle), BUTTON_TEXT_COLOR, BUTTON_COLOR);
     button_init(&buttons[1], 6, 20+1*50, 240-2*6, 40, TR(string_launch), BUTTON_TEXT_COLOR, BUTTON_COLOR);

@@ -16,7 +16,6 @@
 #include "../../View/materialColors.h"
 
 static void init(void *buf) {
-    ili9341_fillrect(0,10,240, 320-10, BACKGROUND_COLOR);
     button_t *buttons = buf;
     button_init(&buttons[0], 6, 20+5*50, 240-2*6, 40, TR(string_back), BUTTON_TEXT_COLOR, BUTTON_COLOR);
 
@@ -48,6 +47,13 @@ static controller_screen_t handle_event(void *buf, uint16_t x,uint16_t y) {
 static void finish(void *buf) {
     joystick_end_calibration(&joystick_left, 0);
     joystick_end_calibration(&joystick_right, 4);
+
+    button_t *buttons = buf;
+    ili9341_fillrect(6, 20+5*50, 240-2*6, 40, BACKGROUND_COLOR);
+
+    label_t *labels = (label_t *) &buttons[1];
+    label_set_color(&labels[0], BACKGROUND_COLOR);
+    label_set_color(&labels[1], BACKGROUND_COLOR);
 }
 
 controller_screen_render_t controller_get_calibrate_screen(void) {

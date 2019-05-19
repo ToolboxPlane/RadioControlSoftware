@@ -17,6 +17,8 @@
 #include "screens/rfinfo.h"
 #include "screens/telemetry.h"
 #include "screens/debug.h"
+#include "../../Drivers/ili9341.h"
+#include "../View/colors.h"
 
 #define TS_MINX 150.0f
 #define TS_MINY 130.0f
@@ -72,6 +74,8 @@ void controller_update(void) {
         if (next_screen != currScreen) {
             if (screens[currScreen].finish) {
                 screens[currScreen].finish(screen_data);
+            } else {
+                ili9341_fillrect(0,10,240, 320-10, BACKGROUND_COLOR);
             }
             currScreen = next_screen;
             screens[currScreen].init(screen_data);
