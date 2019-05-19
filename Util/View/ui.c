@@ -14,13 +14,7 @@
 #include "strings.h"
 #include "colorconvert.h"
 #include "materialColors.h"
-
-#define BACKGROUND_COLOR r8g8b8Tor5g6b5(GREY_P300)
-#define NOTIF_COLOR r8g8b8Tor5g6b5(BLACK)
-#define BUTTON_COLOR r8g8b8Tor5g6b5(DEEP_ORANGE_P500)
-#define NOTIF_TEXT_COLOR r8g8b8Tor5g6b5(WHITE)
-#define BUTTON_TEXT_COLOR r8g8b8Tor5g6b5(WHITE)
-#define BUTTON_TEXT_SELECTED_COLOR r8g8b8Tor5g6b5(GREY_P500)
+#include "colors.h"
 
 label_t lblLeftJoy, lblRightJoy, lblFlightMode;
 label_t ui_buttonLabel[6];
