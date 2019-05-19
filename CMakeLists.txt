@@ -29,9 +29,9 @@ SET(SOURCES_VIEW_ELEMENTS
 set(SOURCES_VIEW ${SOURCES_VIEW_ELEMENTS}
         Util/View/colors.c Util/View/ui.c Util/View/strings.c Util/View/colorconvert.c)
 set(SOURCES_CONTROLLER_SCREENS
-        Util/Controller/screens/settings.c Util/Controller/screens/start.c Util/Controller/screens/flightmodes.c
-        Util/Controller/screens/calibrate.c Util/Controller/screens/rfinfo.c Util/Controller/screens/telemetry.c
-        Util/Controller/screens/debug.c)
+        Util/Controller/Screens/settings.c Util/Controller/Screens/start.c Util/Controller/Screens/flightmodes.c
+        Util/Controller/Screens/calibrate.c Util/Controller/Screens/rfinfo.c Util/Controller/Screens/telemetry.c
+        Util/Controller/Screens/debug.c)
 set(SOURCES_CONTROLLER ${SOURCES_CONTROLLER_SCREENS}
         Util/Controller/controller.c Util/Controller/joystick.c)
 set(SOURCES_MODEL
