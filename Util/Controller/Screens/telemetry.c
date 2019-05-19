@@ -13,6 +13,7 @@
 #include "../../View/ui.h"
 #include "../../View/colorconvert.h"
 #include "../../View/materialColors.h"
+#include "../../Model/model.h"
 
 static void init(void *buf) {
     button_t *buttons = buf;
@@ -29,7 +30,7 @@ static void init(void *buf) {
         label_set_text(&labels[c], TR(string_channel));
         label_append_num(&labels[c], c);
         label_append(&labels[c], ": ", 2);
-        label_append_num(&labels[c], 0);
+        label_append_num(&labels[c], model_receive_data[c]);
     }
 }
 
@@ -51,7 +52,7 @@ static void update(void *buf) {
         label_set_text(&labels[c], TR(string_channel));
         label_append_num(&labels[c], c);
         label_append(&labels[c], ": ", 2);
-        label_append_num(&labels[c], 0);
+        label_append_num(&labels[c], model_receive_data[c]);
     }
 }
 
