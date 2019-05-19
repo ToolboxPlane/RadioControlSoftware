@@ -16,9 +16,9 @@ typedef enum {
     FLIGHTMODES = 2,
     SETTINGS = 3,
     DEBUG = 4,
-    LOG = 5,
-    RFINFO = 6,
-    TELEMETRY = 7
+    RFINFO = 5,
+    TELEMETRY = 6,
+    CONTROLLER_SCREEN_T_LEN
 } controller_screen_t;
 
 typedef struct {

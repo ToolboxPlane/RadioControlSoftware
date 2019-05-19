@@ -16,6 +16,7 @@
 #include "screens/calibrate.h"
 #include "screens/rfinfo.h"
 #include "screens/telemetry.h"
+#include "screens/debug.h"
 
 #define TS_MINX 150.0f
 #define TS_MINY 130.0f
@@ -24,7 +25,7 @@
 
 joystick_t joystick_left, joystick_right;
 
-controller_screen_render_t screens[8];
+controller_screen_render_t screens[CONTROLLER_SCREEN_T_LEN];
 controller_screen_t currScreen;
 uint8_t screen_data[256];
 
@@ -38,6 +39,7 @@ void controller_init() {
     screens[CALIBRATE] = controller_get_calibrate_screen();
     screens[RFINFO] = controller_get_rfinfo_screen();
     screens[TELEMETRY] = controller_get_telemetry_screen();
+    screens[DEBUG] = controller_get_debug_screen();
 
     currScreen = START;
     screens[currScreen].init(screen_data);
