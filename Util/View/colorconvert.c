@@ -1,6 +1,6 @@
 #include "colorconvert.h"
 
-uint16_t r8g8b8Tor5g6b5(uint32_t original) {
+uint16_t r8g8b8_to_r5g6b5(uint32_t original) {
     uint32_t r = (uint32_t)(original & (0x00FF0000));
     uint32_t g = (uint32_t)(original & (0x0000FF00));
     uint32_t b = (uint32_t)(original & (0x000000FF));
@@ -15,7 +15,7 @@ uint16_t r8g8b8Tor5g6b5(uint32_t original) {
     return (r << 11 | g << 5 | b);
 }
 
-uint16_t r8g8b8Tor5g6b5_brightness(uint32_t original, uint8_t brightness) {
+uint16_t r8g8b8_to_r5g6b5_brightness(uint32_t original, uint8_t brightness) {
     uint32_t r = (uint32_t)(original & (0x00FF0000));
     uint32_t g = (uint32_t)(original & (0x0000FF00));
     uint32_t b = (uint32_t)(original & (0x000000FF));

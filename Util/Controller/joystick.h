@@ -2,9 +2,10 @@
 #define RADIOCONTROLSOFTWARE_JOYSTICK_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef struct {
-    uint8_t buttonState;
+    bool button_state;
     int8_t xVal, yVal;
     uint8_t isCalibrating;
     uint16_t minX, minY, maxX, maxY;

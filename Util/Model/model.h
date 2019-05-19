@@ -14,11 +14,11 @@ typedef enum {
 
 extern model_flightmode_t model_flightmode;
 extern uint8_t model_armed;
-extern uint16_t model_debug_vals[6];
 extern int16_t model_rssi;
 extern int16_t model_snr;
 extern uint16_t model_received, model_sent;
 extern int16_t model_remote_rssi, model_remote_snr;
+extern uint16_t model_receive_data[8];
 
 void model_init(void);
 bool model_get_lora_enabled(void);

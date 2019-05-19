@@ -9,7 +9,7 @@
 #define max(a,b) ((a)>(b)?(a):(b))
 
 void joystick_init(joystick_t *joystick) {
-    joystick->buttonState = 0;
+    joystick->button_state = 0;
     joystick->xVal = joystick->yVal = 0;
 
     joystick->isCalibrating = false;
@@ -54,10 +54,10 @@ void joystick_set_y_value(joystick_t *joystick, uint16_t value) {
 }
 
 void joystick_set_button(joystick_t *joystick, uint16_t button) {
-    if (joystick->buttonState && button < BUTTON_SCHMITT_LOW) {
-        joystick->buttonState = false;
-    } else if (!joystick->buttonState && button > BUTTON_SCHMITT_HIGH) {
-        joystick->buttonState = true;
+    if (joystick->button_state && button < BUTTON_SCHMITT_LOW) {
+        joystick->button_state = false;
+    } else if (!joystick->button_state && button > BUTTON_SCHMITT_HIGH) {
+        joystick->button_state = true;
     }
 }
 
@@ -70,6 +70,6 @@ int8_t joystick_get_y_value(const joystick_t *joystick) {
 }
 
 uint8_t joystick_get_button(const joystick_t *joystick) {
-    return joystick->buttonState;
+    return joystick->button_state;
 }
 

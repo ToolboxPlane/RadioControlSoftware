@@ -20,12 +20,26 @@ set(CMAKE_CXX_FLAGS ${CXXFLAGS})
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD  11)
 
-set(SOURCES_HAL HAL/uart.c HAL/adc.c)
-set(SOURCES_DRIVERS Drivers/ili9341.c Drivers/ili9341gfx.c Drivers/LoRa.cpp Drivers/stmpe610.c Drivers/rcLib/rc_lib.c)
-set(SOURCES main.cpp Util/View/label.c Util/Controller/joystick.c Util/View/colorconvert.c
-        Util/View/strings.c Util/View/ui.c Util/Model/model.c Util/Controller/controller.c)
+set(SOURCES_HAL
+        HAL/uart.c HAL/adc.c)
+set(SOURCES_DRIVERS
+        Drivers/ili9341.c Drivers/ili9341gfx.c Drivers/LoRa.cpp Drivers/stmpe610.c Drivers/rcLib/rc_lib.c)
+SET(SOURCES_VIEW_ELEMENTS
+        Util/View/Elements/button.c Util/View/Elements/label.c)
+set(SOURCES_VIEW ${SOURCES_VIEW_ELEMENTS}
+        Util/View/colors.c Util/View/ui.c Util/View/strings.c Util/View/colorconvert.c)
+set(SOURCES_CONTROLLER_SCREENS
+        Util/Controller/Screens/settings.c Util/Controller/Screens/start.c Util/Controller/Screens/flightmodes.c
+        Util/Controller/Screens/calibrate.c Util/Controller/Screens/rfinfo.c Util/Controller/Screens/telemetry.c
+        Util/Controller/Screens/debug.c)
+set(SOURCES_CONTROLLER ${SOURCES_CONTROLLER_SCREENS}
+        Util/Controller/controller.c Util/Controller/joystick.c)
+set(SOURCES_MODEL
+        Util/Model/model.c)
+set(SOURCES_UTIL ${SOURCES_MODEL} ${SOURCES_CONTROLLER} ${SOURCES_VIEW})
+set(SOURCES main.cpp ${SOURCES_HAL} ${SOURCES_DRIVERS} ${SOURCES_UTIL})
 
-ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCES_HAL} ${SOURCES_DRIVERS} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}.elf")
 

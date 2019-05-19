@@ -4,6 +4,8 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
 extern "C" {
     #include "HAL/adc.h"
     #include "HAL/uart.h"
@@ -19,15 +21,12 @@ extern "C" {
 
 #include "Drivers/LoRa.h"
 
+static rc_lib_package_t *pkg_to_send_lora = NULL;
+
 void uart_callback(uint8_t data) {
     static rc_lib_package_t pkg_uart_in;
     if(rc_lib_decode(&pkg_uart_in, data)) {
-        controller_set_debug(0, pkg_uart_in.channel_data[0]);
-        controller_set_debug(1, pkg_uart_in.channel_data[1]);
-        controller_set_debug(2, pkg_uart_in.channel_data[2]);
-        controller_set_debug(3, pkg_uart_in.channel_data[3]);
-        controller_set_debug(4, 32);
-        controller_set_debug(5, 12);
+        *pkg_to_send_lora = pkg_uart_in;
     }
 }
 
@@ -52,10 +51,8 @@ int main() {
     pkg_out.mesh = false;
     rc_lib_transmitter_id = 17;
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-noreturn"
     while(true) {
-        controller_handle_events(controller_get_selection());
+        controller_update();
         joystick_set_x_value(&joystick_left, adc_read_sync(1));
         joystick_set_y_value(&joystick_left, adc_read_sync(2));
         joystick_set_x_value(&joystick_right, adc_read_sync(4));
@@ -81,6 +78,15 @@ int main() {
             LoRa.endPacket();
             model_sent++;
 
+            if (pkg_to_send_lora != NULL) {
+                uint16_t len = rc_lib_encode(pkg_to_send_lora);
+                LoRa.beginPacket();
+                LoRa.write(pkg_to_send_lora->buffer, len);
+                LoRa.endPacket();
+                model_sent++;
+                pkg_to_send_lora = NULL;
+            }
+
             LoRa.receive();
             int size = LoRa.parsePacket();
             if (size) {
@@ -92,11 +98,16 @@ int main() {
                         model_received++;
                         model_remote_rssi = pkg_lora_in.channel_data[0];
                         model_remote_snr = pkg_lora_in.channel_data[1];
+                        uint8_t channel_min = pkg_lora_in.channel_count < 8 ? pkg_lora_in.channel_count : 8;
+                        for (uint8_t c=0; c < channel_min; ++c) {
+                            model_receive_data[c] = pkg_lora_in.channel_data[c];
+                        }
                     }
                     uart_send_byte(0, (uint8_t)read);
                 }
             }
         }
     }
-#pragma clang diagnostic pop
 }
+
+#pragma clang diagnostic pop

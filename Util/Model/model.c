@@ -9,17 +9,16 @@
 #include "../View/strings.h"
 
 #define EEPROM_CONFIG_REG 32
-#define EEPROM_CHANNEL_START_REG 64
 #define SERIAL_ENABLE_BIT 0
 #define LORA_ENABLE_BIT 1
 
 model_flightmode_t model_flightmode = LAUNCH;
 uint8_t model_armed = false;
-uint16_t model_debug_vals[6];
 int16_t model_rssi;
 int16_t model_snr;
 uint16_t model_received, model_sent;
 int16_t model_remote_rssi, model_remote_snr;
+uint16_t model_receive_data[8];
 
 bool model_get_lora_enabled(void) {
     return (eeprom_read_byte((uint8_t*)EEPROM_CONFIG_REG) >> LORA_ENABLE_BIT) & 1;
