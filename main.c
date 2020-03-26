@@ -6,20 +6,17 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
-extern "C" {
-    #include "HAL/adc.h"
-    #include "HAL/uart.h"
-    #include "Drivers/ili9341.h"
-    #include "Drivers/ili9341gfx.h"
-    #include "Drivers/stmpe610.h"
-    #include "Drivers/rcLib/rc_lib.h"
-    #include "Util/Controller/joystick.h"
-    #include "Util/View/ui.h"
-    #include "Util/Controller/controller.h"
-    #include "Util/Model/model.h"
-}
 
-#include "Drivers/LoRa.h"
+#include "HAL/adc.h"
+#include "HAL/uart.h"
+#include "Drivers/ili9341.h"
+#include "Drivers/ili9341gfx.h"
+#include "Drivers/stmpe610.h"
+#include "Drivers/rcLib/rc_lib.h"
+#include "Util/Controller/joystick.h"
+#include "Util/View/ui.h"
+#include "Util/Controller/controller.h"
+#include "Util/Model/model.h"
 
 static rc_lib_package_t *pkg_to_send_lora = NULL;
 
@@ -30,7 +27,7 @@ void uart_callback(uint8_t data) {
     }
 }
 
-int main() {
+int main(void) {
     cli();
 
     controller_init();
@@ -41,7 +38,7 @@ int main() {
     joystick_load_calibration(&joystick_left, 0);
     joystick_load_calibration(&joystick_right, 16);
 
-    LoRa.begin((long)434E6);
+    //LoRa.begin((long)434E6);
     sei();
 
     model_init();

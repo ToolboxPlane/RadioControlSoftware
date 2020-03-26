@@ -217,7 +217,9 @@ void ili9341_clear(uint16_t colour) {
 void ili9341_drawpixel(uint16_t x3, uint16_t y3,
                        uint16_t colour1) //pixels will always be counted from right side.x is representing LCD width which will always be less tha 240.Y is representing LCD height which will always be less than 320
 {
-    if ((x3 < 0) || (x3 >= LCD_W) || (y3 < 0) || (y3 >= LCD_H)) return;
+    if ((x3 >= LCD_W) || (y3 >= LCD_H)) {
+        return;
+    }
 
     ili9341_setaddress(x3, y3, x3 + 1, y3 + 1);
 
