@@ -10,13 +10,11 @@
 #include "HAL/adc.h"
 #include "HAL/uart.h"
 #include "Drivers/ili9341.h"
-#include "Drivers/ili9341gfx.h"
-#include "Drivers/stmpe610.h"
 #include "Drivers/rcLib/rc_lib.h"
 #include "Util/Controller/joystick.h"
-#include "Util/View/ui.h"
 #include "Util/Controller/controller.h"
 #include "Util/Model/model.h"
+#include "HAL/spi.h"
 
 static rc_lib_package_t *pkg_to_send_lora = NULL;
 
@@ -29,10 +27,9 @@ void uart_callback(uint8_t data) {
 
 int main(void) {
     cli();
-
-    controller_init();
     adc_init();
     uart_init(0, 115200, NONE, 1, &uart_callback);
+
     joystick_init(&joystick_left);
     joystick_init(&joystick_right);
     joystick_load_calibration(&joystick_left, 0);
@@ -41,6 +38,7 @@ int main(void) {
     //LoRa.begin((long)434E6);
     sei();
 
+    controller_init();
     model_init();
     rc_lib_transmitter_id = 17;
     rc_lib_package_t pkg_out, pkg_lora_in;

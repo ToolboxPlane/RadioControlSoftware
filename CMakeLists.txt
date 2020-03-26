@@ -21,7 +21,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD  11)
 
 set(SOURCES_HAL
-        HAL/uart.c HAL/adc.c)
+        HAL/uart.c HAL/adc.c HAL/spi.c)
 set(SOURCES_DRIVERS
         Drivers/ili9341.c Drivers/ili9341gfx.c Drivers/stmpe610.c Drivers/sx127x.c Drivers/rcLib/rc_lib.c)
 SET(SOURCES_VIEW_ELEMENTS
