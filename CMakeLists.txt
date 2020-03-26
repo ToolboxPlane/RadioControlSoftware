@@ -40,6 +40,8 @@ set(SOURCES_UTIL ${SOURCES_MODEL} ${SOURCES_CONTROLLER} ${SOURCES_VIEW})
 set(SOURCES main.cpp ${SOURCES_HAL} ${SOURCES_DRIVERS} ${SOURCES_UTIL})
 
 add_executable(${PROJECT_NAME} ${SOURCES})
+add_compile_definitions("MAX_CHANNEL_COUNT=8")
+add_compile_definitions("MAX_RESOLUTION=10")
 
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}.elf")
 

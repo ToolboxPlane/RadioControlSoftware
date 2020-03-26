@@ -35,7 +35,7 @@ int main() {
 
     controller_init();
     adc_init();
-    uart_init(0, 115200, &uart_callback);
+    uart_init(0, 115200, NONE, 1, &uart_callback);
     joystick_init(&joystick_left);
     joystick_init(&joystick_right);
     joystick_load_calibration(&joystick_left, 0);
@@ -45,11 +45,12 @@ int main() {
     sei();
 
     model_init();
-    rc_lib_package_t pkg_out, pkg_lora_in;
-    pkg_out.resolution = 256;
-    pkg_out.channel_count = 8;
-    pkg_out.mesh = false;
     rc_lib_transmitter_id = 17;
+    rc_lib_package_t pkg_out, pkg_lora_in;
+    rc_lib_init_rx(&pkg_lora_in);
+    rc_lib_init_tx(&pkg_out, 256, 8);
+
+    uint16_t mux = 0;
 
     while(true) {
         controller_update();
@@ -68,43 +69,49 @@ int main() {
         pkg_out.channel_data[7] = 0;
         uint8_t outLen = rc_lib_encode(&pkg_out);
 
-        if(model_get_serial_enabled()) {
-            uart_send_buf(0, pkg_out.buffer, outLen);
-        }
+        _delay_ms(10);
 
-        if(model_get_lora_enabled()) {
-            LoRa.beginPacket();
-            LoRa.write(pkg_out.buffer, outLen);
-            LoRa.endPacket();
-            model_sent++;
-
-            if (pkg_to_send_lora != NULL) {
-                uint16_t len = rc_lib_encode(pkg_to_send_lora);
-                LoRa.beginPacket();
-                LoRa.write(pkg_to_send_lora->buffer, len);
-                LoRa.endPacket();
-                model_sent++;
-                pkg_to_send_lora = NULL;
+        mux += 1;
+        if (mux == 5) {
+            if (model_get_serial_enabled()) {
+                uart_send_buf(0, pkg_out.buffer, outLen);
             }
+        } else if (mux >= 10) {
+            mux = 0;
+            if(model_get_lora_enabled()) {
+                /*LoRa.beginPacket();
+                LoRa.write(pkg_out.buffer, outLen);
+                LoRa.endPacket();
+                model_sent++;*/
 
-            LoRa.receive();
-            int size = LoRa.parsePacket();
-            if (size) {
-                model_rssi = LoRa.packetRssi();
-                model_snr = (int8_t)LoRa.packetSnr();
-                int read = 0;
-                while((read = LoRa.read()) != -1) {
-                    if(rc_lib_decode(&pkg_lora_in, read)) {
-                        model_received++;
-                        model_remote_rssi = pkg_lora_in.channel_data[0];
-                        model_remote_snr = pkg_lora_in.channel_data[1];
-                        uint8_t channel_min = pkg_lora_in.channel_count < 8 ? pkg_lora_in.channel_count : 8;
-                        for (uint8_t c=0; c < channel_min; ++c) {
-                            model_receive_data[c] = pkg_lora_in.channel_data[c];
+                /*if (pkg_to_send_lora != NULL) {
+                    uint16_t len = rc_lib_encode(pkg_to_send_lora);
+                    LoRa.beginPacket();
+                    LoRa.write(pkg_to_send_lora->buffer, len);
+                    LoRa.endPacket();
+                    model_sent++;
+                    pkg_to_send_lora = NULL;
+                }*/
+
+                /*LoRa.receive();
+                int size = LoRa.parsePacket();
+                if (size) {
+                    model_rssi = LoRa.packetRssi();
+                    model_snr = (int8_t)LoRa.packetSnr();
+                    int read = 0;
+                    while((read = LoRa.read()) != -1) {
+                        if(rc_lib_decode(&pkg_lora_in, read)) {
+                            model_received++;
+                            model_remote_rssi = pkg_lora_in.channel_data[0];
+                            model_remote_snr = pkg_lora_in.channel_data[1];
+                            uint8_t channel_min = pkg_lora_in.channel_count < 8 ? pkg_lora_in.channel_count : 8;
+                            for (uint8_t c=0; c < channel_min; ++c) {
+                                model_receive_data[c] = pkg_lora_in.channel_data[c];
+                            }
                         }
+                        uart_send_byte(0, (uint8_t)read);
                     }
-                    uart_send_byte(0, (uint8_t)read);
-                }
+                }*/
             }
         }
     }

@@ -11,7 +11,7 @@ This assumes that an arduino based board with USB-Bootloader
 is used (mounted at `/dev/ttyACM0`), 
 if you use a different programmer change the ```-c``` flag.
 ```bash
-avrdude -p m328 -b 115200 -c arduino -P /dev/ttyACM0 -U flash:w:RadioControlSoftware.hex:i
+avrdude -p m328p -b 115200 -c arduino -P /dev/ttyACM0 -U flash:w:RadioControlSoftware.hex:i
 
 ```
 
