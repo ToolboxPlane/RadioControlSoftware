@@ -17,7 +17,7 @@ extern uint8_t model_armed;
 extern int16_t model_rssi;
 extern int16_t model_snr;
 extern uint16_t model_received, model_sent;
-extern int16_t model_remote_rssi, model_remote_snr;
+extern int16_t model_remote_rssi;
 extern uint16_t model_receive_data[8];
 
 void model_init(void);

@@ -20,7 +20,7 @@ static void init(void *buf) {
     button_init(&buttons[0], 6, 20+5*50, 240-2*6, 40, TR(string_back), BUTTON_TEXT_COLOR, BUTTON_COLOR);
 
     label_t *labels = (label_t *) &buttons[1];
-    for (uint8_t c=0; c<6; ++c) {
+    for (uint8_t c=0; c<5; ++c) {
         label_init(&labels[c], BACKGROUND_COLOR, &ui_draw_label);
         label_set_position(&labels[c], 6, 20+30*c);
         label_set_size(&labels[c], 2);
@@ -36,8 +36,6 @@ static void init(void *buf) {
     label_append_num(&labels[3], model_received);
     label_set_text(&labels[4], TR(string_rssi_remote));
     label_append_num(&labels[4], model_remote_rssi);
-    label_set_text(&labels[5], TR(string_snr_remote));
-    label_append_num(&labels[5], model_remote_snr);
 }
 
 static controller_screen_t handle_event(void *buf, uint16_t x,uint16_t y) {
@@ -62,8 +60,6 @@ static void update(void *buf) {
     label_append_num(&labels[3], model_received);
     label_set_text(&labels[4], TR(string_rssi_remote));
     label_append_num(&labels[4], model_remote_rssi);
-    label_set_text(&labels[5], TR(string_snr_remote));
-    label_append_num(&labels[5], model_remote_snr);
 }
 
 static void finish(void *buf) {

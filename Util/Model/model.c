@@ -17,7 +17,7 @@ uint8_t model_armed = false;
 int16_t model_rssi;
 int16_t model_snr;
 uint16_t model_received, model_sent;
-int16_t model_remote_rssi, model_remote_snr;
+int16_t model_remote_rssi;
 uint16_t model_receive_data[8];
 
 bool model_get_lora_enabled(void) {
@@ -71,4 +71,3 @@ void model_init(void) {
     model_snr = model_rssi = 0;
 }
 
- 

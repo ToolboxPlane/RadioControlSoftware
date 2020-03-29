@@ -86,7 +86,6 @@ int main(void) {
                     for (uint8_t b=0; b<len; ++b) {
                         if(rc_lib_decode(&pkg_lora_in, buf[b])) {
                             model_remote_rssi = pkg_lora_in.channel_data[0];
-                            model_remote_snr = pkg_lora_in.channel_data[1];
 
                             uint8_t channel_min = pkg_lora_in.channel_count < 8 ? pkg_lora_in.channel_count : 8;
                             for (uint8_t c=0; c < channel_min; ++c) {
