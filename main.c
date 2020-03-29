@@ -70,12 +70,35 @@ int main(void) {
         mux += 1;
         if (mux == 5) {
             if (model_get_serial_enabled()) {
-                //uart_send_buf(0, pkg_out.buffer, out_len);
+                uart_send_buf(0, pkg_out.buffer, out_len);
             }
         } else if (mux >= 10) {
             mux = 0;
             model_rssi = sx127x_rssi();
             if(model_get_lora_enabled()) {
+                if (sx127x_package_available()) {
+                    uint8_t buf[128];
+                    uint8_t len = sx127x_wait_for_package(buf, 128);
+
+                    model_rssi = sx127x_rssi();
+                    model_snr =sx127x_snr();
+
+                    for (uint8_t b=0; b<len; ++b) {
+                        if(rc_lib_decode(&pkg_lora_in, buf[b])) {
+                            model_remote_rssi = pkg_lora_in.channel_data[0];
+                            model_remote_snr = pkg_lora_in.channel_data[1];
+
+                            uint8_t channel_min = pkg_lora_in.channel_count < 8 ? pkg_lora_in.channel_count : 8;
+                            for (uint8_t c=0; c < channel_min; ++c) {
+                                model_receive_data[c] = pkg_lora_in.channel_data[c];
+                            }
+
+                            model_received++;
+                        }
+                        uart_send_byte(0, buf[b]);
+                    }
+                }
+
                 sx127x_transmit(pkg_out.buffer, out_len);
                 model_sent++;
 
@@ -86,26 +109,6 @@ int main(void) {
                     pkg_to_send_lora = NULL;
                 }
 
-                if (sx127x_package_available()) {
-                    uint8_t buf[128];
-                    uint8_t len = sx127x_wait_for_package(buf, 128);
-
-                    /*for (uint8_t b=0; b<len; ++b) {
-                        if(rc_lib_decode(&pkg_lora_in, buf[b])) {
-                            model_received++;
-                            model_remote_rssi = pkg_lora_in.channel_data[0];
-                            model_remote_snr = pkg_lora_in.channel_data[1];
-                            uint8_t channel_min = pkg_lora_in.channel_count < 8 ? pkg_lora_in.channel_count : 8;
-                            for (uint8_t c=0; c < channel_min; ++c) {
-                                model_receive_data[c] = pkg_lora_in.channel_data[c];
-                            }
-                        }
-                        uart_send_byte(0, buf[b]);
-                    }*/
-                }
-
-                model_rssi = sx127x_rssi();
-                model_snr =sx127x_snr();
             }
         }
     }

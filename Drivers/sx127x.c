@@ -10,7 +10,6 @@
 #include <util/delay.h>
 
 #include "../HAL/spi.h"
-#include "../HAL/uart.h"
 
 #define SELECT (*_cs_port &= ~(1u << _cs_bit))
 #define UNSELECT (*_cs_port |= (1u << _cs_bit))
@@ -127,17 +126,20 @@ bool sx127x_post_spi_init(uint32_t frequency) {
     // Set maximum payload length to 127 (half of the FIFO is used for TX, half for RX)
     sx127x_blocking_single_write(0x23, 127);
 
-    // Set in standby mode
-    //sx127x_blocking_single_write(0x01, 0b10000001);
-    sx127x_blocking_single_write(0x01, 0b10000101); // Set in (Continuous) RX mode
+    // Set in (Continuous) RX mode
+    sx127x_blocking_single_write(0x01, 0b10000101);
 
     return true;
 }
 
 void sx127x_transmit(uint8_t *data, uint8_t len) {
+    if (len > 127) {
+        return;
+    }
+
     sx127x_blocking_single_write(0x01, 0b10000001); // Set in Standby mode
 
-    sx127x_blocking_single_write(0x12, 0xFF); // Clear interrupt flags
+    sx127x_blocking_single_write(0x12, 1u << 3u); // Clear TX done interrupt flags
     sx127x_blocking_single_write(0x22, len + 4); // Write FIFO len
     sx127x_blocking_single_write(0x0E, TX_OFFSET); // Set the TX Buffer Start Address
 
@@ -152,13 +154,12 @@ void sx127x_transmit(uint8_t *data, uint8_t len) {
     // Wait for transmission complete
     while (!(sx127x_blocking_single_read(0x12) & (1u << 3u)));
 
-    sx127x_blocking_single_write(0x12, 0xFF); // Clear interrupt flags
+    sx127x_blocking_single_write(0x12, 1u << 3u); // Clear interrupt flags
     sx127x_blocking_single_write(0x01, 0b10000101); // Set in (Continuous) RX mode
 }
 
 bool sx127x_package_available(void) {
     sx127x_blocking_single_write(0x01, 0b10000101); // Set in (Continuous) RX mode
-    uart_send_byte(0, sx127x_blocking_single_read(0x01));
     uint8_t irq_flags = sx127x_blocking_single_read(0x12);
     return irq_flags & (1u << 6u);
 }
@@ -169,7 +170,6 @@ uint8_t sx127x_wait_for_package(uint8_t *data, uint8_t len) {
     // Wait for any RX event
     uint8_t irq_flags = sx127x_blocking_single_read(0x12);
     while (!(irq_flags & (0b111u << 5u))) {
-        _delay_ms(10);
         irq_flags = sx127x_blocking_single_read(0x12);
     }
 
@@ -178,8 +178,7 @@ uint8_t sx127x_wait_for_package(uint8_t *data, uint8_t len) {
         return 0;
     }
 
-    //sx127x_blocking_single_write(0x01, 0b10000001); // Set in standby
-    sx127x_blocking_single_write(0x12, 0xFF); // Clear interrupt flags
+    sx127x_blocking_single_write(0x12, 0b111u << 5u); // Clear interrupt flags
 
     uint8_t rx_fifo_ptr = sx127x_blocking_single_read(0x25);
     uint8_t number_bytes = rx_fifo_ptr - RX_OFFSET;
@@ -188,8 +187,13 @@ uint8_t sx127x_wait_for_package(uint8_t *data, uint8_t len) {
     sx127x_blocking_fifo_read(RX_OFFSET, buf, number_bytes);
 
     uint8_t min_len = number_bytes < len ? number_bytes : len;
+
+    if (min_len <= 4) {
+        return 0;
+    }
+
     for (uint8_t c=4; c<min_len; ++c) {
-        data[c] = buf[c];
+        data[c-4] = buf[c];
     }
 
     return min_len - 4;
