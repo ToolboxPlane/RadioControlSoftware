@@ -113,10 +113,10 @@ void stmpe610_pre_spi_init(void) {
     STMPE610_CS_PORT |= (1 << STMPE610_CS_BIT);
 }
 
-void stmpe610_post_spi_init(void) {
+bool stmpe610_post_spi_init(void) {
     uint16_t version = stmpe610_get_version();
     if (version != 0x811) {
-        return;
+        return false;
     }
     stmpe610_write_register8(STMPE_SYS_CTRL1, STMPE_SYS_CTRL1_RESET);
     _delay_ms(10);
@@ -138,6 +138,7 @@ void stmpe610_post_spi_init(void) {
     stmpe610_write_register8(STMPE_TSC_I_DRIVE, STMPE_TSC_I_DRIVE_50MA);
     stmpe610_write_register8(STMPE_INT_STA, 0xFF); // reset all ints
     stmpe610_write_register8(STMPE_INT_CTRL, STMPE_INT_CTRL_POL_HIGH | STMPE_INT_CTRL_ENABLE);
+    return true;
 }
 
 uint8_t stmpe610_touched(void) {

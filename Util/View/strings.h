@@ -36,6 +36,8 @@ static const char string_sent[] PROGMEM = "Sent: ";
 static const char string_received[] PROGMEM = "Recv: ";
 static const char string_rf_info[] PROGMEM = "RF-Info";
 static const char string_channel[] PROGMEM = "Ch";
+static const char string_error_touch[] PROGMEM = "Error: Touch";
+static const char string_error_lora[] PROGMEM = "Error: LoRa";
 
 char* string_get(const char *addr);
 

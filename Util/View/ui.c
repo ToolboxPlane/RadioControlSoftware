@@ -16,7 +16,7 @@
 #include "materialcolors.h"
 #include "colors.h"
 
-label_t lbl_left_joystick, lbl_right_joystick, label_flightmode;
+label_t lbl_left_joystick, lbl_right_joystick, label_flightmode, label_error;
 
 void ui_draw_label(const char *text, uint8_t len, uint16_t x, uint16_t y, uint8_t size, uint16_t color) {
     ili9341_setcursor(x,y);
@@ -51,6 +51,11 @@ void ui_init() {
     label_set_position(&label_flightmode, 90, 1);
     label_set_color(&label_flightmode, NOTIF_TEXT_COLOR);
     label_set_size(&label_flightmode, 1);
+
+    label_init(&label_error, BACKGROUND_COLOR, &ui_draw_label);
+    label_set_position(&label_error, 10, 135);
+    label_set_color(&label_error, ERROR_COLOR);
+    label_set_size(&label_error, 3);
 }
 
 void ui_update(uint8_t isArmed, const char* flightmode) {
@@ -74,4 +79,9 @@ void ui_update(uint8_t isArmed, const char* flightmode) {
     label_set_text(&lbl_right_joystick, buf, 11);
 
     label_set_text(&label_flightmode, TR(flightmode));
+}
+
+void ui_show_error(const char *error) {
+    label_set_text(&label_error, TR(error));
+    while (1);
 }

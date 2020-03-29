@@ -10,7 +10,7 @@ typedef struct TsPoint {
 } tsPoint_t;
 
 void stmpe610_pre_spi_init(void);
-void stmpe610_post_spi_init(void);
+bool stmpe610_post_spi_init(void);
 uint8_t stmpe610_touched(void);
 uint8_t stmpe610_buffer_empty(void);
 uint8_t stmpe610_buffer_size(void);
