@@ -1,27 +1,30 @@
 #include "ili9341.h"
 
+#include "../HAL/spi.h"
+
 volatile uint16_t LCD_W = ILI9341_TFTWIDTH;
 volatile uint16_t LCD_H = ILI9341_TFTHEIGHT;
+static volatile bool ready = false;
+
+void ili9341_spi_callback(void) {
+    ready = true;
+}
 
 
-
-void ili9341_spi_init(void)//set spi speed and settings 
+void ili9341_pre_spi_init(void) //set spi speed and settings
 {
-    DDRB |= (1 << 3) | (1 << 5); // Mosi | Sck
-
     CS_DDR |= (1 << CS_BIT);
     DC_DDR |= (1 << DC_BIT);
 
-    SPCR = (1 << SPE) | (1 << MSTR);//mode 0,fosc/4
-    SPSR |= (1 << SPI2X);//doubling spi speed.i.e final spi speed-fosc/2
     CS_PORT |= (1 << CS_BIT);
 }
 
 
 void ili9341_spi_send(unsigned char spi_data)//sent spi data to display
 {
-    SPDR = spi_data;//move data into spdr
-    while (!(SPSR & (1 << SPIF)));//wait till the transmission is finished
+    ready = false;
+    spi_tx_rx(&spi_data, 1, &ili9341_spi_callback);
+    while (!ready);
 }
 
 
@@ -58,13 +61,12 @@ void ili9341_setaddress(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)//set
     ili9341_writedata8(y2 >> 8);
     ili9341_writedata8(y2);
 
-    ili9341_writecommand8(0x2C);//meory write
+    ili9341_writecommand8(0x2C);//memory write
 }
 
-void ili9341_init(void)//set up display using predefined command sequence
+void ili9341_post_spi_init(void)//set up display using predefined command sequence
 {
     //ili9341_hard_init();
-    ili9341_spi_init();
     //ili9341_hard_reset();
     ili9341_writecommand8(0x01);//soft reset
     //_delay_ms(1000); //@TODO Check necessary
@@ -217,7 +219,9 @@ void ili9341_clear(uint16_t colour) {
 void ili9341_drawpixel(uint16_t x3, uint16_t y3,
                        uint16_t colour1) //pixels will always be counted from right side.x is representing LCD width which will always be less tha 240.Y is representing LCD height which will always be less than 320
 {
-    if ((x3 < 0) || (x3 >= LCD_W) || (y3 < 0) || (y3 >= LCD_H)) return;
+    if ((x3 >= LCD_W) || (y3 >= LCD_H)) {
+        return;
+    }
 
     ili9341_setaddress(x3, y3, x3 + 1, y3 + 1);
 

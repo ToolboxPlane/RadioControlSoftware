@@ -16,3 +16,4 @@ const uint16_t NOTIF_COLOR = R8G8B8_TO_R5G6B5(0x0069C0);
 const uint16_t BUTTON_COLOR = R8G8B8_TO_R5G6B5(0x2196f3);
 const uint16_t NOTIF_TEXT_COLOR = R8G8B8_TO_R5G6B5(WHITE);
 const uint16_t BUTTON_TEXT_COLOR = R8G8B8_TO_R5G6B5(WHITE);
+const uint16_t ERROR_COLOR = R8G8B8_TO_R5G6B5(0xB00020); // See: https://material.io/design/color/the-color-system.html#color-theme-creation

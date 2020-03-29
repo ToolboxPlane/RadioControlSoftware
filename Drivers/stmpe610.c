@@ -3,7 +3,9 @@
 //
 #include <avr/io.h>
 #include <util/delay.h>
+#include <stdbool.h>
 #include "stmpe610.h"
+#include "../HAL/spi.h"
 
 /*
  * CS: Port 8 -> PB0
@@ -100,109 +102,102 @@
 #define STMPE_GPIO_DIR 0x13
 #define STMPE_GPIO_ALT_FUNCT 0x17
 
+static volatile bool ready = false;
 
-uint8_t spiIn(void) {
-    SPDR = 0;
-
-    //Wait until transmission complete
-    while(!(SPSR & (1<<SPIF) ));
-
-    // Return received data
-    return(SPDR);
+void spi_callback(void) {
+    ready = true;
 }
 
-void spiOut(uint8_t x) {
-    SPDR = x;
-    while(!(SPSR & (1<<SPIF) ));
-}
-void stmpe610_init(void) {
+void stmpe610_pre_spi_init(void) {
     STMPE610_CS_DDR |= (1 << STMPE610_CS_BIT);
     STMPE610_CS_PORT |= (1 << STMPE610_CS_BIT);
+}
 
-    SPCR = (1 << SPE) | (1 << MSTR) | (1 << SPR0);//mode 0,fosc/4
-    //SPSR |= (1 << SPI2X);//doubling spi speed.i.e final spi speed-fosc/2
-
-    if (stmpe610_getVersion() != 0x811) {
-        return;
+bool stmpe610_post_spi_init(void) {
+    uint16_t version = stmpe610_get_version();
+    if (version != 0x811) {
+        return false;
     }
-    stmpe610_writeRegister8(STMPE_SYS_CTRL1, STMPE_SYS_CTRL1_RESET);
+    stmpe610_write_register8(STMPE_SYS_CTRL1, STMPE_SYS_CTRL1_RESET);
     _delay_ms(10);
 
     for (uint8_t i=0; i<65; i++) {
-        stmpe610_readRegister8(i);
+        stmpe610_read_register8(i);
     }
 
-    stmpe610_writeRegister8(STMPE_SYS_CTRL2, 0x0); // turn on clocks!
-    stmpe610_writeRegister8(STMPE_TSC_CTRL, STMPE_TSC_CTRL_XYZ | STMPE_TSC_CTRL_EN); // XYZ and enable!
-    stmpe610_writeRegister8(STMPE_INT_EN, STMPE_INT_EN_TOUCHDET);
-    stmpe610_writeRegister8(STMPE_ADC_CTRL1, STMPE_ADC_CTRL1_10BIT | (0x6 << 4)); // 96 clocks per conversion
-    stmpe610_writeRegister8(STMPE_ADC_CTRL2, STMPE_ADC_CTRL2_6_5MHZ);
-    stmpe610_writeRegister8(STMPE_TSC_CFG, STMPE_TSC_CFG_4SAMPLE | STMPE_TSC_CFG_DELAY_1MS | STMPE_TSC_CFG_SETTLE_5MS);
-    stmpe610_writeRegister8(STMPE_TSC_FRACTION_Z, 0x6);
-    stmpe610_writeRegister8(STMPE_FIFO_TH, 1);
-    stmpe610_writeRegister8(STMPE_FIFO_STA, STMPE_FIFO_STA_RESET);
-    stmpe610_writeRegister8(STMPE_FIFO_STA, 0);    // unreset
-    stmpe610_writeRegister8(STMPE_TSC_I_DRIVE, STMPE_TSC_I_DRIVE_50MA);
-    stmpe610_writeRegister8(STMPE_INT_STA, 0xFF); // reset all ints
-    stmpe610_writeRegister8(STMPE_INT_CTRL, STMPE_INT_CTRL_POL_HIGH | STMPE_INT_CTRL_ENABLE);
+    stmpe610_write_register8(STMPE_SYS_CTRL2, 0x0); // turn on clocks!
+    stmpe610_write_register8(STMPE_TSC_CTRL, STMPE_TSC_CTRL_XYZ | STMPE_TSC_CTRL_EN); // XYZ and enable!
+    stmpe610_write_register8(STMPE_INT_EN, STMPE_INT_EN_TOUCHDET);
+    stmpe610_write_register8(STMPE_ADC_CTRL1, STMPE_ADC_CTRL1_10BIT | (0x6 << 4)); // 96 clocks per conversion
+    stmpe610_write_register8(STMPE_ADC_CTRL2, STMPE_ADC_CTRL2_6_5MHZ);
+    stmpe610_write_register8(STMPE_TSC_CFG, STMPE_TSC_CFG_4SAMPLE | STMPE_TSC_CFG_DELAY_1MS | STMPE_TSC_CFG_SETTLE_5MS);
+    stmpe610_write_register8(STMPE_TSC_FRACTION_Z, 0x6);
+    stmpe610_write_register8(STMPE_FIFO_TH, 1);
+    stmpe610_write_register8(STMPE_FIFO_STA, STMPE_FIFO_STA_RESET);
+    stmpe610_write_register8(STMPE_FIFO_STA, 0);    // unreset
+    stmpe610_write_register8(STMPE_TSC_I_DRIVE, STMPE_TSC_I_DRIVE_50MA);
+    stmpe610_write_register8(STMPE_INT_STA, 0xFF); // reset all ints
+    stmpe610_write_register8(STMPE_INT_CTRL, STMPE_INT_CTRL_POL_HIGH | STMPE_INT_CTRL_ENABLE);
+    return true;
 }
 
 uint8_t stmpe610_touched(void) {
-    return (stmpe610_readRegister8(STMPE_TSC_CTRL) & 0x80);
+    return (stmpe610_read_register8(STMPE_TSC_CTRL) & 0x80);
 
 }
 
 uint8_t stmpe610_buffer_empty(void) {
-    return (stmpe610_readRegister8(STMPE_FIFO_STA) & STMPE_FIFO_STA_EMPTY);
+    return (stmpe610_read_register8(STMPE_FIFO_STA) & STMPE_FIFO_STA_EMPTY);
 }
 
-uint8_t stmpe610_buffer_Size(void) {
-    return stmpe610_readRegister8(STMPE_FIFO_SIZE);
+uint8_t stmpe610_buffer_size(void) {
+    return stmpe610_read_register8(STMPE_FIFO_SIZE);
 }
 
 tsPoint_t stmpe610_get_point(void) {
     uint16_t x, y;
     uint8_t z;
-    stmpe610_readData(&x, &y, &z);
+    stmpe610_read_data(&x, &y, &z);
     return (tsPoint_t){x, y, z};
 }
 
-void stmpe610_writeRegister8(uint8_t reg, uint8_t val) {
+void stmpe610_write_register8(uint8_t reg, uint8_t val) {
     STMPE610_CS_PORT &= ~(1 << STMPE610_CS_BIT);
     _delay_us(5);//little delay
-    spiOut(reg);
-    spiOut(val);
+    uint8_t buf[2] = {reg, val};
+    ready = false;
+    spi_tx_rx(buf, 2, &spi_callback);
+    while (!ready);
     STMPE610_CS_PORT |= (1<<STMPE610_CS_BIT);
 }
 
-uint16_t stmpe610_readRegister16(uint8_t reg) {
-    uint16_t x = 0;
+uint16_t stmpe610_read_register16(uint8_t reg) {
     STMPE610_CS_PORT &= ~(1 << STMPE610_CS_BIT);
     _delay_us(5);//little delay
-    spiOut(0x80 | reg);
-    spiOut(0x00);
-    x = spiIn();
-    x<<=8;
-    x |= spiIn();
+    uint8_t buf[3] = {0x80 | reg, 0x00, 0x00};
+    ready = false;
+    spi_tx_rx(buf, 3, &spi_callback);
+    while (!ready);
     STMPE610_CS_PORT |= (1<<STMPE610_CS_BIT);
-    return x;
+    return buf[1] << 8u | buf[2];
 }
 
-uint8_t stmpe610_readRegister8(uint8_t reg) {
+uint8_t stmpe610_read_register8(uint8_t reg) {
     STMPE610_CS_PORT &= ~(1 << STMPE610_CS_BIT);
     _delay_us(5);//little delay
-    spiOut(0x80 | reg);
-    spiOut(0x00);
-    uint8_t x = spiIn();
+    uint8_t buf[2] = {0x80 | reg, 0x00};
+    ready = false;
+    spi_tx_rx(buf, 2, &spi_callback);
+    while (!ready);
     STMPE610_CS_PORT |= (1<<STMPE610_CS_BIT);
-    return x;
+    return buf[1];
 }
 
-void stmpe610_readData(uint16_t *x, uint16_t *y, uint8_t *z) {
+void stmpe610_read_data(uint16_t *x, uint16_t *y, uint8_t *z) {
     uint8_t data[4];
 
     for (uint8_t i=0; i<4; i++) {
-        data[i] = stmpe610_readRegister8(0xD7);
+        data[i] = stmpe610_read_register8(0xD7);
     }
     *x = data[0];
     *x <<= 4;
@@ -213,15 +208,15 @@ void stmpe610_readData(uint16_t *x, uint16_t *y, uint8_t *z) {
     *z = data[3];
 
     if (stmpe610_buffer_empty()) {
-        stmpe610_writeRegister8(STMPE_INT_STA, 0xFF); // reset all ints
+        stmpe610_write_register8(STMPE_INT_STA, 0xFF); // reset all ints
     }
 }
 
-uint16_t stmpe610_getVersion(void) {
+uint16_t stmpe610_get_version(void) {
     uint16_t v;
-    v = stmpe610_readRegister8(0);
+    v = stmpe610_read_register8(0);
     v <<= 8;
-    v |= stmpe610_readRegister8(1);
+    v |= stmpe610_read_register8(1);
     return v;
 }
 

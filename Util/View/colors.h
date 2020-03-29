@@ -13,6 +13,6 @@ extern const uint16_t NOTIF_COLOR;
 extern const uint16_t BUTTON_COLOR;
 extern const uint16_t NOTIF_TEXT_COLOR;
 extern const uint16_t BUTTON_TEXT_COLOR;
-extern const uint16_t BUTTON_TEXT_SELECTED_COLOR;
+extern const uint16_t ERROR_COLOR;
 
 #endif //RADIOCONTROLSOFTWARE_COLORS_H

@@ -19,6 +19,8 @@
 #include "Screens/debug.h"
 #include "../../Drivers/ili9341.h"
 #include "../View/colors.h"
+#include "../../HAL/spi.h"
+#include "../../Drivers/sx127x.h"
 
 #define TS_MINX 150.0f
 #define TS_MINY 130.0f
@@ -32,8 +34,21 @@ controller_screen_t currScreen;
 uint8_t screen_data[256];
 
 void controller_init() {
+    ili9341_pre_spi_init();
+    stmpe610_pre_spi_init();
+    sx127x_pre_spi_init(&DDRD, &PORTD, 5);
+    spi_init(false, DIV_16);
+    ili9341_post_spi_init();
     ui_init();
-    stmpe610_init();
+
+    if (!stmpe610_post_spi_init()) {
+        //ui_show_error(string_error_touch);
+    }
+
+    if (!sx127x_post_spi_init(434E6)) {
+        ui_show_error(string_error_lora);
+    }
+
 
     screens[START] = controller_get_start_screen();
     screens[FLIGHTMODES] = controller_get_flightmodes_screen();

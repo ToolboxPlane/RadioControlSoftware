@@ -21,9 +21,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD  11)
 
 set(SOURCES_HAL
-        HAL/uart.c HAL/adc.c)
+        HAL/uart.c HAL/adc.c HAL/spi.c)
 set(SOURCES_DRIVERS
-        Drivers/ili9341.c Drivers/ili9341gfx.c Drivers/LoRa.cpp Drivers/stmpe610.c Drivers/rcLib/rc_lib.c)
+        Drivers/ili9341.c Drivers/ili9341gfx.c Drivers/stmpe610.c Drivers/sx127x.c Drivers/rcLib/rc_lib.c)
 SET(SOURCES_VIEW_ELEMENTS
         Util/View/Elements/button.c Util/View/Elements/label.c)
 set(SOURCES_VIEW ${SOURCES_VIEW_ELEMENTS}
@@ -37,7 +37,7 @@ set(SOURCES_CONTROLLER ${SOURCES_CONTROLLER_SCREENS}
 set(SOURCES_MODEL
         Util/Model/model.c)
 set(SOURCES_UTIL ${SOURCES_MODEL} ${SOURCES_CONTROLLER} ${SOURCES_VIEW})
-set(SOURCES main.cpp ${SOURCES_HAL} ${SOURCES_DRIVERS} ${SOURCES_UTIL})
+set(SOURCES main.c ${SOURCES_HAL} ${SOURCES_DRIVERS} ${SOURCES_UTIL})
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 add_compile_definitions("MAX_CHANNEL_COUNT=8")
