@@ -49,7 +49,6 @@ static void finish(void *buf) {
     joystick_end_calibration(&joystick_right, 4);
 
     button_t *buttons = buf;
-    ili9341_fillrect(6, 20+5*50, 240-2*6, 40, BACKGROUND_COLOR);
 
     label_t *labels = (label_t *) &buttons[1];
     label_set_color(&labels[0], BACKGROUND_COLOR);

@@ -41,7 +41,6 @@ static controller_screen_t handle_event(void *buf, uint16_t x,uint16_t y) {
 
 static void finish(void *buf) {
     button_t *buttons = buf;
-    ili9341_fillrect(6, 20+5*50, 240-2*6, 40, BACKGROUND_COLOR);
 
     label_t *labels = (label_t *) &buttons[1];
     for (uint8_t c=0; c<4; ++c) {

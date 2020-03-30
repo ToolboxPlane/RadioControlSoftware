@@ -40,7 +40,7 @@ static void init(void *buf) {
     for (uint8_t c=0; c<8; ++c) {
         uint8_t index = c + 8;
         label_init(&labels[index], BACKGROUND_COLOR, &ui_draw_label);
-        label_set_position(&labels[index], 120, 20+20*c);
+        label_set_position(&labels[index], 160, 20+20*c);
         label_set_size(&labels[index], 2);
         label_set_color(&labels[index], r8g8b8_to_r5g6b5(BLACK));
         label_set_number(&labels[index], model_receive_data[c]);
@@ -68,7 +68,6 @@ static void update(void *buf) {
 
 static void finish(void *buf) {
     button_t *buttons = buf;
-    ili9341_fillrect(6, 20+5*50, 240-2*6, 40, BACKGROUND_COLOR);
     ili9341_fillrect(6, 20+4*50, 240-2*6, 40, BACKGROUND_COLOR);
 
     label_t *labels = (label_t *) &buttons[2];
