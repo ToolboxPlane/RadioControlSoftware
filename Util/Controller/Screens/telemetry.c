@@ -27,10 +27,23 @@ static void init(void *buf) {
         label_set_size(&labels[c], 2);
         label_set_color(&labels[c], r8g8b8_to_r5g6b5(BLACK));
 
-        label_set_text(&labels[c], TR(string_channel));
-        label_append_num(&labels[c], c);
-        label_append(&labels[c], ": ", 2);
-        label_append_num(&labels[c], model_receive_data[c]);
+    }
+    label_set_text(&labels[0], TR(string_channel_0));
+    label_set_text(&labels[1], TR(string_channel_1));
+    label_set_text(&labels[2], TR(string_channel_2));
+    label_set_text(&labels[3], TR(string_channel_3));
+    label_set_text(&labels[4], TR(string_channel_4));
+    label_set_text(&labels[5], TR(string_channel_5));
+    label_set_text(&labels[6], TR(string_channel_6));
+    label_set_text(&labels[7], TR(string_channel_7));
+
+    for (uint8_t c=0; c<8; ++c) {
+        uint8_t index = c + 8;
+        label_init(&labels[index], BACKGROUND_COLOR, &ui_draw_label);
+        label_set_position(&labels[index], 120, 20+20*c);
+        label_set_size(&labels[index], 2);
+        label_set_color(&labels[index], r8g8b8_to_r5g6b5(BLACK));
+        label_set_number(&labels[index], model_receive_data[c]);
     }
 }
 
@@ -49,10 +62,7 @@ static void update(void *buf) {
     label_t *labels = (label_t *) &buttons[2];
 
     for (uint8_t c=0; c<8; ++c) {
-        label_set_text(&labels[c], TR(string_channel));
-        label_append_num(&labels[c], c);
-        label_append(&labels[c], ": ", 2);
-        label_append_num(&labels[c], model_receive_data[c]);
+        label_set_number(&labels[c+8], model_receive_data[c]);
     }
 }
 
@@ -62,7 +72,7 @@ static void finish(void *buf) {
     ili9341_fillrect(6, 20+4*50, 240-2*6, 40, BACKGROUND_COLOR);
 
     label_t *labels = (label_t *) &buttons[2];
-    for (uint8_t c=0; c<8; ++c) {
+    for (uint8_t c=0; c<16; ++c) {
         label_set_color(&labels[c], BACKGROUND_COLOR);
     }
 }

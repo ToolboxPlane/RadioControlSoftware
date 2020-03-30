@@ -31,7 +31,7 @@ joystick_t joystick_left, joystick_right;
 
 controller_screen_render_t screens[CONTROLLER_SCREEN_T_LEN];
 controller_screen_t currScreen;
-uint8_t screen_data[256];
+uint8_t screen_data[512];
 
 void controller_init() {
     ili9341_pre_spi_init();

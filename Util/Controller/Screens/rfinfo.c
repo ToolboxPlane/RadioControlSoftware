@@ -26,16 +26,24 @@ static void init(void *buf) {
         label_set_size(&labels[c], 2);
         label_set_color(&labels[c], r8g8b8_to_r5g6b5(BLACK));
     }
+    for (uint8_t c=0; c<5; ++c) {
+        uint8_t index = c+5;
+        label_init(&labels[index], BACKGROUND_COLOR, &ui_draw_label);
+        label_set_position(&labels[index], 120, 20+30*c);
+        label_set_size(&labels[index], 2);
+        label_set_color(&labels[index], r8g8b8_to_r5g6b5(BLACK));
+    }
     label_set_text(&labels[0], TR(string_snr));
-    label_append_num(&labels[0], model_snr);
+    label_set_number(&labels[5], model_snr);
     label_set_text(&labels[1], TR(string_rssi));
-    label_append_num(&labels[1], model_rssi);
+    label_set_number(&labels[6], model_rssi);
     label_set_text(&labels[2], TR(string_sent));
-    label_append_num(&labels[2], model_sent);
+    label_set_number(&labels[7], model_sent);
     label_set_text(&labels[3], TR(string_received));
-    label_append_num(&labels[3], model_received);
+    label_set_number(&labels[8], model_received);
     label_set_text(&labels[4], TR(string_rssi_remote));
-    label_append_num(&labels[4], model_remote_rssi);
+    label_set_number(&labels[9], model_remote_rssi);
+
 }
 
 static controller_screen_t handle_event(void *buf, uint16_t x,uint16_t y) {
@@ -50,16 +58,11 @@ static void update(void *buf) {
     button_t *buttons = buf;
     label_t *labels = (label_t *) &buttons[1];
 
-    label_set_text(&labels[0], TR(string_snr));
-    label_append_num(&labels[0], model_snr);
-    label_set_text(&labels[1], TR(string_rssi));
-    label_append_num(&labels[1], model_rssi);
-    label_set_text(&labels[2], TR(string_sent));
-    label_append_num(&labels[2], model_sent);
-    label_set_text(&labels[3], TR(string_received));
-    label_append_num(&labels[3], model_received);
-    label_set_text(&labels[4], TR(string_rssi_remote));
-    label_append_num(&labels[4], model_remote_rssi);
+    label_set_number(&labels[5], model_snr);
+    label_set_number(&labels[6], model_rssi);
+    label_set_number(&labels[7], model_sent);
+    label_set_number(&labels[8], model_received);
+    label_set_number(&labels[9], model_remote_rssi);
 }
 
 static void finish(void *buf) {
@@ -67,7 +70,7 @@ static void finish(void *buf) {
     ili9341_fillrect(6, 20+5*50, 240-2*6, 40, BACKGROUND_COLOR);
 
     label_t *labels = (label_t *) &buttons[1];
-    for (uint8_t c=0; c<6; ++c) {
+    for (uint8_t c=0; c<10; ++c) {
         label_set_color(&labels[c], BACKGROUND_COLOR);
     }
 }
