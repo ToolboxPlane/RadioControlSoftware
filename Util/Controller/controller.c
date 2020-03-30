@@ -37,7 +37,7 @@ void controller_init() {
     ili9341_pre_spi_init();
     stmpe610_pre_spi_init();
     sx127x_pre_spi_init(&DDRD, &PORTD, 5);
-    spi_init(false, DIV_16);
+    spi_init(false, DIV_32);
     ili9341_post_spi_init();
     ui_init();
 

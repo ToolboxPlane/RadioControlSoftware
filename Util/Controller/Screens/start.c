@@ -41,7 +41,9 @@ static controller_screen_t handle_event(void *buf, uint16_t x,uint16_t y) {
 
 static void finish(void *buf) {
     for (uint8_t c=0; c<6; ++c) {
-        ili9341_fillrect(6, 20 + c * 50, 240 - 2 * 6, 40, BACKGROUND_COLOR);
+        if (c != 3) {
+            ili9341_fillrect(6, 20 + c * 50, 240 - 2 * 6, 40, BACKGROUND_COLOR);
+        }
     }
 }
 

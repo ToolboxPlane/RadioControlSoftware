@@ -22,9 +22,11 @@ void ili9341_pre_spi_init(void) //set spi speed and settings
 
 void ili9341_spi_send(unsigned char spi_data)//sent spi data to display
 {
+    spi_set_prescaler(DIV_2);
     ready = false;
     spi_tx_rx(&spi_data, 1, &ili9341_spi_callback);
     while (!ready);
+    spi_set_prescaler(DIV_32);
 }
 
 
@@ -32,7 +34,6 @@ void ili9341_writecommand8(uint8_t com)//command write
 {
     DC_PORT &= ~(1 << DC_BIT);//DC_BIT and CS_BIT both low to sent command
     CS_PORT &= ~(1 << CS_BIT);
-    _delay_us(5);//little delay
     ili9341_spi_send(com);
     CS_PORT |= (1 << CS_BIT);//pull high CS_BIT
 }
@@ -40,7 +41,6 @@ void ili9341_writecommand8(uint8_t com)//command write
 void ili9341_writedata8(uint8_t data)//data write
 {
     DC_PORT |= (1 << DC_BIT);//st DC_BIT high for data
-    _delay_us(1);//delay
     CS_PORT &= ~(1 << CS_BIT);//set CS_BIT low for operation
     ili9341_spi_send(data);
     CS_PORT |= (1 << CS_BIT);
@@ -196,7 +196,7 @@ void ili9341_post_spi_init(void)//set up display using predefined command sequen
 
 //set colour for drawing
 void ili9341_pushcolour(uint16_t colour) {
-    ili9341_writedata8(colour >> 8);
+    ili9341_writedata8(colour >> 8u);
     ili9341_writedata8(colour);
 }
 
