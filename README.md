@@ -26,7 +26,7 @@ avrdude -p m328p -b 115200 -c arduino -P /dev/ttyACM0 -U flash:w:RadioControlSof
 | 4 | Flightmode |
 | 5 | Armed |
 | 6 | Empty |
-| 7 | Empty |
+| 7 | -RSSI |
 
 All Joystick values are between 0 and 255 with 127 being center.
 

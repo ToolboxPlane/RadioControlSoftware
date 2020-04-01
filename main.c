@@ -16,7 +16,7 @@
 #include "Drivers/sx127x.h"
 #include "HAL/timer8bit.h"
 
-#define MUX_BASE 6
+#define MUX_BASE 8
 
 static volatile rc_lib_package_t *pkg_to_send_lora = NULL;
 static volatile uint8_t send_event;
@@ -73,7 +73,7 @@ int main(void) {
         pkg_out.channel_data[4] = model_flightmode;
         pkg_out.channel_data[5] = model_armed;
         pkg_out.channel_data[6] = 0;
-        pkg_out.channel_data[7] = 0;
+        pkg_out.channel_data[7] = -model_rssi;
 
         uint8_t curr_send_event = send_event;
         send_event = 0;
