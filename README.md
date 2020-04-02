@@ -33,8 +33,8 @@ All Joystick values are between 0 and 255 with 127 being center.
 ### Flightmodes
 | Flightmode | Number |
 | --- | --- |    
-| ANGLE | 0|
+| RTH | 0|
 | LAUNCH | 1|
 | LAND | 2|
-| HOLD | 3|
+| LOITER | 3|
 | WAYPOINT | 4

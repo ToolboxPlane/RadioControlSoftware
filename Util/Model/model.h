@@ -5,10 +5,10 @@
 #include <stdbool.h>
 
 typedef enum {
-    ANGLE = 0,
+    RTH = 0,
     LAUNCH = 1,
     LAND = 2,
-    HOLD = 3,
+    LOITER = 3,
     WAYPOINT = 4
 } model_flightmode_t;
 

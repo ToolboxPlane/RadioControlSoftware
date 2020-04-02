@@ -51,14 +51,14 @@ void model_set_serial_enabled(bool enabled) {
 
 char* model_get_flightmode_string(model_flightmode_t mode) {
     switch (mode) {
-        case ANGLE:
-            return (char*)string_angle;
+        case RTH:
+            return (char*)string_rth;
         case LAUNCH:
             return (char*)string_launch;
         case LAND:
             return (char*)string_land;
-        case HOLD:
-            return (char*)string_hold;
+        case LOITER:
+            return (char*)string_loiter;
         case WAYPOINT:
             return (char*)string_waypoint;
         default:
